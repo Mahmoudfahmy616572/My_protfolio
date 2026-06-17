@@ -20,7 +20,10 @@ class AppLocalizations {
     'skill_git': 'Git / GitHub',
     'skill_ui_ux': 'UI/UX Design',
     'projects': 'Projects',
-    'project_eclassify': 'eClassify',
+    'project_ship_link': 'ShipLink',
+    'project_ship_link_desc':
+        'Shipping & logistics mobile app connecting users with carriers for seamless package delivery.',
+    'project_eclassify': 'eClassify - Classified Marketplace',
     'project_eclassify_desc':
         'Full classified ads marketplace app with Flutter mobile app, Laravel admin panel, and real-time chat. Published on Google Play & App Store.',
     'project_sneakers': 'Sneakers',
@@ -65,7 +68,10 @@ class AppLocalizations {
     'skill_git': 'جيت / جيت هاب',
     'skill_ui_ux': 'تصميم واجهات',
     'projects': 'المشاريع',
-    'project_eclassify': 'eClassify',
+    'project_ship_link': 'ShipLink',
+    'project_ship_link_desc':
+        'تطبيق شحن ولوجستيات يربط المستخدمين بشركات النقل لتوصيل الطرود بسلاسة.',
+    'project_eclassify': 'eClassify - سوق الإعلانات',
     'project_eclassify_desc':
         'سوق متكامل للإعلانات المبوبة مع تطبيق فلاتر ولوحة تحكم Laravel ومحادثة فورية. منشور على Google Play و App Store.',
     'project_sneakers': 'سنيكرز',

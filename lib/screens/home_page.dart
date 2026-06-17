@@ -401,12 +401,9 @@ class _ProjectsSection extends StatelessWidget {
 
     final projects = [
       _Project(
-        name: 'eClassify',
-        description: t.tr('project_eclassify_desc'),
-        imagePath: 'assets/images/eclassify.jpeg',
-        playStoreUrl:
-            'https://play.google.com/store/apps/details?id=com.eclassify.wrteam',
-        appStoreUrl: 'https://testflight.apple.com/join/woAP0dC5',
+        name: t.tr('project_ship_link'),
+        description: t.tr('project_ship_link_desc'),
+        imagePath: 'assets/images/ShipLink.png',
         githubUrl: 'https://github.com/Mahmoudfahmy616572/ship_link',
       ),
       _Project(
@@ -427,6 +424,15 @@ class _ProjectsSection extends StatelessWidget {
         description: t.tr('project_minishop_desc'),
         imagePath: 'assets/images/minishop.jpeg',
         githubUrl: 'https://github.com/Mahmoudfahmy616572/e_commerce',
+      ),
+      _Project(
+        name: 'eClassify',
+        description: t.tr('project_eclassify_desc'),
+        imagePath: 'assets/images/eclassify.jpeg',
+        playStoreUrl:
+            'https://play.google.com/store/apps/details?id=com.eclassify.wrteam',
+        appStoreUrl: 'https://testflight.apple.com/join/woAP0dC5',
+        githubUrl: 'https://github.com/Mahmoudfahmy616572/ship_link',
       ),
     ];
 
