@@ -23,9 +23,6 @@ class AppLocalizations {
     'project_ship_link': 'ShipLink',
     'project_ship_link_desc':
         'Shipping & logistics mobile app connecting users with carriers for seamless package delivery.',
-    'project_eclassify': 'eClassify - Classified Marketplace',
-    'project_eclassify_desc':
-        'Full classified ads marketplace app with Flutter mobile app, Laravel admin panel, and real-time chat. Published on Google Play & App Store.',
     'project_sneakers': 'Sneakers',
     'project_sneakers_desc':
         'E-commerce app for sneakers with product browsing, cart management, and checkout flow.',
@@ -71,9 +68,6 @@ class AppLocalizations {
     'project_ship_link': 'ShipLink',
     'project_ship_link_desc':
         'تطبيق شحن ولوجستيات يربط المستخدمين بشركات النقل لتوصيل الطرود بسلاسة.',
-    'project_eclassify': 'eClassify - سوق الإعلانات',
-    'project_eclassify_desc':
-        'سوق متكامل للإعلانات المبوبة مع تطبيق فلاتر ولوحة تحكم Laravel ومحادثة فورية. منشور على Google Play و App Store.',
     'project_sneakers': 'سنيكرز',
     'project_sneakers_desc':
         'تطبيق متجر إلكتروني للأحذية الرياضية مع تصفح المنتجات وإدارة السلة وعملية الدفع.',

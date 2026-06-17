@@ -425,15 +425,6 @@ class _ProjectsSection extends StatelessWidget {
         imagePath: 'assets/images/minishop.jpeg',
         githubUrl: 'https://github.com/Mahmoudfahmy616572/e_commerce',
       ),
-      _Project(
-        name: 'eClassify',
-        description: t.tr('project_eclassify_desc'),
-        imagePath: 'assets/images/eclassify.jpeg',
-        playStoreUrl:
-            'https://play.google.com/store/apps/details?id=com.eclassify.wrteam',
-        appStoreUrl: 'https://testflight.apple.com/join/woAP0dC5',
-        githubUrl: 'https://github.com/Mahmoudfahmy616572/ship_link',
-      ),
     ];
 
     return AnimatedSection(
