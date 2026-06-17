@@ -20,9 +20,9 @@ class AppLocalizations {
     'skill_git': 'Git / GitHub',
     'skill_ui_ux': 'UI/UX Design',
     'projects': 'Projects',
-    'project_ship_link': 'ShipLink',
-    'project_ship_link_desc':
-        'Shipping & logistics mobile app connecting users with carriers for seamless package delivery.',
+    'project_eclassify': 'eClassify',
+    'project_eclassify_desc':
+        'Full classified ads marketplace app with Flutter mobile app, Laravel admin panel, and real-time chat. Published on Google Play & App Store.',
     'project_sneakers': 'Sneakers',
     'project_sneakers_desc':
         'E-commerce app for sneakers with product browsing, cart management, and checkout flow.',
@@ -33,6 +33,8 @@ class AppLocalizations {
     'project_minishop_desc':
         'Lightweight e-commerce app with product listing, search, and order management.',
     'view_on_github': 'View on GitHub',
+    'view_on_playstore': 'View on Google Play',
+    'lives_on': 'Live on',
     'download_cv': 'Download My CV',
     'cv_subtitle':
         'Always up-to-date. Click below to get the latest version of my CV.',
@@ -63,9 +65,9 @@ class AppLocalizations {
     'skill_git': 'جيت / جيت هاب',
     'skill_ui_ux': 'تصميم واجهات',
     'projects': 'المشاريع',
-    'project_ship_link': 'شيب لينك',
-    'project_ship_link_desc':
-        'تطبيق شحن ولوجستيات يربط المستخدمين بشركات النقل لتوصيل الطرود بسلاسة.',
+    'project_eclassify': 'eClassify',
+    'project_eclassify_desc':
+        'سوق متكامل للإعلانات المبوبة مع تطبيق فلاتر ولوحة تحكم Laravel ومحادثة فورية. منشور على Google Play و App Store.',
     'project_sneakers': 'سنيكرز',
     'project_sneakers_desc':
         'تطبيق متجر إلكتروني للأحذية الرياضية مع تصفح المنتجات وإدارة السلة وعملية الدفع.',
@@ -76,6 +78,8 @@ class AppLocalizations {
     'project_minishop_desc':
         'تطبيق متجر إلكتروني خفيف مع عرض المنتجات والبحث وإدارة الطلبات.',
     'view_on_github': 'عرض على جيت هاب',
+    'view_on_playstore': 'عرض على Google Play',
+    'lives_on': 'منشور على',
     'download_cv': 'تحميل السيرة الذاتية',
     'cv_subtitle': 'دائماً محدثة. اضغط للتحميل للحصول على أحدث نسخة من سيرتي الذاتية.',
     'download_cv_btn': 'تحميل السيرة الذاتية (PDF)',
