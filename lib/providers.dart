@@ -1,5 +1,18 @@
 import 'package:flutter/material.dart';
 
+enum SeniorityLevel { all, junior, intermediate, senior }
+
+class FilterProvider extends ChangeNotifier {
+  SeniorityLevel _level = SeniorityLevel.all;
+
+  SeniorityLevel get level => _level;
+
+  void setLevel(SeniorityLevel level) {
+    _level = level;
+    notifyListeners();
+  }
+}
+
 class ThemeProvider extends ChangeNotifier {
   ThemeMode _themeMode = ThemeMode.dark;
 

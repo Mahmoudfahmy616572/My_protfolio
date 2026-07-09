@@ -1,43 +1,193 @@
+import 'dart:convert';
+import 'dart:math' show sin, pi;
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
+import '../cv_downloader.dart';
 import '../localization.dart';
 import '../providers.dart';
 import '../widgets/animated_section.dart';
+import '../widgets/particle_bg.dart';
 
-class HomePage extends StatelessWidget {
+class HomePage extends StatefulWidget {
   const HomePage({super.key});
+
+  @override
+  State<HomePage> createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
+  final ScrollController _scrollController = ScrollController();
+  double _scrollProgress = 0;
+  bool _showBackToTop = false;
+  int _activeSection = 0;
+
+  static const _sectionKeys = ['about_me', 'skills', 'projects', 'download_cv', 'contact'];
+
+  @override
+  void initState() {
+    super.initState();
+    _scrollController.addListener(_onScroll);
+  }
+
+  void _onScroll() {
+    final pos = _scrollController.position;
+    final progress = pos.maxScrollExtent > 0 ? pos.pixels / pos.maxScrollExtent : 0.0;
+    final sectionCount = _sectionKeys.length + 2;
+    final section = (progress * sectionCount).floor().clamp(0, sectionCount - 1);
+    setState(() {
+      _scrollProgress = progress.clamp(0.0, 1.0);
+      _showBackToTop = pos.pixels > 400;
+      _activeSection = section;
+    });
+  }
+
+  void _scrollToSection(int index) {
+    final sectionCount = _sectionKeys.length + 2;
+    final target = _scrollController.position.maxScrollExtent * (index / (sectionCount - 1));
+    _scrollController.animateTo(
+      target,
+      duration: const Duration(milliseconds: 500),
+      curve: Curves.easeOutCubic,
+    );
+  }
+
+  Widget _buildSectionDot(BuildContext context, int index, String label) {
+    final theme = Theme.of(context);
+    final isActive = index == _activeSection;
+    return Tooltip(
+      message: label,
+      child: GestureDetector(
+        onTap: () => _scrollToSection(index),
+        child: AnimatedContainer(
+          duration: const Duration(milliseconds: 250),
+          curve: Curves.easeOut,
+          margin: const EdgeInsets.symmetric(vertical: 6),
+          width: isActive ? 10 : 6,
+          height: isActive ? 10 : 6,
+          decoration: BoxDecoration(
+            shape: BoxShape.circle,
+            color: isActive
+                ? theme.colorScheme.primary
+                : theme.colorScheme.onSurface.withValues(alpha: 0.25),
+            boxShadow: isActive
+                ? [BoxShadow(color: theme.colorScheme.primary.withValues(alpha: 0.4), blurRadius: 6)]
+                : null,
+          ),
+        ),
+      ),
+    );
+  }
+
+  @override
+  void dispose() {
+    _scrollController.removeListener(_onScroll);
+    _scrollController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
     final t = AppLocalizations.of(context);
+    final theme = Theme.of(context);
+    final isRtl = Directionality.of(context) == TextDirection.rtl;
     return Scaffold(
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-            _HeaderSection(),
-            const _StatsBar(),
-            const _AboutSection(),
-            const _SkillsSection(),
-            const _ProjectsSection(),
-            const _CVSection(),
-            const _ContactSection(),
-            Container(
-              width: double.infinity,
-              padding: const EdgeInsets.all(24),
-              color: Colors.black26,
-              child: Text(
-                t.tr('copyright'),
-                textAlign: TextAlign.center,
-                style: const TextStyle(color: Colors.grey, fontSize: 14),
+      body: Stack(
+        children: [
+          ParticleBg(
+            primaryColor: theme.colorScheme.primary,
+            child: SingleChildScrollView(
+              controller: _scrollController,
+              child: Column(
+                children: [
+                  _HeaderSection(),
+                  const _StatsBar(),
+                  const _AboutSection(),
+                  const _SkillsSection(),
+                  const _ProjectsSection(),
+                  const _CVSection(),
+                  _ContactSection(),
+                  Container(
+                    width: double.infinity,
+                    padding: const EdgeInsets.all(24),
+                    color: Colors.black26,
+                    child: Text(
+                      t.tr('copyright'),
+                      textAlign: TextAlign.center,
+                      style: const TextStyle(color: Colors.grey, fontSize: 14),
+                    ),
+                  ),
+                ],
               ),
             ),
-          ],
-        ),
+          ),
+          Positioned(
+            top: 0,
+            left: 0,
+            right: 0,
+            height: 3,
+            child: Container(
+              width: MediaQuery.of(context).size.width * _scrollProgress,
+              height: 3,
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  colors: [
+                    theme.colorScheme.primary,
+                    theme.colorScheme.tertiary,
+                  ],
+                ),
+              ),
+            ),
+          ),
+          Positioned(
+            right: isRtl ? null : 8,
+            left: isRtl ? 8 : null,
+            top: 0,
+            bottom: 0,
+            child: IgnorePointer(
+              ignoring: !_showBackToTop,
+              child: AnimatedOpacity(
+                opacity: _showBackToTop ? 1.0 : 0.0,
+                duration: const Duration(milliseconds: 300),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    _buildSectionDot(context, 0, t.tr('name')),
+                    _buildSectionDot(context, 1, 'Stats'),
+                    ..._sectionKeys.asMap().entries.map((e) =>
+                      _buildSectionDot(context, e.key + 2, t.tr(e.value)),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        ],
       ),
       floatingActionButton: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
+          AnimatedSlide(
+            offset: _showBackToTop ? Offset.zero : const Offset(0, 3),
+            duration: const Duration(milliseconds: 250),
+            curve: Curves.easeOut,
+            child: AnimatedOpacity(
+              opacity: _showBackToTop ? 1.0 : 0.0,
+              duration: const Duration(milliseconds: 200),
+              child: _FAB(
+                icon: Icons.keyboard_arrow_up,
+                tooltip: 'Back to top',
+                onPressed: () => _scrollController.animateTo(
+                  0,
+                  duration: const Duration(milliseconds: 500),
+                  curve: Curves.easeOutCubic,
+                ),
+              ),
+            ),
+          ),
+          if (_showBackToTop) const SizedBox(height: 8),
           _FAB(
             icon: context.watch<ThemeProvider>().themeMode == ThemeMode.dark
                 ? Icons.light_mode
@@ -57,7 +207,7 @@ class HomePage extends StatelessWidget {
   }
 }
 
-class _FAB extends StatelessWidget {
+class _FAB extends StatefulWidget {
   final IconData icon;
   final String tooltip;
   final VoidCallback onPressed;
@@ -69,12 +219,50 @@ class _FAB extends StatelessWidget {
   });
 
   @override
+  State<_FAB> createState() => _FABState();
+}
+
+class _FABState extends State<_FAB> {
+  bool _hovered = false;
+
+  @override
   Widget build(BuildContext context) {
-    return FloatingActionButton.small(
-      heroTag: tooltip,
-      onPressed: onPressed,
-      tooltip: tooltip,
-      child: Icon(icon),
+    final theme = Theme.of(context);
+    return MouseRegion(
+      onEnter: (_) => setState(() => _hovered = true),
+      onExit: (_) => setState(() => _hovered = false),
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 250),
+        curve: Curves.easeOut,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(28),
+          boxShadow: _hovered
+              ? [
+                  BoxShadow(
+                    color: theme.colorScheme.primary.withValues(alpha: 0.4),
+                    blurRadius: 16,
+                    spreadRadius: 1,
+                  ),
+                ]
+              : null,
+        ),
+        child: AnimatedScale(
+          scale: _hovered ? 1.12 : 1.0,
+          duration: const Duration(milliseconds: 200),
+          curve: Curves.easeOutBack,
+          child: FloatingActionButton.small(
+            heroTag: widget.tooltip,
+            onPressed: widget.onPressed,
+            tooltip: widget.tooltip,
+            child: AnimatedRotation(
+              turns: _hovered ? 0.125 : 0.0,
+              duration: const Duration(milliseconds: 300),
+              curve: Curves.easeOutBack,
+              child: Icon(widget.icon),
+            ),
+          ),
+        ),
+      ),
     );
   }
 }
@@ -86,7 +274,9 @@ class _HeaderSection extends StatelessWidget {
     final theme = Theme.of(context);
     return AnimatedSection(
       index: 0,
-      child: Container(
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 300),
+        curve: Curves.easeOut,
         width: double.infinity,
         decoration: BoxDecoration(
           gradient: LinearGradient(
@@ -101,25 +291,36 @@ class _HeaderSection extends StatelessWidget {
         padding: const EdgeInsets.fromLTRB(24, 80, 24, 60),
         child: Column(
           children: [
-            Container(
-              padding: const EdgeInsets.all(4),
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                border: Border.all(
-                  color: theme.colorScheme.primary.withValues(alpha: 0.4),
-                  width: 3,
-                ),
-              ),
-              child: CircleAvatar(
-                radius: 68,
-                backgroundImage:
-                    const AssetImage('assets/images/profile.png'),
-                backgroundColor: theme.colorScheme.primaryContainer,
+            _FloatingWidget(
+              child: Stack(
+                alignment: Alignment.center,
+                children: [
+                  _PulseRing(color: theme.colorScheme.primary, delay: 0),
+                  _PulseRing(color: theme.colorScheme.tertiary, delay: 1),
+                  Container(
+                    padding: const EdgeInsets.all(4),
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      border: Border.all(
+                        color: theme.colorScheme.primary.withValues(alpha: 0.4),
+                        width: 3,
+                      ),
+                    ),
+                    child: CircleAvatar(
+                      radius: 68,
+                      backgroundImage:
+                          ResizeImage(
+                          const AssetImage('assets/images/profile.png'),
+                          width: 272),
+                      backgroundColor: theme.colorScheme.primaryContainer,
+                    ),
+                  ),
+                ],
               ),
             ),
             const SizedBox(height: 28),
-            Text(
-              t.tr('name'),
+            _GradientText(
+              text: t.tr('name'),
               style: theme.textTheme.headlineLarge?.copyWith(
                 fontWeight: FontWeight.bold,
                 letterSpacing: -0.5,
@@ -133,8 +334,9 @@ class _HeaderSection extends StatelessWidget {
                 borderRadius: BorderRadius.circular(20),
                 color: theme.colorScheme.primary.withValues(alpha: 0.15),
               ),
-              child: Text(
-                t.tr('title'),
+              child: _TypewriterText(
+                key: ValueKey(t.tr('title')),
+                text: t.tr('title'),
                 style: theme.textTheme.titleMedium?.copyWith(
                   color: theme.colorScheme.primary,
                   fontWeight: FontWeight.w600,
@@ -142,20 +344,24 @@ class _HeaderSection extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 8),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Icon(Icons.location_on_outlined,
-                    size: 16,
-                    color: theme.colorScheme.onSurface.withValues(alpha: 0.5)),
-                const SizedBox(width: 4),
-                Text(
-                  t.tr('location'),
-                  style: theme.textTheme.bodyMedium?.copyWith(
-                    color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
+            _FloatingWidget(
+              amplitude: 3,
+              duration: 2,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(Icons.location_on_outlined,
+                      size: 16,
+                      color: theme.colorScheme.onSurface.withValues(alpha: 0.5)),
+                  const SizedBox(width: 4),
+                  Text(
+                    t.tr('location'),
+                    style: theme.textTheme.bodyMedium?.copyWith(
+                      color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
             const SizedBox(height: 28),
             Row(
@@ -164,7 +370,7 @@ class _HeaderSection extends StatelessWidget {
                 _SocialButton(
                   icon: Icons.email_outlined,
                   label: 'Email',
-                  url: 'mailto:mahmoudfahmy616572@gmail.com',
+                  url: 'mailto:mahmoudfahmeyy@gmail.com',
                 ),
                 const SizedBox(width: 12),
                 _SocialButton(
@@ -204,20 +410,61 @@ class _SocialButton extends StatefulWidget {
 
 class _SocialButtonState extends State<_SocialButton> {
   bool _hovered = false;
+  double _magnetX = 0;
+  double _magnetY = 0;
+
+  void _onHover(PointerEvent event) {
+    final box = context.findRenderObject() as RenderBox?;
+    if (box == null) return;
+    final local = box.globalToLocal(event.position);
+    final size = box.size;
+    final cx = size.width / 2;
+    final cy = size.height / 2;
+    setState(() {
+      _magnetX = ((local.dx - cx) / cx) * 6;
+      _magnetY = ((local.dy - cy) / cy) * 6;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return MouseRegion(
       onEnter: (_) => setState(() => _hovered = true),
-      onExit: (_) => setState(() => _hovered = false),
-      child: AnimatedScale(
-        scale: _hovered ? 1.12 : 1.0,
-        duration: const Duration(milliseconds: 200),
-        child: Tooltip(
-          message: widget.label,
-          child: IconButton.filled(
-            onPressed: () => launchUrl(Uri.parse(widget.url)),
-            icon: Icon(widget.icon),
+      onHover: _onHover,
+      onExit: (_) => setState(() {
+        _hovered = false;
+        _magnetX = 0;
+        _magnetY = 0;
+      }),
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 250),
+        curve: Curves.easeOut,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(28),
+          boxShadow: _hovered
+              ? [
+                  BoxShadow(
+                    color: theme.colorScheme.primary.withValues(alpha: 0.4),
+                    blurRadius: 20,
+                    spreadRadius: 2,
+                  ),
+                ]
+              : null,
+        ),
+        child: Transform.translate(
+          offset: Offset(_magnetX, _magnetY),
+          child: AnimatedScale(
+            scale: _hovered ? 1.15 : 1.0,
+            duration: const Duration(milliseconds: 200),
+            curve: Curves.easeOutBack,
+            child: Tooltip(
+              message: widget.label,
+              child: IconButton.filled(
+                onPressed: () => launchUrl(Uri.parse(widget.url)),
+                icon: Icon(widget.icon),
+              ),
+            ),
           ),
         ),
       ),
@@ -231,7 +478,9 @@ class _StatsBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    return Container(
+    return AnimatedContainer(
+      duration: const Duration(milliseconds: 300),
+      curve: Curves.easeOut,
       width: double.infinity,
       color: theme.colorScheme.primary.withValues(alpha: 0.08),
       padding: const EdgeInsets.symmetric(vertical: 28),
@@ -246,22 +495,27 @@ class _StatsBar extends StatelessWidget {
               icon: Icons.phone_android,
               value: '8+',
               label: 'Flutter Apps',
+              index: 0,
             ),
             _StatItem(
               icon: Icons.store,
               value: '5K+',
               label: 'Google Play Downloads',
+              index: 1,
             ),
             _StatItem(
               icon: Icons.code,
               value: '14',
               label: 'GitHub Repos',
+              index: 2,
             ),
             _StatItem(
               icon: Icons.work_outline,
               value: '2+',
               label: 'Years Experience',
+              index: 3,
             ),
+            _GitHubLiveStat(index: 4),
           ],
         ),
       ),
@@ -269,16 +523,94 @@ class _StatsBar extends StatelessWidget {
   }
 }
 
-class _StatItem extends StatelessWidget {
+class _StatItem extends StatefulWidget {
   final IconData icon;
   final String value;
   final String label;
+  final int index;
 
   const _StatItem({
     required this.icon,
     required this.value,
     required this.label,
+    this.index = 0,
   });
+
+  @override
+  State<_StatItem> createState() => _StatItemState();
+}
+
+class _StatItemState extends State<_StatItem>
+    with SingleTickerProviderStateMixin {
+  late final AnimationController _controller;
+  late final Animation<double> _animation;
+  late final double _target;
+  late final String _suffix;
+  ScrollPosition? _scrollPosition;
+  bool _visible = false;
+
+  @override
+  void initState() {
+    super.initState();
+    final match = RegExp(r'^(\d+(?:\.\d+)?)(.*)$').firstMatch(widget.value);
+    _target = double.parse(match?.group(1) ?? '0');
+    _suffix = match?.group(2) ?? '';
+
+    _controller = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 1200),
+    );
+    _animation = CurvedAnimation(
+      parent: _controller,
+      curve: Curves.easeOutCubic,
+    );
+
+    WidgetsBinding.instance.addPostFrameCallback((_) => _checkVisibility());
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    final scrollable = Scrollable.maybeOf(context);
+    final newPosition = scrollable?.position;
+    if (newPosition != _scrollPosition) {
+      _scrollPosition?.removeListener(_onScroll);
+      _scrollPosition = newPosition;
+      newPosition?.addListener(_onScroll);
+    }
+  }
+
+  void _onScroll() {
+    _checkVisibility();
+  }
+
+  void _checkVisibility() {
+    if (!mounted) return;
+    final renderBox = context.findRenderObject() as RenderBox?;
+    if (renderBox == null) return;
+    final pos = renderBox.localToGlobal(Offset.zero);
+    final size = renderBox.size;
+    final scrollable = Scrollable.maybeOf(context);
+    final viewportHeight = scrollable?.context.size?.height ?? 600;
+    final isVisible = pos.dy < viewportHeight && pos.dy + size.height > 0;
+
+    if (isVisible && !_visible) {
+      _visible = true;
+      Future.delayed(Duration(milliseconds: 300 + 200 * widget.index), () {
+        if (mounted && _visible) _controller.forward(from: 0);
+      });
+    } else if (!isVisible && _visible) {
+      _visible = false;
+      _controller.reset();
+    }
+  }
+
+  @override
+  void dispose() {
+    _scrollPosition?.removeListener(_onScroll);
+    _controller.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -286,17 +618,166 @@ class _StatItem extends StatelessWidget {
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
-        Icon(icon, color: theme.colorScheme.primary, size: 24),
+        Icon(widget.icon, color: theme.colorScheme.primary, size: 24),
         const SizedBox(height: 8),
-        Text(
-          value,
-          style: theme.textTheme.titleLarge?.copyWith(
-            fontWeight: FontWeight.bold,
-            color: theme.colorScheme.primary,
-          ),
+        AnimatedBuilder(
+          animation: _animation,
+          builder: (context, _) {
+            final current = (_target * _animation.value);
+            final display = _suffix.isEmpty
+                ? current.toInt().toString()
+                : '${current.toInt()}$_suffix';
+            return Text(
+              display,
+              style: theme.textTheme.titleLarge?.copyWith(
+                fontWeight: FontWeight.bold,
+                color: theme.colorScheme.primary,
+              ),
+            );
+          },
         ),
         Text(
-          label,
+          widget.label,
+          style: theme.textTheme.bodySmall?.copyWith(
+            color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+class _GitHubLiveStat extends StatefulWidget {
+  final int index;
+
+  const _GitHubLiveStat({this.index = 0});
+
+  @override
+  State<_GitHubLiveStat> createState() => _GitHubLiveStatState();
+}
+
+class _GitHubLiveStatState extends State<_GitHubLiveStat>
+    with SingleTickerProviderStateMixin {
+  late final AnimationController _controller;
+  late final Animation<double> _animation;
+  int _repos = 0;
+  bool _loaded = false;
+  ScrollPosition? _scrollPosition;
+  bool _visible = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 1200),
+    );
+    _animation = CurvedAnimation(
+      parent: _controller,
+      curve: Curves.easeOutCubic,
+    );
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _fetchStats();
+      _checkVisibility();
+    });
+  }
+
+  Future<void> _fetchStats() async {
+    try {
+      final res = await http.get(
+        Uri.parse('https://api.github.com/users/Mahmoudfahmy616572'),
+        headers: {'Accept': 'application/vnd.github.v3+json'},
+      );
+      if (res.statusCode == 200 && mounted) {
+        final data = jsonDecode(res.body);
+        setState(() {
+          _repos = data['public_repos'] ?? 0;
+          _loaded = true;
+        });
+      }
+    } catch (_) {}
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    final scrollable = Scrollable.maybeOf(context);
+    final newPosition = scrollable?.position;
+    if (newPosition != _scrollPosition) {
+      _scrollPosition?.removeListener(_onScroll);
+      _scrollPosition = newPosition;
+      newPosition?.addListener(_onScroll);
+    }
+  }
+
+  void _onScroll() {
+    _checkVisibility();
+  }
+
+  void _checkVisibility() {
+    if (!mounted) return;
+    final renderBox = context.findRenderObject() as RenderBox?;
+    if (renderBox == null) return;
+    final pos = renderBox.localToGlobal(Offset.zero);
+    final size = renderBox.size;
+    final scrollable = Scrollable.maybeOf(context);
+    final viewportHeight = scrollable?.context.size?.height ?? 600;
+    final isVisible = pos.dy < viewportHeight && pos.dy + size.height > 0;
+    if (isVisible && !_visible) {
+      _visible = true;
+      Future.delayed(Duration(milliseconds: 300 + 200 * widget.index), () {
+        if (mounted && _visible) _controller.forward(from: 0);
+      });
+    } else if (!isVisible && _visible) {
+      _visible = false;
+      _controller.reset();
+    }
+  }
+
+  @override
+  void dispose() {
+    _scrollPosition?.removeListener(_onScroll);
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    if (!_loaded) {
+      return Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(Icons.code, color: theme.colorScheme.primary, size: 24),
+          const SizedBox(height: 8),
+          Icon(Icons.circle, size: 24, color: theme.colorScheme.primary.withValues(alpha: 0.2)),
+          const SizedBox(height: 4),
+          Text('GitHub',
+            style: theme.textTheme.bodySmall?.copyWith(
+              color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
+            ),
+          ),
+        ],
+      );
+    }
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Icon(Icons.code, color: theme.colorScheme.primary, size: 24),
+        const SizedBox(height: 8),
+        AnimatedBuilder(
+          animation: _animation,
+          builder: (context, _) {
+            return Text(
+              (_repos * _animation.value).toInt().toString(),
+              style: theme.textTheme.titleLarge?.copyWith(
+                fontWeight: FontWeight.bold,
+                color: theme.colorScheme.primary,
+              ),
+            );
+          },
+        ),
+        Text('GitHub Repos',
           style: theme.textTheme.bodySmall?.copyWith(
             color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
           ),
@@ -349,17 +830,19 @@ class _SkillsSection extends StatelessWidget {
     final theme = Theme.of(context);
 
     final skills = [
-      (t.tr('skill_flutter'), Icons.phone_android),
-      (t.tr('skill_dart'), Icons.code),
-      (t.tr('skill_firebase'), Icons.storage),
-      (t.tr('skill_rest_api'), Icons.api),
-      (t.tr('skill_git'), Icons.source),
-      (t.tr('skill_ui_ux'), Icons.palette),
+      (t.tr('skill_flutter'), Icons.phone_android, 0.92),
+      (t.tr('skill_dart'), Icons.code, 0.88),
+      (t.tr('skill_firebase'), Icons.storage, 0.80),
+      (t.tr('skill_rest_api'), Icons.api, 0.82),
+      (t.tr('skill_git'), Icons.source, 0.85),
+      (t.tr('skill_ui_ux'), Icons.palette, 0.75),
     ];
 
     return AnimatedSection(
       index: 3,
-      child: Container(
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 300),
+        curve: Curves.easeOut,
         width: double.infinity,
         color: theme.colorScheme.surfaceContainerHighest,
         padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 56),
@@ -367,21 +850,24 @@ class _SkillsSection extends StatelessWidget {
           children: [
             _SectionHeader(title: t.tr('skills')),
             const SizedBox(height: 28),
-            Wrap(
-              spacing: 14,
-              runSpacing: 14,
-              alignment: WrapAlignment.center,
-              children: skills
-                  .map((s) => Chip(
-                        avatar: Icon(s.$2, size: 20),
-                        label: Text(s.$1),
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 12, vertical: 10),
-                        side: BorderSide.none,
-                        backgroundColor: theme.colorScheme.primary
-                            .withValues(alpha: 0.12),
-                      ))
-                  .toList(),
+            ConstrainedBox(
+              constraints: const BoxConstraints(maxWidth: 520),
+              child: Column(
+                children: skills.asMap().entries.map((entry) {
+                  return _AnimatedChip(
+                    index: entry.key,
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 4),
+                      child: _SkillBar(
+                        value: entry.value.$3,
+                        index: entry.key,
+                        label: entry.value.$1,
+                        icon: entry.value.$2,
+                      ),
+                    ),
+                  );
+                }).toList(),
+              ),
             ),
           ],
         ),
@@ -398,13 +884,33 @@ class _ProjectsSection extends StatelessWidget {
     final t = AppLocalizations.of(context);
     final theme = Theme.of(context);
     final isWide = MediaQuery.of(context).size.width > 800;
+    final filterLevel = context.watch<FilterProvider>().level;
 
-    final projects = [
+    final allProjects = [
+      _Project(
+        name: t.tr('project_unipath'),
+        description: t.tr('project_unipath_desc'),
+        imagePath: 'assets/images/UniPath.png',
+        githubUrl: 'https://github.com/Mahmoudfahmy616572/uni_path_germany',
+        dashboardUrl: 'https://uni-path-dashboard.pages.dev/',
+        dashboardLabel: 'Dashboard',
+        apkUrl:
+            'https://github.com/Mahmoudfahmy616572/uni_path_germany/releases/download/v1.0.0/app-arm64-v8a-release.apk',
+        seniority: SeniorityLevel.senior,
+        techStack: const ['Flutter', 'Dart', 'Firebase', 'REST API'],
+      ),
       _Project(
         name: t.tr('project_ship_link'),
         description: t.tr('project_ship_link_desc'),
         imagePath: 'assets/images/ShipLink.png',
         githubUrl: 'https://github.com/Mahmoudfahmy616572/ship_link',
+        dashboardUrl: 'https://mahmoudfahmy616572.github.io/ship_link/',
+        apkUrl:
+            'https://github.com/Mahmoudfahmy616572/ship_link/releases/download/v1.0.0/app-arm64-v8a-user-release.apk',
+        driverApkUrl:
+            'https://github.com/Mahmoudfahmy616572/ship_link/releases/download/v1.0.0/app-arm64-v8a-driver-release.apk',
+        seniority: SeniorityLevel.senior,
+        techStack: const ['Flutter', 'Dart', 'Supabase', 'Paymob'],
       ),
       _Project(
         name: t.tr('project_sneakers'),
@@ -412,20 +918,30 @@ class _ProjectsSection extends StatelessWidget {
         imagePath: 'assets/images/Sneakers.png',
         githubUrl:
             'https://github.com/Mahmoudfahmy616572/Sneakers_eCommerce',
+        seniority: SeniorityLevel.junior,
+        techStack: const ['Flutter', 'Dart', 'REST API'],
       ),
       _Project(
         name: t.tr('project_soundora'),
         description: t.tr('project_soundora_desc'),
         imagePath: 'assets/images/SoundOra.png',
         githubUrl: 'https://github.com/Mahmoudfahmy616572/soundora',
+        seniority: SeniorityLevel.senior,
+        techStack: const ['Flutter', 'Dart', 'Firebase', 'Cloudinary'],
       ),
       _Project(
         name: t.tr('project_minishop'),
         description: t.tr('project_minishop_desc'),
         imagePath: 'assets/images/minishop.jpeg',
         githubUrl: 'https://github.com/Mahmoudfahmy616572/e_commerce',
+        seniority: SeniorityLevel.junior,
+        techStack: const ['Flutter', 'Dart', 'REST API'],
       ),
     ];
+
+    final projects = filterLevel == SeniorityLevel.all
+        ? allProjects
+        : allProjects.where((p) => p.seniority == filterLevel).toList();
 
     return AnimatedSection(
       index: 4,
@@ -434,25 +950,116 @@ class _ProjectsSection extends StatelessWidget {
         child: Column(
           children: [
             _SectionHeader(title: t.tr('projects')),
+            const SizedBox(height: 28),
+            _FilterChips(currentLevel: filterLevel),
             const SizedBox(height: 32),
-            Wrap(
-              spacing: 24,
-              runSpacing: 24,
-              alignment: WrapAlignment.center,
-              children: projects.asMap().entries.map((entry) {
-                return SizedBox(
-                  width: isWide ? 340 : double.infinity,
-                  child: _ProjectCard(
-                    project: entry.value,
-                    index: entry.key,
+            if (projects.isEmpty)
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: 40),
+                child: Text(
+                  filterLevel == SeniorityLevel.senior
+                      ? 'No senior projects yet'
+                      : filterLevel == SeniorityLevel.intermediate
+                          ? 'No intermediate projects yet'
+                          : 'No junior projects yet',
+                  style: theme.textTheme.bodyLarge?.copyWith(
+                    color:
+                        theme.colorScheme.onSurface.withValues(alpha: 0.5),
                   ),
-                );
-              }).toList(),
-            ),
+                ),
+              )
+            else
+              AnimatedSwitcher(
+                duration: const Duration(milliseconds: 300),
+                switchInCurve: Curves.easeOut,
+                switchOutCurve: Curves.easeIn,
+                child: Wrap(
+                  key: ValueKey(filterLevel),
+                  spacing: 24,
+                  runSpacing: 24,
+                  alignment: WrapAlignment.center,
+                  children: projects.asMap().entries.map((entry) {
+                    return SizedBox(
+                      width: isWide ? 340 : double.infinity,
+                      child: _ProjectCard(
+                        project: entry.value,
+                        index: entry.key,
+                      ),
+                    );
+                  }).toList(),
+                ),
+              ),
           ],
         ),
       ),
     );
+  }
+}
+
+class _FilterChips extends StatelessWidget {
+  final SeniorityLevel currentLevel;
+
+  const _FilterChips({required this.currentLevel});
+
+  @override
+  Widget build(BuildContext context) {
+    final t = AppLocalizations.of(context);
+    final theme = Theme.of(context);
+
+    final chips = [
+      (SeniorityLevel.all, t.tr('filter_all')),
+      (SeniorityLevel.junior, t.tr('filter_junior')),
+      (SeniorityLevel.intermediate, t.tr('filter_intermediate')),
+      (SeniorityLevel.senior, t.tr('filter_senior')),
+    ];
+
+    return Center(
+      child: SingleChildScrollView(
+        scrollDirection: Axis.horizontal,
+        padding: const EdgeInsets.symmetric(horizontal: 8),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: chips.map((c) {
+            final isSelected = c.$1 == currentLevel;
+            return Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 4),
+              child: ChoiceChip(
+                label: Text(c.$2),
+                selected: isSelected,
+                onSelected: (_) =>
+                    context.read<FilterProvider>().setLevel(c.$1),
+                selectedColor: _chipColor(c.$1, theme),
+                backgroundColor: theme.colorScheme.surfaceContainerHighest
+                    .withValues(alpha: 0.5),
+                labelStyle: TextStyle(
+                  color: isSelected
+                      ? theme.colorScheme.onPrimary
+                      : theme.colorScheme.onSurface,
+                  fontWeight:
+                      isSelected ? FontWeight.w600 : FontWeight.normal,
+                ),
+                side: BorderSide.none,
+                padding: const EdgeInsets.symmetric(
+                    horizontal: 16, vertical: 10),
+              ),
+            );
+          }).toList(),
+        ),
+      ),
+    );
+  }
+
+  Color _chipColor(SeniorityLevel level, ThemeData theme) {
+    switch (level) {
+      case SeniorityLevel.senior:
+        return const Color(0xFF7C4DFF);
+      case SeniorityLevel.intermediate:
+        return const Color(0xFFFF8A65);
+      case SeniorityLevel.junior:
+        return const Color(0xFF66BB6A);
+      case SeniorityLevel.all:
+        return theme.colorScheme.primary;
+    }
   }
 }
 
@@ -463,6 +1070,12 @@ class _Project {
   final String? playStoreUrl;
   final String? appStoreUrl;
   final String? githubUrl;
+  final String? dashboardUrl;
+  final String? dashboardLabel;
+  final String? apkUrl;
+  final String? driverApkUrl;
+  final SeniorityLevel seniority;
+  final List<String> techStack;
 
   const _Project({
     required this.name,
@@ -471,154 +1084,759 @@ class _Project {
     this.playStoreUrl,
     this.appStoreUrl,
     this.githubUrl,
+    this.dashboardUrl,
+    this.dashboardLabel,
+    this.apkUrl,
+    this.driverApkUrl,
+    this.seniority = SeniorityLevel.all,
+    this.techStack = const [],
   });
 }
 
-class _ProjectCard extends StatelessWidget {
+class _ProjectCard extends StatefulWidget {
   final _Project project;
   final int index;
 
   const _ProjectCard({required this.project, required this.index});
 
   @override
-  Widget build(BuildContext context) {
-    final t = AppLocalizations.of(context);
-    final theme = Theme.of(context);
-    return AnimatedStaggeredCard(
-      index: index,
-      child: Card(
-        clipBehavior: Clip.antiAlias,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Stack(
+  State<_ProjectCard> createState() => _ProjectCardState();
+}
+
+class _ProjectCardState extends State<_ProjectCard> {
+  bool _hovered = false;
+  double _tiltX = 0;
+  double _tiltY = 0;
+  final GlobalKey _cardKey = GlobalKey();
+
+  void _onMouseMove(PointerEvent event) {
+    final box = _cardKey.currentContext?.findRenderObject() as RenderBox?;
+    if (box == null) return;
+    final localPos = box.globalToLocal(event.position);
+    final size = box.size;
+    final cx = size.width / 2;
+    final cy = size.height / 2;
+    setState(() {
+      _tiltX = ((localPos.dy - cy) / cy).clamp(-1.0, 1.0);
+      _tiltY = ((localPos.dx - cx) / cx).clamp(-1.0, 1.0);
+    });
+  }
+
+  void _showDescriptionDialog(BuildContext ctx) {
+    final theme = Theme.of(ctx);
+    final bottom = MediaQuery.of(ctx).padding.bottom;
+    showGeneralDialog(
+      context: ctx,
+      barrierDismissible: true,
+      barrierLabel: '',
+      barrierColor: Colors.black54,
+      transitionDuration: const Duration(milliseconds: 300),
+      pageBuilder: (ctx, anim1, anim2) => Align(
+        alignment: Alignment.bottomCenter,
+        child: AnimatedBuilder(
+          animation: anim1,
+          builder: (ctx, child) => Transform.translate(
+            offset: Offset(0, (1 - anim1.value) * 300),
+            child: Opacity(opacity: anim1.value, child: child),
+          ),
+          child: Container(
+            width: double.infinity,
+            constraints: BoxConstraints(
+              maxHeight: MediaQuery.of(ctx).size.height * 0.6,
+            ),
+            margin: EdgeInsets.fromLTRB(16, 0, 16, 16 + bottom),
+            decoration: BoxDecoration(
+              color: theme.colorScheme.surface,
+              borderRadius: BorderRadius.circular(20),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withValues(alpha: 0.15),
+                  blurRadius: 30,
+                  offset: const Offset(0, 10),
+                ),
+              ],
+            ),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
               children: [
-                AspectRatio(
-                  aspectRatio: 16 / 9,
-                  child: Image.asset(
-                    project.imagePath,
-                    fit: BoxFit.cover,
-                    errorBuilder: (_, __, ___) => Container(
-                      color: theme.colorScheme.surfaceContainerHighest,
-                      child: const Center(
-                          child: Icon(Icons.image, size: 48)),
+                Container(
+                  margin: const EdgeInsets.only(top: 12),
+                  width: 40,
+                  height: 4,
+                  decoration: BoxDecoration(
+                    color: theme.colorScheme.onSurface.withValues(alpha: 0.15),
+                    borderRadius: BorderRadius.circular(2),
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(20, 16, 20, 0),
+                  child: Row(
+                    children: [
+                      Expanded(
+                        child: Text(
+                          widget.project.name,
+                          style: theme.textTheme.titleLarge?.copyWith(
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                      IconButton(
+                        icon: const Icon(Icons.close),
+                        onPressed: () => Navigator.of(ctx).pop(),
+                      ),
+                    ],
+                  ),
+                ),
+                const Divider(),
+                Flexible(
+                  child: SingleChildScrollView(
+                    padding: const EdgeInsets.fromLTRB(20, 8, 20, 20),
+                    child: Text(
+                      widget.project.description,
+                      style: theme.textTheme.bodyLarge?.copyWith(
+                        height: 1.7,
+                        color: theme.colorScheme.onSurface
+                            .withValues(alpha: 0.85),
+                      ),
                     ),
                   ),
                 ),
-                if (project.playStoreUrl != null)
-                  Positioned(
-                    top: 8,
-                    right: 8,
-                    child: Container(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 8, vertical: 4),
-                      decoration: BoxDecoration(
-                        color: Colors.green.withValues(alpha: 0.9),
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                      child: const Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Icon(Icons.check_circle,
-                              size: 14, color: Colors.white),
-                          SizedBox(width: 4),
-                          Text(
-                            'Published',
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 11,
-                              fontWeight: FontWeight.w600,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
               ],
             ),
-            Padding(
-              padding: const EdgeInsets.all(16),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    project.name,
-                    style: theme.textTheme.titleLarge?.copyWith(
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  const SizedBox(height: 8),
-                  Text(
-                    project.description,
-                    style: theme.textTheme.bodyMedium?.copyWith(
-                      color: theme.colorScheme.onSurface
-                          .withValues(alpha: 0.8),
-                      height: 1.5,
-                    ),
-                  ),
-                  const SizedBox(height: 16),
-                  if (project.playStoreUrl != null) ...[
-                    Row(
-                      children: [
-                        Icon(Icons.store,
-                            size: 16,
-                            color: theme.colorScheme.primary),
-                        const SizedBox(width: 6),
-                        Text(
-                          t.tr('lives_on'),
-                          style: theme.textTheme.labelMedium?.copyWith(
-                            color: theme.colorScheme.primary,
-                          ),
+          ),
+        ),
+      ),
+      transitionBuilder: (ctx, anim1, anim2, child) => child,
+    );
+  }
+
+  void _showImageDialog(BuildContext ctx) {
+    showGeneralDialog(
+      context: ctx,
+      barrierDismissible: true,
+      barrierLabel: '',
+      barrierColor: Colors.black87,
+      transitionDuration: const Duration(milliseconds: 300),
+      pageBuilder: (ctx, anim1, anim2) => Scaffold(
+        backgroundColor: Colors.transparent,
+        appBar: AppBar(
+          backgroundColor: Colors.black87,
+          elevation: 0,
+          leading: IconButton(
+            icon: const Icon(Icons.close, color: Colors.white),
+            onPressed: () => Navigator.of(ctx).pop(),
+          ),
+          title: Text(
+            widget.project.name,
+            style: const TextStyle(color: Colors.white),
+          ),
+        ),
+        body: InteractiveViewer(
+          child: Center(
+            child: Image.asset(
+              widget.project.imagePath,
+              fit: BoxFit.contain,
+              errorBuilder: (_, __, ___) => const Icon(
+                  Icons.broken_image, color: Colors.white, size: 64),
+            ),
+          ),
+        ),
+      ),
+      transitionBuilder: (ctx, anim1, anim2, child) {
+        return ScaleTransition(
+          scale: CurvedAnimation(parent: anim1, curve: Curves.easeOutBack),
+          child: FadeTransition(opacity: anim1, child: child),
+        );
+      },
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final t = AppLocalizations.of(context);
+    final theme = Theme.of(context);
+    return MouseRegion(
+      onHover: _onMouseMove,
+      onEnter: (_) => setState(() => _hovered = true),
+      onExit: (_) => setState(() {
+        _hovered = false;
+        _tiltX = 0;
+        _tiltY = 0;
+      }),
+      child: AnimatedStaggeredCard(
+        index: widget.index,
+        child: AnimatedContainer(
+          duration: const Duration(milliseconds: 250),
+          curve: Curves.easeOut,
+          child: Transform(
+            key: _cardKey,
+            alignment: Alignment.center,
+            transform: Matrix4.identity()
+              ..setEntry(3, 2, 0.001)
+              ..rotateX(-_tiltX * 0.04)
+              ..rotateY(_tiltY * 0.04),
+            child: Card(
+              elevation: _hovered ? 8 : 1,
+            shadowColor: theme.colorScheme.primary.withValues(alpha: 0.3),
+            clipBehavior: Clip.antiAlias,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                GestureDetector(
+                  onTap: () => _showImageDialog(context),
+                  child: Stack(
+                    children: [
+                      ClipRRect(
+                        child: Stack(
+                          children: [
+                            _ShimmerBox(height: 200),
+                            Image.asset(
+                              widget.project.imagePath,
+                              cacheWidth: 680,
+                              errorBuilder: (_, __, ___) => const Center(
+                                  child: Icon(Icons.image, size: 48)),
+                              frameBuilder: (ctx, child, frame, wasSync) {
+                                if (wasSync || frame != null) return child;
+                                return const SizedBox.shrink();
+                              },
+                            ),
+                          ],
                         ),
-                      ],
-                    ),
-                    const SizedBox(height: 8),
-                    Row(
-                      children: [
-                        Expanded(
-                          child: _StoreBadge(
-                            label: 'Google Play',
-                            icon: Icons.play_circle_outline,
-                            onTap: () => launchUrl(
-                                Uri.parse(project.playStoreUrl!)),
-                          ),
-                        ),
-                        if (project.appStoreUrl != null)
-                          const SizedBox(width: 8),
-                        if (project.appStoreUrl != null)
-                          Expanded(
-                            child: _StoreBadge(
-                              label: 'App Store',
-                              icon: Icons.apple,
-                              onTap: () => launchUrl(
-                                  Uri.parse(project.appStoreUrl!)),
+                      ),
+                      Positioned(
+                        top: 8,
+                        right: 8,
+                        child: _ImageExpandIcon(),
+                      ),
+                      if (widget.project.playStoreUrl != null)
+                        Positioned(
+                          top: 8,
+                          left: 8,
+                          child: Container(
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 8, vertical: 4),
+                            decoration: BoxDecoration(
+                              color: Colors.green.withValues(alpha: 0.9),
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                            child: const Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Icon(Icons.check_circle,
+                                    size: 14, color: Colors.white),
+                                SizedBox(width: 4),
+                                Text(
+                                  'Published',
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 11,
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                                ),
+                              ],
                             ),
                           ),
+                        ),
+                    ],
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(16),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Expanded(
+                            child: Text(
+                              widget.project.name,
+                              style: theme.textTheme.titleLarge?.copyWith(
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ),
+                          if (widget.project.seniority != SeniorityLevel.all)
+                            Padding(
+                              padding: const EdgeInsets.only(left: 8),
+                              child: _SeniorityBadge(
+                                  level: widget.project.seniority),
+                            ),
+                        ],
+                      ),
+                      const SizedBox(height: 8),
+                      Text(
+                        widget.project.description,
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
+                        style: theme.textTheme.bodyMedium?.copyWith(
+                          color: theme.colorScheme.onSurface
+                              .withValues(alpha: 0.8),
+                          height: 1.5,
+                        ),
+                      ),
+                      if (widget.project.description.isNotEmpty)
+                        Padding(
+                          padding: const EdgeInsets.only(top: 4),
+                          child: GestureDetector(
+                            onTap: () => _showDescriptionDialog(context),
+                            child: Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Text(
+                                  'Show more',
+                                  style: theme.textTheme.labelMedium?.copyWith(
+                                    color: theme.colorScheme.primary,
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                                ),
+                                const SizedBox(width: 2),
+                                Icon(
+                                  Icons.expand_more,
+                                  size: 16,
+                                  color: theme.colorScheme.primary,
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      if (widget.project.techStack.isNotEmpty) ...[
+                        const SizedBox(height: 12),
+                        Wrap(
+                          spacing: 6,
+                          runSpacing: 4,
+                          children: widget.project.techStack.map((tech) {
+                            return Container(
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 8, vertical: 3),
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(10),
+                                color: theme.colorScheme.primary
+                                    .withValues(alpha: 0.1),
+                              ),
+                              child: Text(
+                                tech,
+                                style: theme.textTheme.labelSmall?.copyWith(
+                                  color: theme.colorScheme.primary,
+                                  fontWeight: FontWeight.w500,
+                                  fontSize: 11,
+                                ),
+                              ),
+                            );
+                          }).toList(),
+                        ),
+                      ],
+                      const SizedBox(height: 16),
+                      if (widget.project.playStoreUrl != null) ...[
+                        Row(
+                          children: [
+                            Icon(Icons.store,
+                                size: 16,
+                                color: theme.colorScheme.primary),
+                            const SizedBox(width: 6),
+                            Text(
+                              t.tr('lives_on'),
+                              style: theme.textTheme.labelMedium?.copyWith(
+                                color: theme.colorScheme.primary,
+                              ),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: 8),
+                        Row(
+                          children: [
+                            Expanded(
+                              child: _StoreBadge(
+                                label: 'Google Play',
+                                icon: Icons.play_circle_outline,
+                                onTap: () => launchUrl(
+                                    Uri.parse(widget.project.playStoreUrl!)),
+                              ),
+                            ),
+                            if (widget.project.appStoreUrl != null)
+                              const SizedBox(width: 8),
+                            if (widget.project.appStoreUrl != null)
+                              Expanded(
+                                child: _StoreBadge(
+                                  label: 'App Store',
+                                  icon: Icons.apple,
+                                  onTap: () => launchUrl(
+                                      Uri.parse(widget.project.appStoreUrl!)),
+                                ),
+                              ),
+                          ],
+                        ),
+                        const SizedBox(height: 8),
+                      ],
+                      if (widget.project.dashboardUrl != null ||
+                          widget.project.apkUrl != null ||
+                          widget.project.driverApkUrl != null) ...[
+                        Row(
+                          children: [
+                            if (widget.project.dashboardUrl != null)
+                              Expanded(
+                                child: _StoreBadge(
+                                  label: widget.project.dashboardLabel ?? 'Web App',
+                                  icon: Icons.language,
+                                  onTap: () => launchUrl(
+                                      Uri.parse(widget.project.dashboardUrl!)),
+                                ),
+                              ),
+                            if (widget.project.dashboardUrl != null &&
+                                widget.project.apkUrl != null)
+                              const SizedBox(width: 8),
+                            if (widget.project.apkUrl != null)
+                              Expanded(
+                                child: _StoreBadge(
+                                  label: 'User APK',
+                                  icon: Icons.download,
+                                  onTap: () => launchUrl(
+                                      Uri.parse(widget.project.apkUrl!)),
+                                ),
+                              ),
+                          ],
+                        ),
+                        if (widget.project.driverApkUrl != null) ...[
+                          const SizedBox(height: 8),
+                          Row(
+                            children: [
+                              Expanded(
+                                child: _StoreBadge(
+                                  label: 'Driver APK',
+                                  icon: Icons.download,
+                                  onTap: () => launchUrl(
+                                      Uri.parse(widget.project.driverApkUrl!)),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
+                        const SizedBox(height: 8),
+                      ],
+                      if (widget.project.githubUrl != null)
+                        Row(
+                          children: [
+                            Icon(Icons.code,
+                                size: 16,
+                                color: theme.colorScheme.onSurface
+                                    .withValues(alpha: 0.5)),
+                            const SizedBox(width: 6),
+                            TextButton.icon(
+                              onPressed: () => launchUrl(
+                                  Uri.parse(widget.project.githubUrl!)),
+                              icon: const Icon(Icons.open_in_new, size: 16),
+                              label: Text(t.tr('view_on_github')),
+                            ),
+                          ],
+                        ),
                       ],
                     ),
-                    const SizedBox(height: 8),
-                  ],
-                  Row(
-                    children: [
-                      Icon(Icons.code,
-                          size: 16,
-                          color: theme.colorScheme.onSurface
-                              .withValues(alpha: 0.5)),
-                      const SizedBox(width: 6),
-                      TextButton.icon(
-                        onPressed: () => launchUrl(
-                            Uri.parse(project.githubUrl!)),
-                        icon: const Icon(Icons.open_in_new, size: 16),
-                        label: Text(t.tr('view_on_github')),
-                      ),
-                    ],
                   ),
                 ],
               ),
             ),
-          ],
+          ),
         ),
       ),
+    );
+  }
+}
+
+class _ImageExpandIcon extends StatelessWidget {
+  const _ImageExpandIcon();
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.all(4),
+      decoration: BoxDecoration(
+        color: Colors.black.withValues(alpha: 0.4),
+        borderRadius: BorderRadius.circular(16),
+      ),
+      child: Icon(
+        Icons.fullscreen,
+        size: 18,
+        color: Colors.white.withValues(alpha: 0.9),
+      ),
+    );
+  }
+}
+
+class _FloatingWidget extends StatefulWidget {
+  final Widget child;
+  final double amplitude;
+  final double duration;
+
+  const _FloatingWidget({
+    required this.child,
+    this.amplitude = 8,
+    this.duration = 3,
+  });
+
+  @override
+  State<_FloatingWidget> createState() => _FloatingWidgetState();
+}
+
+class _FloatingWidgetState extends State<_FloatingWidget>
+    with SingleTickerProviderStateMixin {
+  late final AnimationController _controller;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = AnimationController(
+      vsync: this,
+      duration: Duration(seconds: widget.duration.toInt()),
+    )..repeat(reverse: true);
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return AnimatedBuilder(
+      animation: _controller,
+      builder: (context, child) {
+        return Transform.translate(
+          offset: Offset(0, sin(_controller.value * pi) * widget.amplitude),
+          child: child,
+        );
+      },
+      child: widget.child,
+    );
+  }
+}
+
+class _GradientText extends StatefulWidget {
+  final String text;
+  final TextStyle? style;
+
+  const _GradientText({required this.text, this.style});
+
+  @override
+  State<_GradientText> createState() => _GradientTextState();
+}
+
+class _GradientTextState extends State<_GradientText>
+    with SingleTickerProviderStateMixin {
+  late final AnimationController _controller;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = AnimationController(
+      vsync: this,
+      duration: const Duration(seconds: 4),
+    )..repeat();
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    return AnimatedBuilder(
+      animation: _controller,
+      builder: (context, _) {
+        return ShaderMask(
+          shaderCallback: (bounds) {
+            return LinearGradient(
+              colors: [
+                theme.colorScheme.primary,
+                theme.colorScheme.tertiary,
+                theme.colorScheme.primary,
+              ],
+              stops: [
+                (_controller.value - 0.3).clamp(0.0, 1.0),
+                _controller.value.clamp(0.0, 1.0),
+                (_controller.value + 0.3).clamp(0.0, 1.0),
+              ],
+            ).createShader(bounds);
+          },
+          child: Text(
+            widget.text,
+            style: widget.style?.copyWith(color: Colors.white),
+          ),
+        );
+      },
+    );
+  }
+}
+
+class _TypewriterText extends StatefulWidget {
+  final String text;
+  final TextStyle? style;
+
+  const _TypewriterText({super.key, required this.text, this.style});
+
+  @override
+  State<_TypewriterText> createState() => _TypewriterTextState();
+}
+
+class _TypewriterTextState extends State<_TypewriterText>
+    with SingleTickerProviderStateMixin {
+  late final AnimationController _controller;
+  late final Animation<int> _charCount;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = AnimationController(
+      vsync: this,
+      duration: Duration(milliseconds: 50 * widget.text.length),
+    );
+    _charCount = IntTween(begin: 0, end: widget.text.length).animate(
+      CurvedAnimation(parent: _controller, curve: Curves.linear),
+    );
+    Future.delayed(const Duration(milliseconds: 600), () {
+      if (mounted) _controller.forward();
+    });
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return AnimatedBuilder(
+      animation: _charCount,
+      builder: (context, _) {
+        final visible = widget.text.substring(0, _charCount.value);
+        return Text(
+          visible + (_charCount.value < widget.text.length ? '▎' : ''),
+          style: widget.style,
+        );
+      },
+    );
+  }
+}
+
+class _PulseRing extends StatefulWidget {
+  final Color color;
+  final int delay;
+
+  const _PulseRing({required this.color, this.delay = 0});
+
+  @override
+  State<_PulseRing> createState() => _PulseRingState();
+}
+
+class _PulseRingState extends State<_PulseRing>
+    with SingleTickerProviderStateMixin {
+  late final AnimationController _controller;
+  late final Animation<double> _scale;
+  late final Animation<double> _opacity;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = AnimationController(
+      vsync: this,
+      duration: const Duration(seconds: 2),
+    );
+    Future.delayed(Duration(seconds: widget.delay), () {
+      if (mounted) _controller.repeat(reverse: true);
+    });
+    _scale = Tween<double>(begin: 1.0, end: 1.25).animate(
+      CurvedAnimation(parent: _controller, curve: Curves.easeInOutSine),
+    );
+    _opacity = Tween<double>(begin: 0.5, end: 0.0).animate(
+      CurvedAnimation(parent: _controller, curve: Curves.easeInOutSine),
+    );
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return AnimatedBuilder(
+      animation: _controller,
+      builder: (context, _) {
+        return Transform.scale(
+          scale: _scale.value,
+          child: Container(
+            width: 146,
+            height: 146,
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              border: Border.all(
+                color: widget.color.withValues(alpha: _opacity.value),
+                width: 2.5,
+              ),
+            ),
+          ),
+        );
+      },
+    );
+  }
+}
+
+class _AnimatedChip extends StatefulWidget {
+  final Widget child;
+  final int index;
+  final int baseDelay;
+
+  const _AnimatedChip({
+    required this.child,
+    this.index = 0,
+    this.baseDelay = 350,
+  });
+
+  @override
+  State<_AnimatedChip> createState() => _AnimatedChipState();
+}
+
+class _AnimatedChipState extends State<_AnimatedChip>
+    with SingleTickerProviderStateMixin {
+  late final AnimationController _controller;
+  late final Animation<double> _anim;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 500),
+    );
+    _anim = CurvedAnimation(parent: _controller, curve: Curves.easeOutBack);
+    Future.delayed(
+        Duration(milliseconds: widget.baseDelay + 100 * widget.index), () {
+      if (mounted) _controller.forward();
+    });
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return AnimatedBuilder(
+      animation: _anim,
+      builder: (context, child) {
+        return Opacity(
+          opacity: _anim.value.clamp(0.0, 1.0),
+          child: Transform.scale(scale: _anim.value, child: child),
+        );
+      },
+      child: widget.child,
     );
   }
 }
@@ -667,6 +1885,195 @@ class _StoreBadge extends StatelessWidget {
   }
 }
 
+class _SeniorityBadge extends StatelessWidget {
+  final SeniorityLevel level;
+
+  const _SeniorityBadge({required this.level});
+
+  @override
+  Widget build(BuildContext context) {
+    final t = AppLocalizations.of(context);
+    final theme = Theme.of(context);
+    final label = switch (level) {
+      SeniorityLevel.junior => t.tr('filter_junior'),
+      SeniorityLevel.intermediate => t.tr('filter_intermediate'),
+      SeniorityLevel.senior => t.tr('filter_senior'),
+      _ => '',
+    };
+    final color = switch (level) {
+      SeniorityLevel.senior => const Color(0xFF7C4DFF),
+      SeniorityLevel.intermediate => const Color(0xFFFF8A65),
+      SeniorityLevel.junior => const Color(0xFF66BB6A),
+      _ => Colors.transparent,
+    };
+
+    if (level == SeniorityLevel.all) return const SizedBox.shrink();
+
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+      decoration: BoxDecoration(
+        color: color.withValues(alpha: 0.9),
+        borderRadius: BorderRadius.circular(12),
+        boxShadow: [
+          BoxShadow(
+            color: color.withValues(alpha: 0.3),
+            blurRadius: 6,
+            offset: const Offset(0, 2),
+          ),
+        ],
+      ),
+      child: Text(
+        label,
+        style: theme.textTheme.labelSmall?.copyWith(
+          color: Colors.white,
+          fontWeight: FontWeight.w700,
+          fontSize: 11,
+        ),
+      ),
+    );
+  }
+}
+
+class _SkillBar extends StatefulWidget {
+  final double value;
+  final int index;
+  final String label;
+  final IconData icon;
+
+  const _SkillBar({
+    required this.value,
+    required this.index,
+    required this.label,
+    required this.icon,
+  });
+
+  @override
+  State<_SkillBar> createState() => _SkillBarState();
+}
+
+class _SkillBarState extends State<_SkillBar>
+    with SingleTickerProviderStateMixin {
+  late final AnimationController _controller;
+  late final Animation<double> _anim;
+  ScrollPosition? _scrollPosition;
+  bool _visible = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 800),
+    );
+    _anim = CurvedAnimation(parent: _controller, curve: Curves.easeOutCubic);
+    WidgetsBinding.instance.addPostFrameCallback((_) => _checkVisibility());
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    final scrollable = Scrollable.maybeOf(context);
+    final newPosition = scrollable?.position;
+    if (newPosition != _scrollPosition) {
+      _scrollPosition?.removeListener(_onScroll);
+      _scrollPosition = newPosition;
+      newPosition?.addListener(_onScroll);
+    }
+  }
+
+  void _onScroll() {
+    _checkVisibility();
+  }
+
+  void _checkVisibility() {
+    if (!mounted) return;
+    final renderBox = context.findRenderObject() as RenderBox?;
+    if (renderBox == null) return;
+    final pos = renderBox.localToGlobal(Offset.zero);
+    final size = renderBox.size;
+    final scrollable = Scrollable.maybeOf(context);
+    final viewportHeight = scrollable?.context.size?.height ?? 600;
+    final isVisible = pos.dy < viewportHeight && pos.dy + size.height > 0;
+
+    if (isVisible && !_visible) {
+      _visible = true;
+      Future.delayed(Duration(milliseconds: 300 + 100 * widget.index), () {
+        if (mounted && _visible) _controller.forward(from: 0);
+      });
+    } else if (!isVisible && _visible) {
+      _visible = false;
+      _controller.reset();
+    }
+  }
+
+  @override
+  void dispose() {
+    _scrollPosition?.removeListener(_onScroll);
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    return AnimatedBuilder(
+      animation: _anim,
+      builder: (context, _) {
+        final currentPercent = (widget.value * _anim.value * 100).toInt();
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              children: [
+                Icon(widget.icon,
+                    size: 18, color: theme.colorScheme.primary),
+                const SizedBox(width: 8),
+                Text(
+                  widget.label,
+                  style: theme.textTheme.bodyMedium?.copyWith(
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+                const Spacer(),
+                Text(
+                  '$currentPercent%',
+                  style: theme.textTheme.labelSmall?.copyWith(
+                    color: theme.colorScheme.primary,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 6),
+            ClipRRect(
+              borderRadius: BorderRadius.circular(6),
+              child: Container(
+                height: 8,
+                color: theme.colorScheme.surfaceContainerHighest,
+                child: FractionallySizedBox(
+                  alignment: Alignment.centerLeft,
+                  widthFactor: widget.value * _anim.value,
+                  child: Container(
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(6),
+                      gradient: LinearGradient(
+                        colors: [
+                          theme.colorScheme.primary,
+                          theme.colorScheme.tertiary,
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ],
+        );
+      },
+    );
+  }
+}
+
 class _CVSection extends StatelessWidget {
   const _CVSection();
 
@@ -676,7 +2083,9 @@ class _CVSection extends StatelessWidget {
     final theme = Theme.of(context);
     return AnimatedSection(
       index: 5,
-      child: Container(
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 300),
+        curve: Curves.easeOut,
         width: double.infinity,
         decoration: BoxDecoration(
           gradient: LinearGradient(
@@ -702,9 +2111,7 @@ class _CVSection extends StatelessWidget {
             ),
             const SizedBox(height: 28),
             FilledButton.icon(
-              onPressed: () => launchUrl(Uri.parse(
-                'https://raw.githubusercontent.com/mahmoudfahmy616572/My_protfolio/gh-pages/assets/assets/pdfs/my_cv.pdf',
-              )),
+              onPressed: downloadCv,
               icon: const Icon(Icons.download),
               label: Text(t.tr('download_cv_btn')),
               style: FilledButton.styleFrom(
@@ -729,8 +2136,46 @@ class _CVSection extends StatelessWidget {
   }
 }
 
-class _ContactSection extends StatelessWidget {
-  const _ContactSection();
+class _ContactSection extends StatefulWidget {
+  @override
+  State<_ContactSection> createState() => _ContactSectionState();
+}
+
+class _ContactSectionState extends State<_ContactSection> {
+  final _formKey = GlobalKey<FormState>();
+  final _nameController = TextEditingController();
+  final _emailController = TextEditingController();
+  final _messageController = TextEditingController();
+  bool _sending = false;
+
+  @override
+  void dispose() {
+    _nameController.dispose();
+    _emailController.dispose();
+    _messageController.dispose();
+    super.dispose();
+  }
+
+  void _sendMessage() {
+    if (!_formKey.currentState!.validate()) return;
+    setState(() => _sending = true);
+    final subject = Uri.encodeComponent(
+        'Portfolio Contact from ${_nameController.text}');
+    final body = Uri.encodeComponent(
+      'Name: ${_nameController.text}\n'
+      'Email: ${_emailController.text}\n\n'
+      '${_messageController.text}',
+    );
+    launchUrl(Uri.parse('mailto:mahmoudfahmeyy@gmail.com?subject=$subject&body=$body'));
+    Future.delayed(const Duration(milliseconds: 600), () {
+      if (!mounted) return;
+      setState(() => _sending = false);
+      _formKey.currentState?.reset();
+      _nameController.clear();
+      _emailController.clear();
+      _messageController.clear();
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -752,34 +2197,169 @@ class _ContactSection extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 28),
+            ConstrainedBox(
+              constraints: const BoxConstraints(maxWidth: 500),
+              child: Form(
+                key: _formKey,
+                child: Column(
+                  children: [
+                    TextFormField(
+                      controller: _nameController,
+                      decoration: InputDecoration(
+                        labelText: t.tr('form_name'),
+                        prefixIcon: const Icon(Icons.person_outline),
+                        border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(12)),
+                      ),
+                      validator: (v) =>
+                          v == null || v.trim().isEmpty ? 'Required' : null,
+                    ),
+                    const SizedBox(height: 14),
+                    TextFormField(
+                      controller: _emailController,
+                      keyboardType: TextInputType.emailAddress,
+                      decoration: InputDecoration(
+                        labelText: t.tr('form_email'),
+                        prefixIcon: const Icon(Icons.email_outlined),
+                        border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(12)),
+                      ),
+                      validator: (v) {
+                        if (v == null || v.trim().isEmpty) return 'Required';
+                        if (!v.contains('@')) return 'Invalid email';
+                        return null;
+                      },
+                    ),
+                    const SizedBox(height: 14),
+                    TextFormField(
+                      controller: _messageController,
+                      maxLines: 4,
+                      decoration: InputDecoration(
+                        labelText: t.tr('form_message'),
+                        alignLabelWithHint: true,
+                        prefixIcon: const Padding(
+                          padding: EdgeInsets.only(bottom: 64),
+                          child: Icon(Icons.message_outlined),
+                        ),
+                        border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(12)),
+                      ),
+                      validator: (v) =>
+                          v == null || v.trim().isEmpty ? 'Required' : null,
+                    ),
+                    const SizedBox(height: 20),
+                    FilledButton.icon(
+                      onPressed: _sending ? null : _sendMessage,
+                      icon: _sending
+                          ? const SizedBox(
+                              width: 18, height: 18,
+                              child: CircularProgressIndicator(
+                                  strokeWidth: 2, color: Colors.white))
+                          : const Icon(Icons.send),
+                      label: Text(_sending ? t.tr('form_sent') : t.tr('form_send')),
+                      style: FilledButton.styleFrom(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 32, vertical: 16),
+                        textStyle: const TextStyle(fontSize: 16),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+            const SizedBox(height: 32),
             Wrap(
               spacing: 20,
               runSpacing: 14,
               alignment: WrapAlignment.center,
               children: [
-                _ContactItem(
-                  icon: Icons.email_outlined,
-                  label: 'Email',
-                  value: 'mahmoudfahmy616572@gmail.com',
-                  url: 'mailto:mahmoudfahmy616572@gmail.com',
+                AnimatedStaggeredCard(
+                  index: 0,
+                  child: _ContactItem(
+                    icon: Icons.email_outlined,
+                    label: 'Email',
+                    value: 'mahmoudfahmeyy@gmail.com',
+                    url: 'mailto:mahmoudfahmeyy@gmail.com',
+                  ),
                 ),
-                _ContactItem(
-                  icon: Icons.code,
-                  label: 'GitHub',
-                  value: '@Mahmoudfahmy616572',
-                  url: 'https://github.com/Mahmoudfahmy616572',
+                AnimatedStaggeredCard(
+                  index: 1,
+                  child: _ContactItem(
+                    icon: Icons.code,
+                    label: 'GitHub',
+                    value: '@Mahmoudfahmy616572',
+                    url: 'https://github.com/Mahmoudfahmy616572',
+                  ),
                 ),
-                _ContactItem(
-                  icon: Icons.link,
-                  label: 'LinkedIn',
-                  value: 'Mahmoud Fahmy',
-                  url: 'https://linkedin.com/in/mahmoud__fahmy',
+                AnimatedStaggeredCard(
+                  index: 2,
+                  child: _ContactItem(
+                    icon: Icons.link,
+                    label: 'LinkedIn',
+                    value: 'Mahmoud Fahmy',
+                    url: 'https://linkedin.com/in/mahmoud__fahmy',
+                  ),
                 ),
               ],
             ),
           ],
         ),
       ),
+    );
+  }
+}
+
+class _ShimmerBox extends StatefulWidget {
+  final double height;
+  final BorderRadius? borderRadius;
+
+  const _ShimmerBox({this.height = 200, this.borderRadius});
+
+  @override
+  State<_ShimmerBox> createState() => _ShimmerBoxState();
+}
+
+class _ShimmerBoxState extends State<_ShimmerBox>
+    with SingleTickerProviderStateMixin {
+  late final AnimationController _controller;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 1200),
+    )..repeat();
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    return AnimatedBuilder(
+      animation: _controller,
+      builder: (context, _) {
+        return Container(
+          height: widget.height,
+          decoration: BoxDecoration(
+            borderRadius: widget.borderRadius,
+            gradient: LinearGradient(
+              begin: Alignment(-1 + _controller.value * 2, 0),
+              end: Alignment(1 + _controller.value * 2, 0),
+              colors: [
+                theme.colorScheme.surfaceContainerHighest,
+                theme.colorScheme.surfaceContainerHighest.withValues(alpha: 0.4),
+                theme.colorScheme.surfaceContainerHighest,
+              ],
+            ),
+          ),
+        );
+      },
     );
   }
 }
@@ -797,13 +2377,20 @@ class _SectionHeader extends StatelessWidget {
           fontWeight: FontWeight.w600,
         )),
         const SizedBox(height: 10),
-        Container(
-          width: 50,
-          height: 3,
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(2),
-            color: theme.colorScheme.primary,
-          ),
+        TweenAnimationBuilder<double>(
+          tween: Tween(begin: 0.0, end: 1.0),
+          duration: const Duration(milliseconds: 700),
+          curve: Curves.easeOutCubic,
+          builder: (context, value, _) {
+            return Container(
+              width: 50 * value,
+              height: 3,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(2),
+                color: theme.colorScheme.primary,
+              ),
+            );
+          },
         ),
       ],
     );

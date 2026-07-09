@@ -11,6 +11,7 @@ void main() {
       providers: [
         ChangeNotifierProvider(create: (_) => ThemeProvider()),
         ChangeNotifierProvider(create: (_) => LocaleProvider()),
+        ChangeNotifierProvider(create: (_) => FilterProvider()),
       ],
       child: const PortfolioApp(),
     ),
