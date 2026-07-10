@@ -892,10 +892,10 @@ class _ProjectsSection extends StatelessWidget {
         description: t.tr('project_unipath_desc'),
         imagePath: 'assets/images/UniPath.png',
         githubUrl: 'https://github.com/Mahmoudfahmy616572/uni_path_germany',
-        dashboardUrl: 'https://uni-path-dashboard.pages.dev/',
+        dashboardUrl: 'https://mahmoudfahmy616572.github.io/uni_path_germany/',
         dashboardLabel: 'Dashboard',
         apkUrl:
-            'https://github.com/Mahmoudfahmy616572/uni_path_germany/releases/download/v1.0.0/app-arm64-v8a-release.apk',
+            'https://github.com/Mahmoudfahmy616572/uni_path_germany/releases/download/v1.1.0/app-arm64-v8a-release.apk',
         seniority: SeniorityLevel.senior,
         techStack: const ['Flutter', 'Dart', 'Firebase', 'REST API'],
       ),
