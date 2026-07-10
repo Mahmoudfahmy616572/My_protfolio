@@ -17,7 +17,7 @@ jobs:
         with:
           channel: stable
 
-      - run: flutter build web --release
+      - run: flutter build web --release --base-href="/My_protfolio/"
 
       - uses: peaceiris/actions-gh-pages@v4
         with:
