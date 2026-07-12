@@ -363,6 +363,8 @@ class _HeaderSection extends StatelessWidget {
                 ],
               ),
             ),
+            const SizedBox(height: 16),
+            _OpenToWorkBadge(),
             const SizedBox(height: 28),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -1607,6 +1609,84 @@ class _FloatingWidgetState extends State<_FloatingWidget>
         );
       },
       child: widget.child,
+    );
+  }
+}
+
+class _OpenToWorkBadge extends StatefulWidget {
+  const _OpenToWorkBadge();
+
+  @override
+  State<_OpenToWorkBadge> createState() => _OpenToWorkBadgeState();
+}
+
+class _OpenToWorkBadgeState extends State<_OpenToWorkBadge>
+    with SingleTickerProviderStateMixin {
+  late final AnimationController _controller;
+  late final Animation<double> _opacity;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = AnimationController(
+      vsync: this,
+      duration: const Duration(seconds: 1),
+    )..repeat(reverse: true);
+    _opacity = Tween<double>(begin: 1.0, end: 0.3).animate(
+      CurvedAnimation(parent: _controller, curve: Curves.easeInOutSine),
+    );
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final t = AppLocalizations.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 7),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(20),
+        color: isDark
+            ? Colors.green.withValues(alpha: 0.15)
+            : Colors.green.withValues(alpha: 0.12),
+        border: Border.all(
+          color: Colors.green.withValues(alpha: 0.4),
+          width: 1,
+        ),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          AnimatedBuilder(
+            animation: _controller,
+            builder: (context, _) => Opacity(
+              opacity: _opacity.value,
+              child: Container(
+                width: 9,
+                height: 9,
+                decoration: const BoxDecoration(
+                  color: Colors.green,
+                  shape: BoxShape.circle,
+                ),
+              ),
+            ),
+          ),
+          const SizedBox(width: 8),
+          Text(
+            t.tr('open_to_work'),
+            style: theme.textTheme.bodyMedium?.copyWith(
+              color: Colors.green.shade700,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+        ],
+      ),
     );
   }
 }

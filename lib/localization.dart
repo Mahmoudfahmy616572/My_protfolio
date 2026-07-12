@@ -9,6 +9,7 @@ class AppLocalizations {
     'name': 'Mahmoud Fahmy',
     'title': 'Flutter Mobile Developer',
     'location': 'Cairo, Egypt',
+    'open_to_work': 'Open to Work',
     'about_me': 'About Me',
     'about_text':
         'I am a passionate Flutter mobile developer with experience in building cross-platform applications. I specialize in creating clean, efficient, and user-friendly mobile apps using Flutter and Dart. I have worked on various projects including e-commerce apps, audio streaming apps, and logistics solutions.',
@@ -66,6 +67,7 @@ class AppLocalizations {
     'name': 'محمود فهمي',
     'title': 'مطور تطبيقات فلاتر',
     'location': 'القاهرة، مصر',
+    'open_to_work': 'متاح للعمل',
     'about_me': 'عنّي',
     'about_text':
         'أنا مطور تطبيقات فلاتر شغوف ببناء تطبيقات متعددة المنصات. أتخصص في إنشاء تطبيقات جوال نظيفة وفعالة وسهلة الاستخدام باستخدام Flutter و Dart. عملت على مشاريع متنوعة تشمل تطبيقات التجارة الإلكترونية وتطبيقات بث الموسيقى وحلول الشحن واللوجستيات.',
