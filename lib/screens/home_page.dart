@@ -1095,6 +1095,17 @@ class _Project {
   });
 }
 
+({IconData icon, Color color})? _techIcon(String tech) {
+  switch (tech) {
+    case 'Firebase':
+      return (icon: Icons.local_fire_department, color: Colors.orange);
+    case 'Supabase':
+      return (icon: Icons.bolt, color: Colors.green);
+    default:
+      return null;
+  }
+}
+
 class _ProjectCard extends StatefulWidget {
   final _Project project;
   final int index;
@@ -1402,32 +1413,44 @@ class _ProjectCardState extends State<_ProjectCard> {
                             ),
                           ),
                         ),
-                      if (widget.project.techStack.isNotEmpty) ...[
-                        const SizedBox(height: 12),
-                        Wrap(
-                          spacing: 6,
-                          runSpacing: 4,
-                          children: widget.project.techStack.map((tech) {
-                            return Container(
-                              padding: const EdgeInsets.symmetric(
-                                  horizontal: 8, vertical: 3),
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(10),
-                                color: theme.colorScheme.primary
-                                    .withValues(alpha: 0.1),
-                              ),
-                              child: Text(
-                                tech,
-                                style: theme.textTheme.labelSmall?.copyWith(
-                                  color: theme.colorScheme.primary,
-                                  fontWeight: FontWeight.w500,
-                                  fontSize: 11,
-                                ),
-                              ),
-                            );
-                          }).toList(),
-                        ),
-                      ],
+                          if (widget.project.techStack.isNotEmpty) ...[
+                            const SizedBox(height: 12),
+                            Wrap(
+                              spacing: 6,
+                              runSpacing: 4,
+                              children: widget.project.techStack.map((tech) {
+                                final icon = _techIcon(tech);
+                                return Container(
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 8, vertical: 3),
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(10),
+                                    color: theme.colorScheme.primary
+                                        .withValues(alpha: 0.1),
+                                  ),
+                                  child: Row(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      if (icon != null) ...[
+                                        Icon(icon.icon,
+                                            size: 13, color: icon.color),
+                                        const SizedBox(width: 4),
+                                      ],
+                                      Text(
+                                        tech,
+                                        style: theme
+                                            .textTheme.labelSmall?.copyWith(
+                                          color: theme.colorScheme.primary,
+                                          fontWeight: FontWeight.w500,
+                                          fontSize: 11,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                );
+                              }).toList(),
+                            ),
+                          ],
                       const SizedBox(height: 16),
                       if (widget.project.playStoreUrl != null) ...[
                         Row(
