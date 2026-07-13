@@ -2380,7 +2380,8 @@ class _ContactSectionState extends State<_ContactSection> {
                 AnimatedStaggeredCard(
                   index: 0,
                   child: _ContactItem(
-                    icon: Icons.email_outlined,
+                    icon: Icon(Icons.email_outlined,
+                        color: theme.colorScheme.primary, size: 22),
                     label: 'Email',
                     value: 'mahmoudfahmeyy@gmail.com',
                     url: 'mailto:mahmoudfahmeyy@gmail.com',
@@ -2389,7 +2390,8 @@ class _ContactSectionState extends State<_ContactSection> {
                 AnimatedStaggeredCard(
                   index: 1,
                   child: _ContactItem(
-                    icon: Icons.code,
+                    icon: Icon(Icons.code,
+                        color: theme.colorScheme.primary, size: 22),
                     label: 'GitHub',
                     value: '@Mahmoudfahmy616572',
                     url: 'https://github.com/Mahmoudfahmy616572',
@@ -2398,7 +2400,8 @@ class _ContactSectionState extends State<_ContactSection> {
                 AnimatedStaggeredCard(
                   index: 2,
                   child: _ContactItem(
-                    icon: Icons.link,
+                    icon: Icon(Icons.link,
+                        color: theme.colorScheme.primary, size: 22),
                     label: 'LinkedIn',
                     value: 'Mahmoud Fahmy',
                     url: 'https://linkedin.com/in/mahmoud__fahmy',
@@ -2407,8 +2410,8 @@ class _ContactSectionState extends State<_ContactSection> {
                 AnimatedStaggeredCard(
                   index: 3,
                   child: _ContactItem(
-                    icon: FontAwesomeIcons.whatsapp,
-                    iconColor: const Color(0xFF25D366),
+                    icon: FaIcon(FontAwesomeIcons.whatsapp,
+                        color: const Color(0xFF25D366), size: 22),
                     label: t.tr('whatsapp'),
                     value: '+201013312546',
                     url: 'https://wa.me/201013312546',
@@ -2512,18 +2515,16 @@ class _SectionHeader extends StatelessWidget {
 }
 
 class _ContactItem extends StatelessWidget {
-  final IconData icon;
+  final Widget icon;
   final String label;
   final String value;
   final String url;
-  final Color? iconColor;
 
   const _ContactItem({
     required this.icon,
     required this.label,
     required this.value,
     required this.url,
-    this.iconColor,
   });
 
   @override
@@ -2541,7 +2542,7 @@ class _ContactItem extends StatelessWidget {
         child: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Icon(icon, color: iconColor ?? theme.colorScheme.primary, size: 22),
+            icon,
             const SizedBox(width: 12),
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
