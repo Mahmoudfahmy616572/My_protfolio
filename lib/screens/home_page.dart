@@ -371,21 +371,27 @@ class _HeaderSection extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 _SocialButton(
-                  icon: Icons.email_outlined,
+                  icon: const Icon(Icons.email_outlined),
                   label: 'Email',
                   url: 'mailto:mahmoudfahmeyy@gmail.com',
                 ),
                 const SizedBox(width: 12),
                 _SocialButton(
-                  icon: Icons.code,
+                  icon: const Icon(Icons.code),
                   label: 'GitHub',
                   url: 'https://github.com/Mahmoudfahmy616572',
                 ),
                 const SizedBox(width: 12),
                 _SocialButton(
-                  icon: Icons.link,
+                  icon: const Icon(Icons.link),
                   label: 'LinkedIn',
                   url: 'https://linkedin.com/in/mahmoud__fahmy',
+                ),
+                const SizedBox(width: 12),
+                _SocialButton(
+                  icon: FaIcon(FontAwesomeIcons.whatsapp),
+                  label: t.tr('whatsapp'),
+                  url: 'https://wa.me/201013312546',
                 ),
               ],
             ),
@@ -397,7 +403,7 @@ class _HeaderSection extends StatelessWidget {
 }
 
 class _SocialButton extends StatefulWidget {
-  final IconData icon;
+  final Widget icon;
   final String label;
   final String url;
 
@@ -461,11 +467,11 @@ class _SocialButtonState extends State<_SocialButton> {
             scale: _hovered ? 1.15 : 1.0,
             duration: const Duration(milliseconds: 200),
             curve: Curves.easeOutBack,
-            child: Tooltip(
+              child: Tooltip(
               message: widget.label,
               child: IconButton.filled(
                 onPressed: () => launchUrl(Uri.parse(widget.url)),
-                icon: Icon(widget.icon),
+                icon: widget.icon,
               ),
             ),
           ),
