@@ -47,6 +47,7 @@ class AppLocalizations {
     'cv_subtitle':
         'Always up-to-date. Click below to get the latest version of my CV.',
     'download_cv_btn': 'Download CV (PDF)',
+    'whatsapp': 'WhatsApp',
     'cv_note':
         'Update your CV file in the GitHub repo and it\'s automatically reflected here.',
     'contact': 'Get In Touch',
@@ -104,6 +105,7 @@ class AppLocalizations {
     'download_cv': 'تحميل السيرة الذاتية',
     'cv_subtitle': 'دائماً محدثة. اضغط للتحميل للحصول على أحدث نسخة من سيرتي الذاتية.',
     'download_cv_btn': 'تحميل السيرة الذاتية (PDF)',
+    'whatsapp': 'واتساب',
     'cv_note': 'حدّث ملف الـ CV في مستودع جيت هاب وستظهر التغييرات تلقائياً هنا.',
     'contact': 'تواصل معي',
     'contact_subtitle': 'لا تتردد في التواصل للتعاون أو الفرص المتاحة!',

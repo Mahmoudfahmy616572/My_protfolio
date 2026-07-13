@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:math' show sin, pi;
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:http/http.dart' as http;
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -2403,6 +2404,16 @@ class _ContactSectionState extends State<_ContactSection> {
                     url: 'https://linkedin.com/in/mahmoud__fahmy',
                   ),
                 ),
+                AnimatedStaggeredCard(
+                  index: 3,
+                  child: _ContactItem(
+                    icon: FontAwesomeIcons.whatsapp,
+                    iconColor: const Color(0xFF25D366),
+                    label: t.tr('whatsapp'),
+                    value: '+201013312546',
+                    url: 'https://wa.me/201013312546',
+                  ),
+                ),
               ],
             ),
           ],
@@ -2505,12 +2516,14 @@ class _ContactItem extends StatelessWidget {
   final String label;
   final String value;
   final String url;
+  final Color? iconColor;
 
   const _ContactItem({
     required this.icon,
     required this.label,
     required this.value,
     required this.url,
+    this.iconColor,
   });
 
   @override
@@ -2528,7 +2541,7 @@ class _ContactItem extends StatelessWidget {
         child: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Icon(icon, color: theme.colorScheme.primary, size: 22),
+            Icon(icon, color: iconColor ?? theme.colorScheme.primary, size: 22),
             const SizedBox(width: 12),
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
