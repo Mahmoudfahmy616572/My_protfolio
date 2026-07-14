@@ -902,7 +902,9 @@ class _ProjectsSection extends StatelessWidget {
         imagePath: 'assets/images/UniPath.png',
         githubUrl: 'https://github.com/Mahmoudfahmy616572/uni_path_germany',
         dashboardUrl: 'https://mahmoudfahmy616572.github.io/uni_path_germany/',
-        dashboardLabel: 'Dashboard',
+        dashboardLabel: 'Student Panel',
+        adminDashboardUrl: 'https://mahmoudfahmy616572.github.io/uni-path-germany-dashboard/',
+        adminDashboardLabel: 'Admin Panel',
         apkUrl:
             'https://github.com/Mahmoudfahmy616572/uni_path_germany/releases/download/v1.1.0/app-arm64-v8a-release.apk',
         seniority: SeniorityLevel.senior,
@@ -1081,6 +1083,8 @@ class _Project {
   final String? githubUrl;
   final String? dashboardUrl;
   final String? dashboardLabel;
+  final String? adminDashboardUrl;
+  final String? adminDashboardLabel;
   final String? apkUrl;
   final String? driverApkUrl;
   final SeniorityLevel seniority;
@@ -1095,6 +1099,8 @@ class _Project {
     this.githubUrl,
     this.dashboardUrl,
     this.dashboardLabel,
+    this.adminDashboardUrl,
+    this.adminDashboardLabel,
     this.apkUrl,
     this.driverApkUrl,
     this.seniority = SeniorityLevel.all,
@@ -1501,6 +1507,7 @@ class _ProjectCardState extends State<_ProjectCard> {
                         const SizedBox(height: 8),
                       ],
                       if (widget.project.dashboardUrl != null ||
+                          widget.project.adminDashboardUrl != null ||
                           widget.project.apkUrl != null ||
                           widget.project.driverApkUrl != null) ...[
                         Row(
@@ -1515,6 +1522,19 @@ class _ProjectCardState extends State<_ProjectCard> {
                                 ),
                               ),
                             if (widget.project.dashboardUrl != null &&
+                                (widget.project.adminDashboardUrl != null ||
+                                    widget.project.apkUrl != null))
+                              const SizedBox(width: 8),
+                            if (widget.project.adminDashboardUrl != null)
+                              Expanded(
+                                child: _StoreBadge(
+                                  label: widget.project.adminDashboardLabel ?? 'Admin',
+                                  icon: Icons.admin_panel_settings,
+                                  onTap: () => launchUrl(
+                                      Uri.parse(widget.project.adminDashboardUrl!)),
+                                ),
+                              ),
+                            if (widget.project.adminDashboardUrl != null &&
                                 widget.project.apkUrl != null)
                               const SizedBox(width: 8),
                             if (widget.project.apkUrl != null)
