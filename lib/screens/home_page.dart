@@ -901,8 +901,6 @@ class _ProjectsSection extends StatelessWidget {
         description: t.tr('project_unipath_desc'),
         imagePath: 'assets/images/UniPath.png',
         githubUrl: 'https://github.com/Mahmoudfahmy616572/uni_path_germany',
-        dashboardUrl: 'https://mahmoudfahmy616572.github.io/uni_path_germany/',
-        dashboardLabel: 'Student Panel',
         adminDashboardUrl: 'https://mahmoudfahmy616572.github.io/uni-path-germany-dashboard/',
         adminDashboardLabel: 'Admin Panel',
         apkUrl:
