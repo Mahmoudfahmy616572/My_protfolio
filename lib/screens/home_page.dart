@@ -311,7 +311,7 @@ class _HeaderSection extends StatelessWidget {
                       radius: 68,
                       backgroundImage:
                           ResizeImage(
-                          const AssetImage('assets/images/profile.png'),
+                          const AssetImage('assets/images/profile.jpeg'),
                           width: 272),
                       backgroundColor: theme.colorScheme.primaryContainer,
                     ),
