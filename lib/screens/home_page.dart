@@ -914,6 +914,8 @@ class _ProjectsSection extends StatelessWidget {
         imagePath: 'assets/images/ShipLink.png',
         githubUrl: 'https://github.com/Mahmoudfahmy616572/ship_link',
         dashboardUrl: 'https://mahmoudfahmy616572.github.io/ship_link/',
+        adminDashboardUrl: 'https://mahmoudfahmy616572.github.io/ship_link/admin/',
+        adminDashboardLabel: 'Admin Panel',
         apkUrl:
             'https://github.com/Mahmoudfahmy616572/ship_link/releases/download/v1.0.0/app-arm64-v8a-user-release.apk',
         driverApkUrl:
