@@ -842,6 +842,7 @@ class _SkillsSection extends StatelessWidget {
       (t.tr('skill_flutter'), Icons.phone_android, 0.92),
       (t.tr('skill_dart'), Icons.code, 0.88),
       (t.tr('skill_firebase'), Icons.storage, 0.80),
+      (t.tr('skill_supabase'), Icons.bolt, 0.91),
       (t.tr('skill_rest_api'), Icons.api, 0.82),
       (t.tr('skill_git'), Icons.source, 0.85),
       (t.tr('skill_ui_ux'), Icons.palette, 0.75),
