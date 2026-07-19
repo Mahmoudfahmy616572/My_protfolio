@@ -993,7 +993,7 @@ class _ProjectsSection extends StatelessWidget {
                   children: projects.asMap().entries.map((entry) {
                     return SizedBox(
                       width: isWide ? 340 : double.infinity,
-                      height: isWide ? 480 : null,
+                      height: isWide ? 500 : null,
                       child: _ProjectCard(
                         project: entry.value,
                         index: entry.key,
