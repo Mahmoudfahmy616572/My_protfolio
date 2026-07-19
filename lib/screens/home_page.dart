@@ -993,6 +993,7 @@ class _ProjectsSection extends StatelessWidget {
                   children: projects.asMap().entries.map((entry) {
                     return SizedBox(
                       width: isWide ? 340 : double.infinity,
+                      height: isWide ? 480 : null,
                       child: _ProjectCard(
                         project: entry.value,
                         index: entry.key,
@@ -1309,7 +1310,9 @@ class _ProjectCardState extends State<_ProjectCard> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                GestureDetector(
+                SizedBox(
+                  height: 200,
+                  child: GestureDetector(
                   onTap: () => _showImageDialog(context),
                   child: Stack(
                     children: [
@@ -1367,13 +1370,15 @@ class _ProjectCardState extends State<_ProjectCard> {
                     ],
                   ),
                 ),
-                Padding(
-                  padding: const EdgeInsets.all(16),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Row(
-                        crossAxisAlignment: CrossAxisAlignment.center,
+                ),
+                Expanded(
+                  child: Padding(
+                    padding: const EdgeInsets.all(16),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
+                          crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
                           Expanded(
                             child: Text(
@@ -1392,41 +1397,48 @@ class _ProjectCardState extends State<_ProjectCard> {
                         ],
                       ),
                       const SizedBox(height: 8),
-                      Text(
-                        widget.project.description,
-                        maxLines: 2,
-                        overflow: TextOverflow.ellipsis,
-                        style: theme.textTheme.bodyMedium?.copyWith(
-                          color: theme.colorScheme.onSurface
-                              .withValues(alpha: 0.8),
-                          height: 1.5,
-                        ),
-                      ),
-                      if (widget.project.description.isNotEmpty)
-                        Padding(
-                          padding: const EdgeInsets.only(top: 4),
-                          child: GestureDetector(
-                            onTap: () => _showDescriptionDialog(context),
-                            child: Row(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                Text(
-                                  'Show more',
-                                  style: theme.textTheme.labelMedium?.copyWith(
-                                    color: theme.colorScheme.primary,
-                                    fontWeight: FontWeight.w600,
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              widget.project.description,
+                              maxLines: 2,
+                              overflow: TextOverflow.ellipsis,
+                              style: theme.textTheme.bodyMedium?.copyWith(
+                                color: theme.colorScheme.onSurface
+                                    .withValues(alpha: 0.8),
+                                height: 1.5,
+                              ),
+                            ),
+                            if (widget.project.description.isNotEmpty)
+                              Padding(
+                                padding: const EdgeInsets.only(top: 4),
+                                child: GestureDetector(
+                                  onTap: () => _showDescriptionDialog(context),
+                                  child: Row(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      Text(
+                                        'Show more',
+                                        style: theme.textTheme.labelMedium?.copyWith(
+                                          color: theme.colorScheme.primary,
+                                          fontWeight: FontWeight.w600,
+                                        ),
+                                      ),
+                                      const SizedBox(width: 2),
+                                      Icon(
+                                        Icons.expand_more,
+                                        size: 16,
+                                        color: theme.colorScheme.primary,
+                                      ),
+                                    ],
                                   ),
                                 ),
-                                const SizedBox(width: 2),
-                                Icon(
-                                  Icons.expand_more,
-                                  size: 16,
-                                  color: theme.colorScheme.primary,
-                                ),
-                              ],
-                            ),
-                          ),
+                              ),
+                          ],
                         ),
+                      ),
                           if (widget.project.techStack.isNotEmpty) ...[
                             const SizedBox(height: 12),
                             Wrap(
@@ -1585,9 +1597,10 @@ class _ProjectCardState extends State<_ProjectCard> {
                       ],
                     ),
                   ),
-                ],
-              ),
+                ),
+              ],
             ),
+          ),
           ),
         ),
       ),
