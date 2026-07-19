@@ -907,7 +907,7 @@ class _ProjectsSection extends StatelessWidget {
         apkUrl:
             'https://github.com/Mahmoudfahmy616572/uni-path-germany-dashboard/releases/download/v1.0.0/app-arm64-v8a-release.apk',
         seniority: SeniorityLevel.senior,
-        techStack: const ['Flutter', 'Dart', 'Firebase', 'REST API'],
+        techStack: const ['Flutter', 'Dart', 'Firebase', 'Supabase', 'REST API'],
       ),
       _Project(
         name: t.tr('project_ship_link'),
@@ -922,7 +922,7 @@ class _ProjectsSection extends StatelessWidget {
         driverApkUrl:
             'https://github.com/Mahmoudfahmy616572/ship_link/releases/download/v1.0.0/app-arm64-v8a-driver-release.apk',
         seniority: SeniorityLevel.senior,
-        techStack: const ['Flutter', 'Dart', 'Supabase', 'Paymob'],
+        techStack: const ['Flutter', 'Dart', 'Supabase', 'Firebase', 'Paymob'],
       ),
       _Project(
         name: t.tr('project_sneakers'),
