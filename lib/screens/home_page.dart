@@ -993,6 +993,7 @@ class _ProjectsSection extends StatelessWidget {
                   children: projects.asMap().entries.map((entry) {
                     return SizedBox(
                       width: isWide ? 340 : double.infinity,
+                      height: isWide ? 480 : null,
                       child: _ProjectCard(
                         project: entry.value,
                         index: entry.key,
@@ -1370,139 +1371,231 @@ class _ProjectCardState extends State<_ProjectCard> {
                   ),
                 ),
                 ),
-                Padding(
-                  padding: const EdgeInsets.all(12),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Row(
-                        crossAxisAlignment: CrossAxisAlignment.center,
+                Expanded(
+                  child: Padding(
+                    padding: const EdgeInsets.all(16),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Expanded(
-                          child: Text(
-                            widget.project.name,
-                            style: theme.textTheme.titleLarge?.copyWith(
-                              fontWeight: FontWeight.bold,
+                        Row(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Expanded(
+                            child: Text(
+                              widget.project.name,
+                              style: theme.textTheme.titleLarge?.copyWith(
+                                fontWeight: FontWeight.bold,
+                              ),
                             ),
                           ),
-                        ),
-                        if (widget.project.seniority != SeniorityLevel.all)
-                          Padding(
-                            padding: const EdgeInsets.only(left: 8),
-                            child: _SeniorityBadge(
-                                level: widget.project.seniority),
-                          ),
-                      ],
-                    ),
-                    const SizedBox(height: 6),
-                    GestureDetector(
-                      onTap: () => _showDescriptionDialog(context),
-                      child: Text(
-                        widget.project.description,
-                        maxLines: 2,
-                        overflow: TextOverflow.ellipsis,
-                        style: theme.textTheme.bodyMedium?.copyWith(
-                          color: theme.colorScheme.onSurface
-                              .withValues(alpha: 0.8),
-                          height: 1.5,
-                        ),
+                          if (widget.project.seniority != SeniorityLevel.all)
+                            Padding(
+                              padding: const EdgeInsets.only(left: 8),
+                              child: _SeniorityBadge(
+                                  level: widget.project.seniority),
+                            ),
+                        ],
                       ),
-                    ),
-                    if (widget.project.techStack.isNotEmpty) ...[
                       const SizedBox(height: 8),
-                      Wrap(
-                        spacing: 6,
-                        runSpacing: 4,
-                        children: widget.project.techStack.map((tech) {
-                          final icon = _techIcon(tech);
-                          return Container(
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 8, vertical: 3),
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(10),
-                              color: theme.colorScheme.primary
-                                  .withValues(alpha: 0.1),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              widget.project.description,
+                              maxLines: 2,
+                              overflow: TextOverflow.ellipsis,
+                              style: theme.textTheme.bodyMedium?.copyWith(
+                                color: theme.colorScheme.onSurface
+                                    .withValues(alpha: 0.8),
+                                height: 1.5,
+                              ),
                             ),
-                            child: Row(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                if (icon != null) ...[
-                                  Icon(icon.icon,
-                                      size: 13, color: icon.color),
-                                  const SizedBox(width: 4),
-                                ],
-                                Text(
-                                  tech,
-                                  style: theme
-                                      .textTheme.labelSmall?.copyWith(
-                                    color: theme.colorScheme.primary,
-                                    fontWeight: FontWeight.w500,
-                                    fontSize: 11,
+                            if (widget.project.description.isNotEmpty)
+                              Padding(
+                                padding: const EdgeInsets.only(top: 4),
+                                child: GestureDetector(
+                                  onTap: () => _showDescriptionDialog(context),
+                                  child: Row(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      Text(
+                                        'Show more',
+                                        style: theme.textTheme.labelMedium?.copyWith(
+                                          color: theme.colorScheme.primary,
+                                          fontWeight: FontWeight.w600,
+                                        ),
+                                      ),
+                                      const SizedBox(width: 2),
+                                      Icon(
+                                        Icons.expand_more,
+                                        size: 16,
+                                        color: theme.colorScheme.primary,
+                                      ),
+                                    ],
                                   ),
                                 ),
-                              ],
-                            ),
-                          );
-                        }).toList(),
+                              ),
+                          ],
+                        ),
                       ),
-                    ],
-                    const SizedBox(height: 10),
-                    Wrap(
-                      spacing: 6,
-                      runSpacing: 6,
-                      children: [
-                        if (widget.project.playStoreUrl != null)
-                          _StoreBadge(
-                            label: 'Google Play',
-                            icon: Icons.play_circle_outline,
-                            onTap: () => launchUrl(
-                                Uri.parse(widget.project.playStoreUrl!)),
+                          if (widget.project.techStack.isNotEmpty) ...[
+                            const SizedBox(height: 12),
+                            Wrap(
+                              spacing: 6,
+                              runSpacing: 4,
+                              children: widget.project.techStack.map((tech) {
+                                final icon = _techIcon(tech);
+                                return Container(
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 8, vertical: 3),
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(10),
+                                    color: theme.colorScheme.primary
+                                        .withValues(alpha: 0.1),
+                                  ),
+                                  child: Row(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      if (icon != null) ...[
+                                        Icon(icon.icon,
+                                            size: 13, color: icon.color),
+                                        const SizedBox(width: 4),
+                                      ],
+                                      Text(
+                                        tech,
+                                        style: theme
+                                            .textTheme.labelSmall?.copyWith(
+                                          color: theme.colorScheme.primary,
+                                          fontWeight: FontWeight.w500,
+                                          fontSize: 11,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                );
+                              }).toList(),
+                            ),
+                          ],
+                      const SizedBox(height: 16),
+                      if (widget.project.playStoreUrl != null) ...[
+                        Row(
+                          children: [
+                            Icon(Icons.store,
+                                size: 16,
+                                color: theme.colorScheme.primary),
+                            const SizedBox(width: 6),
+                            Text(
+                              t.tr('lives_on'),
+                              style: theme.textTheme.labelMedium?.copyWith(
+                                color: theme.colorScheme.primary,
+                              ),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: 8),
+                        Row(
+                          children: [
+                            Expanded(
+                              child: _StoreBadge(
+                                label: 'Google Play',
+                                icon: Icons.play_circle_outline,
+                                onTap: () => launchUrl(
+                                    Uri.parse(widget.project.playStoreUrl!)),
+                              ),
+                            ),
+                            if (widget.project.appStoreUrl != null)
+                              const SizedBox(width: 8),
+                            if (widget.project.appStoreUrl != null)
+                              Expanded(
+                                child: _StoreBadge(
+                                  label: 'App Store',
+                                  icon: Icons.apple,
+                                  onTap: () => launchUrl(
+                                      Uri.parse(widget.project.appStoreUrl!)),
+                                ),
+                              ),
+                          ],
+                        ),
+                        const SizedBox(height: 8),
+                      ],
+                      if (widget.project.dashboardUrl != null ||
+                          widget.project.adminDashboardUrl != null ||
+                          widget.project.apkUrl != null ||
+                          widget.project.driverApkUrl != null) ...[
+                        Row(
+                          children: [
+                            if (widget.project.dashboardUrl != null)
+                              Expanded(
+                                child: _StoreBadge(
+                                  label: widget.project.dashboardLabel ?? 'Web App',
+                                  icon: Icons.language,
+                                  onTap: () => launchUrl(
+                                      Uri.parse(widget.project.dashboardUrl!)),
+                                ),
+                              ),
+                            if (widget.project.dashboardUrl != null &&
+                                (widget.project.adminDashboardUrl != null ||
+                                    widget.project.apkUrl != null))
+                              const SizedBox(width: 8),
+                            if (widget.project.adminDashboardUrl != null)
+                              Expanded(
+                                child: _StoreBadge(
+                                  label: widget.project.adminDashboardLabel ?? 'Admin',
+                                  icon: Icons.admin_panel_settings,
+                                  onTap: () => launchUrl(
+                                      Uri.parse(widget.project.adminDashboardUrl!)),
+                                ),
+                              ),
+                            if (widget.project.adminDashboardUrl != null &&
+                                widget.project.apkUrl != null)
+                              const SizedBox(width: 8),
+                            if (widget.project.apkUrl != null)
+                              Expanded(
+                                child: _StoreBadge(
+                                  label: 'User APK',
+                                  icon: Icons.download,
+                                  onTap: () => launchUrl(
+                                      Uri.parse(widget.project.apkUrl!)),
+                                ),
+                              ),
+                          ],
+                        ),
+                        if (widget.project.driverApkUrl != null) ...[
+                          const SizedBox(height: 8),
+                          Row(
+                            children: [
+                              Expanded(
+                                child: _StoreBadge(
+                                  label: 'Driver APK',
+                                  icon: Icons.download,
+                                  onTap: () => launchUrl(
+                                      Uri.parse(widget.project.driverApkUrl!)),
+                                ),
+                              ),
+                            ],
                           ),
-                        if (widget.project.appStoreUrl != null)
-                          _StoreBadge(
-                            label: 'App Store',
-                            icon: Icons.apple,
-                            onTap: () => launchUrl(
-                                Uri.parse(widget.project.appStoreUrl!)),
-                          ),
-                        if (widget.project.dashboardUrl != null)
-                          _StoreBadge(
-                            label: widget.project.dashboardLabel ?? 'Web App',
-                            icon: Icons.language,
-                            onTap: () => launchUrl(
-                                Uri.parse(widget.project.dashboardUrl!)),
-                          ),
-                        if (widget.project.adminDashboardUrl != null)
-                          _StoreBadge(
-                            label: widget.project.adminDashboardLabel ?? 'Admin',
-                            icon: Icons.admin_panel_settings,
-                            onTap: () => launchUrl(
-                                Uri.parse(widget.project.adminDashboardUrl!)),
-                          ),
-                        if (widget.project.apkUrl != null)
-                          _StoreBadge(
-                            label: 'APK',
-                            icon: Icons.download,
-                            onTap: () => launchUrl(
-                                Uri.parse(widget.project.apkUrl!)),
-                          ),
-                        if (widget.project.driverApkUrl != null)
-                          _StoreBadge(
-                            label: 'Driver APK',
-                            icon: Icons.download,
-                            onTap: () => launchUrl(
-                                Uri.parse(widget.project.driverApkUrl!)),
-                          ),
-                        if (widget.project.githubUrl != null)
-                          _StoreBadge(
-                            label: t.tr('view_on_github'),
-                            icon: Icons.code,
-                            onTap: () => launchUrl(
-                                Uri.parse(widget.project.githubUrl!)),
-                          ),
+                        ],
+                        const SizedBox(height: 8),
+                      ],
+                      if (widget.project.githubUrl != null)
+                        Row(
+                          children: [
+                            Icon(Icons.code,
+                                size: 16,
+                                color: theme.colorScheme.onSurface
+                                    .withValues(alpha: 0.5)),
+                            const SizedBox(width: 6),
+                            TextButton.icon(
+                              onPressed: () => launchUrl(
+                                  Uri.parse(widget.project.githubUrl!)),
+                              icon: const Icon(Icons.open_in_new, size: 16),
+                              label: Text(t.tr('view_on_github')),
+                            ),
+                          ],
+                        ),
                       ],
                     ),
-                    ],
                   ),
                 ),
               ],
@@ -1910,7 +2003,7 @@ class _StoreBadge extends StatelessWidget {
       onTap: onTap,
       borderRadius: BorderRadius.circular(8),
       child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 5),
+        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(8),
           border: Border.all(color: theme.colorScheme.outlineVariant),
