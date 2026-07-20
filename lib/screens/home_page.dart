@@ -1309,7 +1309,9 @@ class _ProjectCardState extends State<_ProjectCard> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                GestureDetector(
+                SizedBox(
+                  width: double.infinity,
+                  child: GestureDetector(
                   onTap: () => _showImageDialog(context),
                   child: Stack(
                     children: [
@@ -1320,6 +1322,7 @@ class _ProjectCardState extends State<_ProjectCard> {
                             Image.asset(
                               widget.project.imagePath,
                               cacheWidth: 680,
+                              fit: BoxFit.fitWidth,
                               errorBuilder: (_, __, ___) => const Center(
                                   child: Icon(Icons.image, size: 48)),
                               frameBuilder: (ctx, child, frame, wasSync) {
@@ -1365,6 +1368,7 @@ class _ProjectCardState extends State<_ProjectCard> {
                           ),
                         ),
                     ],
+                  ),
                   ),
                 ),
                 Padding(
