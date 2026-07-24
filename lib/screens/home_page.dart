@@ -842,11 +842,69 @@ class _SkillsSection extends StatelessWidget {
     final skills = [
       (t.tr('skill_flutter'), Icons.phone_android, 0.92),
       (t.tr('skill_dart'), Icons.code, 0.88),
-      (t.tr('skill_firebase'), Icons.storage, 0.80),
       (t.tr('skill_supabase'), Icons.bolt, 0.91),
-      (t.tr('skill_rest_api'), Icons.api, 0.82),
+      (t.tr('skill_firebase'), Icons.storage, 0.80),
       (t.tr('skill_git'), Icons.source, 0.85),
-      (t.tr('skill_ui_ux'), Icons.palette, 0.75),
+    ];
+
+    final categories = [
+      (
+        t.tr('cat_architecture'),
+        Icons.architecture,
+        [
+          t.tr('skill_flutter'),
+          t.tr('skill_dart'),
+          t.tr('skill_oop'),
+          t.tr('skill_mvvm'),
+          t.tr('skill_bloc'),
+          t.tr('skill_provider'),
+        ],
+      ),
+      (
+        t.tr('cat_backend'),
+        Icons.dns,
+        [
+          t.tr('skill_firebase'),
+          t.tr('skill_supabase'),
+          'Cloud Functions',
+          'Firestore',
+          'Realtime DB',
+          'Local Storage',
+        ],
+      ),
+      (
+        t.tr('cat_apis'),
+        Icons.payment,
+        [
+          t.tr('skill_rest_api'),
+          t.tr('skill_stripe'),
+          'Stripe Connect',
+          t.tr('skill_paymob'),
+        ],
+      ),
+      (
+        t.tr('cat_networking'),
+        Icons.wifi,
+        [
+          'TCP/IP',
+          'OSI Model',
+          'Routing & Switching',
+          'Network Security',
+        ],
+      ),
+      (
+        t.tr('cat_tools'),
+        Icons.build,
+        [
+          t.tr('skill_git'),
+          'GitHub',
+          'GitLab',
+          'Postman',
+          t.tr('skill_google_maps'),
+          'Android Studio',
+          t.tr('skill_ui_ux'),
+        ],
+      ),
     ];
 
     return AnimatedSection(
@@ -862,22 +920,79 @@ class _SkillsSection extends StatelessWidget {
             _SectionHeader(title: t.tr('skills')),
             const SizedBox(height: 28),
             ConstrainedBox(
-              constraints: const BoxConstraints(maxWidth: 520),
+              constraints: const BoxConstraints(maxWidth: 600),
               child: Column(
-                children: skills.asMap().entries.map((entry) {
-                  return _AnimatedChip(
-                    index: entry.key,
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 4),
-                      child: _SkillBar(
-                        value: entry.value.$3,
-                        index: entry.key,
-                        label: entry.value.$1,
-                        icon: entry.value.$2,
+                children: [
+                  ...skills.asMap().entries.map((entry) {
+                    return _AnimatedChip(
+                      index: entry.key,
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 4),
+                        child: _SkillBar(
+                          value: entry.value.$3,
+                          index: entry.key,
+                          label: entry.value.$1,
+                          icon: entry.value.$2,
+                        ),
                       ),
-                    ),
-                  );
-                }).toList(),
+                    );
+                  }),
+                  const SizedBox(height: 32),
+                  ...categories.asMap().entries.map((catEntry) {
+                    final cat = catEntry.value;
+                    return _AnimatedChip(
+                      index: skills.length + catEntry.key,
+                      child: Padding(
+                        padding: const EdgeInsets.only(bottom: 20),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Row(
+                              children: [
+                                Icon(cat.$2,
+                                    size: 16,
+                                    color: theme.colorScheme.primary),
+                                const SizedBox(width: 8),
+                                Text(
+                                  cat.$1,
+                                  style: theme.textTheme.titleSmall?.copyWith(
+                                    fontWeight: FontWeight.bold,
+                                    color: theme.colorScheme.onSurface,
+                                  ),
+                                ),
+                              ],
+                            ),
+                            const SizedBox(height: 10),
+                            Wrap(
+                              spacing: 8,
+                              runSpacing: 8,
+                              children: cat.$3.map((skill) {
+                                return Container(
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 12, vertical: 6),
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(20),
+                                    color: theme.colorScheme.surface,
+                                    border: Border.all(
+                                      color: theme.colorScheme.outlineVariant,
+                                    ),
+                                  ),
+                                  child: Text(
+                                    skill,
+                                    style: theme.textTheme.labelMedium?.copyWith(
+                                      color: theme.colorScheme.onSurface
+                                          .withValues(alpha: 0.8),
+                                    ),
+                                  ),
+                                );
+                              }).toList(),
+                            ),
+                          ],
+                        ),
+                      ),
+                    );
+                  }),
+                ],
               ),
             ),
           ],
