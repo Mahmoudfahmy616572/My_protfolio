@@ -1021,9 +1021,10 @@ class _ProjectsSection extends StatelessWidget {
         adminDashboardUrl: 'https://mahmoudfahmy616572.github.io/uni-path-germany-dashboard/',
         adminDashboardLabel: 'Admin Panel',
         apkUrl:
-            'https://github.com/Mahmoudfahmy616572/uni-path-germany-dashboard/releases/download/v1.0.0/app-arm64-v8a-release.apk',
+            'https://github.com/Mahmoudfahmy616572/uni-path-germany-dashboard/releases/download/v1.0.2/app-arm64-v8a-release.apk',
         seniority: SeniorityLevel.senior,
         techStack: const ['Flutter', 'Dart', 'Firebase', 'Supabase', 'REST API'],
+        liveDemoUrl: 'https://mahmoudfahmy616572.github.io/uni-path-germany-web/',
       ),
       _Project(
         name: t.tr('project_ship_link'),
