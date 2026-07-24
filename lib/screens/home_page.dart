@@ -1041,6 +1041,7 @@ class _ProjectsSection extends StatelessWidget {
         seniority: SeniorityLevel.senior,
         techStack: const ['Flutter', 'Dart', 'Supabase', 'Firebase', 'Paymob'],
         liveDemoUrl: 'https://mahmoudfahmy616572.github.io/ship_link/',
+        driverLiveDemoUrl: 'https://mahmoudfahmy616572.github.io/ship_link/driver/',
       ),
       _Project(
         name: t.tr('project_sneakers'),
@@ -1207,6 +1208,7 @@ class _Project {
   final String? apkUrl;
   final String? driverApkUrl;
   final String? liveDemoUrl;
+  final String? driverLiveDemoUrl;
   final SeniorityLevel seniority;
   final List<String> techStack;
 
@@ -1224,6 +1226,7 @@ class _Project {
     this.apkUrl,
     this.driverApkUrl,
     this.liveDemoUrl,
+    this.driverLiveDemoUrl,
     this.seniority = SeniorityLevel.all,
     this.techStack = const [],
   });
@@ -1601,6 +1604,24 @@ class _ProjectCardState extends State<_ProjectCard> {
                                 builder: (_) => DemoScreen(
                                   url: widget.project.liveDemoUrl!,
                                   title: widget.project.name,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                      if (widget.project.driverLiveDemoUrl != null) ...[
+                        const SizedBox(height: 8),
+                        SizedBox(
+                          width: double.infinity,
+                          child: _StoreBadge(
+                            label: t.tr('driver_demo'),
+                            icon: Icons.local_shipping_outlined,
+                            onTap: () => Navigator.of(context).push(
+                              MaterialPageRoute(
+                                builder: (_) => DemoScreen(
+                                  url: widget.project.driverLiveDemoUrl!,
+                                  title: '${widget.project.name} Driver',
                                 ),
                               ),
                             ),
