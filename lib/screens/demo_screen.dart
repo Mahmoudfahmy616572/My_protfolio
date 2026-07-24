@@ -1,4 +1,5 @@
 import 'dart:html' as html;
+import 'dart:math';
 import 'dart:ui_web' as ui_web;
 import 'package:flutter/material.dart';
 import 'package:portfolio/localization.dart';
@@ -20,6 +21,21 @@ class DemoScreen extends StatefulWidget {
 class _DemoScreenState extends State<DemoScreen> {
   late final String _viewType;
 
+  // Realistic Android phone viewport (Pixel 7 / most common)
+  static const double _viewportW = 412.0;
+  static const double _viewportH = 915.0;
+
+  // Frame decorations
+  static const double _borderW = 4.0;
+  static const double _notchH = 44.0;
+  static const double _homeBarH = 12.0;
+  static const double _homeBarMargin = 8.0;
+
+  // Full frame size including border + notch + home bar
+  static final double _frameW = _viewportW + _borderW * 2;
+  static final double _frameH =
+      _viewportH + _borderW * 2 + _notchH + _homeBarH + _homeBarMargin;
+
   @override
   void initState() {
     super.initState();
@@ -28,10 +44,10 @@ class _DemoScreenState extends State<DemoScreen> {
       final iframe = html.IFrameElement()
         ..src = widget.url
         ..style.border = 'none'
-        ..style.width = '100%'
-        ..style.height = '100%'
         ..style.margin = '0'
         ..style.padding = '0'
+        ..style.width = '${_viewportW.round()}px'
+        ..style.height = '${_viewportH.round()}px'
         ..allow =
             'accelerometer; camera; geolocation; microphone; clipboard-write'
         ..setAttribute('loading', 'eager');
@@ -43,8 +59,6 @@ class _DemoScreenState extends State<DemoScreen> {
   Widget build(BuildContext context) {
     final t = AppLocalizations.of(context);
     final theme = Theme.of(context);
-    final screenW = MediaQuery.of(context).size.width;
-    final isWide = screenW > 800;
 
     return Scaffold(
       backgroundColor: theme.scaffoldBackgroundColor,
@@ -57,42 +71,25 @@ class _DemoScreenState extends State<DemoScreen> {
                 final availW = constraints.maxWidth;
                 final availH = constraints.maxHeight;
 
-                double frameW;
-                double frameH;
-
-                if (isWide) {
-                  frameH = availH - 24;
-                  frameW = frameH * 9 / 19.5;
-                  if (frameW > 400) {
-                    frameW = 400;
-                    frameH = frameW * 19.5 / 9;
-                  }
-                } else {
-                  frameW = availW * 0.92;
-                  frameH = frameW * 19.5 / 9;
-                  if (frameH > availH - 16) {
-                    frameH = availH - 16;
-                    frameW = frameH * 9 / 19.5;
-                  }
-                }
-
-                final borderWidth = 4.0;
-                final notchH = 44.0;
-                final homeBarH = 12.0;
-                final iframeW = frameW - borderWidth * 2;
-                final iframeH = frameH - borderWidth * 2 - notchH - homeBarH;
+                // Scale factor: fit frame in available space, never upscale
+                final scale = min(availW / _frameW, min(availH / _frameH, 1.0));
+                final displayW = _frameW * scale;
+                final displayH = _frameH * scale;
 
                 return Center(
                   child: SizedBox(
-                    width: frameW,
-                    height: frameH,
-                    child: _PhoneFrame(
-                      theme: theme,
-                      notchHeight: notchH,
-                      homeBarHeight: homeBarH,
-                      viewType: _viewType,
-                      iframeWidth: iframeW,
-                      iframeHeight: iframeH,
+                    width: displayW,
+                    height: displayH,
+                    child: FittedBox(
+                      fit: BoxFit.contain,
+                      child: SizedBox(
+                        width: _frameW,
+                        height: _frameH,
+                        child: _PhoneFrame(
+                          theme: theme,
+                          viewType: _viewType,
+                        ),
+                      ),
                     ),
                   ),
                 );
@@ -186,30 +183,25 @@ class _DemoScreenState extends State<DemoScreen> {
 
 class _PhoneFrame extends StatelessWidget {
   final ThemeData theme;
-  final double notchHeight;
-  final double homeBarHeight;
   final String viewType;
-  final double iframeWidth;
-  final double iframeHeight;
 
   const _PhoneFrame({
     required this.theme,
-    required this.notchHeight,
-    required this.homeBarHeight,
     required this.viewType,
-    required this.iframeWidth,
-    required this.iframeHeight,
   });
 
   @override
   Widget build(BuildContext context) {
     final isDark = theme.brightness == Brightness.dark;
-    final frameColor = isDark ? const Color(0xFF1A1A2E) : const Color(0xFFF0F0F0);
+    final frameColor =
+        isDark ? const Color(0xFF1A1A2E) : const Color(0xFFF0F0F0);
     final borderColor = isDark ? Colors.grey.shade800 : Colors.grey.shade400;
     final notchColor = isDark ? Colors.black : Colors.grey.shade300;
     final barColor = isDark ? Colors.grey.shade600 : Colors.grey.shade400;
 
     return Container(
+      width: _DemoScreenState._frameW,
+      height: _DemoScreenState._frameH,
       decoration: BoxDecoration(
         color: frameColor,
         borderRadius: BorderRadius.circular(44),
@@ -230,7 +222,7 @@ class _PhoneFrame extends StatelessWidget {
       child: Column(
         children: [
           Container(
-            height: notchHeight,
+            height: _DemoScreenState._notchH,
             decoration: BoxDecoration(
               color: frameColor,
               borderRadius: const BorderRadius.vertical(
@@ -257,7 +249,7 @@ class _PhoneFrame extends StatelessWidget {
             ),
           ),
           Container(
-            height: homeBarHeight,
+            height: _DemoScreenState._homeBarH,
             width: 120,
             margin: const EdgeInsets.only(bottom: 8),
             decoration: BoxDecoration(
