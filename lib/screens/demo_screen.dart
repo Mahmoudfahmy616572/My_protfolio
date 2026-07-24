@@ -119,86 +119,88 @@ class _DemoScreenState extends State<DemoScreen> {
             ),
           ),
           Expanded(
-            child: Center(
-              child: Padding(
-                padding: EdgeInsets.symmetric(
-                    horizontal: isWide ? 48 : 16, vertical: 24),
-                child: AspectRatio(
-                  aspectRatio: 9 / 19.5,
-                  child: Container(
-                    constraints: const BoxConstraints(
-                      maxWidth: 360,
-                      maxHeight: 760,
-                    ),
-                    decoration: BoxDecoration(
-                      color: theme.brightness == Brightness.dark
-                          ? const Color(0xFF1A1A2E)
-                          : const Color(0xFFF0F0F0),
-                      borderRadius: BorderRadius.circular(44),
-                      border: Border.all(
+            child: Padding(
+              padding: EdgeInsets.symmetric(
+                  horizontal: isWide ? 24 : 8, vertical: 16),
+              child: Center(
+                child: ConstrainedBox(
+                  constraints: BoxConstraints(
+                    maxWidth: isWide ? 420 : double.infinity,
+                    maxHeight: double.infinity,
+                  ),
+                  child: AspectRatio(
+                    aspectRatio: 9 / 19.5,
+                    child: Container(
+                      decoration: BoxDecoration(
                         color: theme.brightness == Brightness.dark
-                            ? Colors.grey.shade800
-                            : Colors.grey.shade400,
-                        width: 4,
-                      ),
-                      boxShadow: [
-                        BoxShadow(
-                          color: theme.colorScheme.primary.withValues(alpha: 0.15),
-                          blurRadius: 40,
-                          spreadRadius: 4,
+                            ? const Color(0xFF1A1A2E)
+                            : const Color(0xFFF0F0F0),
+                        borderRadius: BorderRadius.circular(44),
+                        border: Border.all(
+                          color: theme.brightness == Brightness.dark
+                              ? Colors.grey.shade800
+                              : Colors.grey.shade400,
+                          width: 4,
                         ),
-                        BoxShadow(
-                          color: Colors.black.withValues(alpha: 0.1),
-                          blurRadius: 60,
-                          spreadRadius: 8,
-                        ),
-                      ],
-                    ),
-                    child: Column(
-                      children: [
-                        Container(
-                          height: 44,
-                          decoration: BoxDecoration(
-                            color: theme.brightness == Brightness.dark
-                                ? const Color(0xFF1A1A2E)
-                                : const Color(0xFFF0F0F0),
-                            borderRadius: const BorderRadius.vertical(
-                              top: Radius.circular(40),
-                            ),
+                        boxShadow: [
+                          BoxShadow(
+                            color: theme.colorScheme.primary.withValues(alpha: 0.15),
+                            blurRadius: 40,
+                            spreadRadius: 4,
                           ),
-                          child: Center(
-                            child: Container(
-                              width: 100,
-                              height: 28,
-                              decoration: BoxDecoration(
-                                color: theme.brightness == Brightness.dark
-                                    ? Colors.black
-                                    : Colors.grey.shade300,
-                                borderRadius: BorderRadius.circular(20),
+                          BoxShadow(
+                            color: Colors.black.withValues(alpha: 0.1),
+                            blurRadius: 60,
+                            spreadRadius: 8,
+                          ),
+                        ],
+                      ),
+                      child: Column(
+                        children: [
+                          Container(
+                            height: 44,
+                            decoration: BoxDecoration(
+                              color: theme.brightness == Brightness.dark
+                                  ? const Color(0xFF1A1A2E)
+                                  : const Color(0xFFF0F0F0),
+                              borderRadius: const BorderRadius.vertical(
+                                top: Radius.circular(40),
+                              ),
+                            ),
+                            child: Center(
+                              child: Container(
+                                width: 100,
+                                height: 28,
+                                decoration: BoxDecoration(
+                                  color: theme.brightness == Brightness.dark
+                                      ? Colors.black
+                                      : Colors.grey.shade300,
+                                  borderRadius: BorderRadius.circular(20),
+                                ),
                               ),
                             ),
                           ),
-                        ),
-                        Expanded(
-                          child: ClipRRect(
-                            borderRadius: const BorderRadius.vertical(
-                              bottom: Radius.circular(40),
+                          Expanded(
+                            child: ClipRRect(
+                              borderRadius: const BorderRadius.vertical(
+                                bottom: Radius.circular(40),
+                              ),
+                              child: HtmlElementView(viewType: _viewType),
                             ),
-                            child: HtmlElementView(viewType: _viewType),
                           ),
-                        ),
-                        Container(
-                          height: 5,
-                          width: 120,
-                          margin: const EdgeInsets.only(bottom: 8),
-                          decoration: BoxDecoration(
-                            color: theme.brightness == Brightness.dark
-                                ? Colors.grey.shade600
-                                : Colors.grey.shade400,
-                            borderRadius: BorderRadius.circular(3),
+                          Container(
+                            height: 5,
+                            width: 120,
+                            margin: const EdgeInsets.only(bottom: 8),
+                            decoration: BoxDecoration(
+                              color: theme.brightness == Brightness.dark
+                                  ? Colors.grey.shade600
+                                  : Colors.grey.shade400,
+                              borderRadius: BorderRadius.circular(3),
+                            ),
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
                   ),
                 ),
