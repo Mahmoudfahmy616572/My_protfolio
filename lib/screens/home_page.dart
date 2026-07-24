@@ -1053,7 +1053,7 @@ class _ProjectsSection extends StatelessWidget {
         imagePath: 'assets/images/Sneakers.png',
         githubUrl:
             'https://github.com/Mahmoudfahmy616572/Sneakers_eCommerce',
-        seniority: SeniorityLevel.junior,
+        seniority: SeniorityLevel.intermediate,
         techStack: const ['Flutter', 'Dart', 'REST API'],
       ),
       _Project(
@@ -1071,7 +1071,7 @@ class _ProjectsSection extends StatelessWidget {
         shortDescription: t.tr('project_minishop_desc_short'),
         imagePath: 'assets/images/minishop.jpeg',
         githubUrl: 'https://github.com/Mahmoudfahmy616572/e_commerce',
-        seniority: SeniorityLevel.junior,
+        seniority: SeniorityLevel.intermediate,
         techStack: const ['Flutter', 'Dart', 'REST API'],
       ),
     ];
