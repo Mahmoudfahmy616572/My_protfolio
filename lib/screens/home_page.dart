@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:http/http.dart' as http;
 import 'package:portfolio/screens/demo_screen.dart';
+import 'package:portfolio/screens/project_detail_screen.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../cv_downloader.dart';
@@ -1016,6 +1017,7 @@ class _ProjectsSection extends StatelessWidget {
       _Project(
         name: t.tr('project_unipath'),
         description: t.tr('project_unipath_desc'),
+        shortDescription: t.tr('project_unipath_desc_short'),
         imagePath: 'assets/images/UniPath.png',
         githubUrl: 'https://github.com/Mahmoudfahmy616572/uni_path_germany',
         adminDashboardUrl: 'https://mahmoudfahmy616572.github.io/uni-path-germany-dashboard/',
@@ -1029,6 +1031,7 @@ class _ProjectsSection extends StatelessWidget {
       _Project(
         name: t.tr('project_ship_link'),
         description: t.tr('project_ship_link_desc'),
+        shortDescription: t.tr('project_ship_link_desc_short'),
         imagePath: 'assets/images/ShipLink.png',
         githubUrl: 'https://github.com/Mahmoudfahmy616572/ship_link',
         dashboardUrl: 'https://mahmoudfahmy616572.github.io/ship_link/',
@@ -1046,6 +1049,7 @@ class _ProjectsSection extends StatelessWidget {
       _Project(
         name: t.tr('project_sneakers'),
         description: t.tr('project_sneakers_desc'),
+        shortDescription: t.tr('project_sneakers_desc_short'),
         imagePath: 'assets/images/Sneakers.png',
         githubUrl:
             'https://github.com/Mahmoudfahmy616572/Sneakers_eCommerce',
@@ -1055,6 +1059,7 @@ class _ProjectsSection extends StatelessWidget {
       _Project(
         name: t.tr('project_soundora'),
         description: t.tr('project_soundora_desc'),
+        shortDescription: t.tr('project_soundora_desc_short'),
         imagePath: 'assets/images/SoundOra.png',
         githubUrl: 'https://github.com/Mahmoudfahmy616572/soundora',
         seniority: SeniorityLevel.senior,
@@ -1063,6 +1068,7 @@ class _ProjectsSection extends StatelessWidget {
       _Project(
         name: t.tr('project_minishop'),
         description: t.tr('project_minishop_desc'),
+        shortDescription: t.tr('project_minishop_desc_short'),
         imagePath: 'assets/images/minishop.jpeg',
         githubUrl: 'https://github.com/Mahmoudfahmy616572/e_commerce',
         seniority: SeniorityLevel.junior,
@@ -1197,6 +1203,7 @@ class _FilterChips extends StatelessWidget {
 class _Project {
   final String name;
   final String description;
+  final String shortDescription;
   final String imagePath;
   final String? playStoreUrl;
   final String? appStoreUrl;
@@ -1215,6 +1222,7 @@ class _Project {
   const _Project({
     required this.name,
     required this.description,
+    this.shortDescription = '',
     required this.imagePath,
     this.playStoreUrl,
     this.appStoreUrl,
@@ -1270,94 +1278,6 @@ class _ProjectCardState extends State<_ProjectCard> {
       _tiltX = ((localPos.dy - cy) / cy).clamp(-1.0, 1.0);
       _tiltY = ((localPos.dx - cx) / cx).clamp(-1.0, 1.0);
     });
-  }
-
-  void _showDescriptionDialog(BuildContext ctx) {
-    final theme = Theme.of(ctx);
-    final bottom = MediaQuery.of(ctx).padding.bottom;
-    showGeneralDialog(
-      context: ctx,
-      barrierDismissible: true,
-      barrierLabel: '',
-      barrierColor: Colors.black54,
-      transitionDuration: const Duration(milliseconds: 300),
-      pageBuilder: (ctx, anim1, anim2) => Align(
-        alignment: Alignment.bottomCenter,
-        child: AnimatedBuilder(
-          animation: anim1,
-          builder: (ctx, child) => Transform.translate(
-            offset: Offset(0, (1 - anim1.value) * 300),
-            child: Opacity(opacity: anim1.value, child: child),
-          ),
-          child: Container(
-            width: double.infinity,
-            constraints: BoxConstraints(
-              maxHeight: MediaQuery.of(ctx).size.height * 0.6,
-            ),
-            margin: EdgeInsets.fromLTRB(16, 0, 16, 16 + bottom),
-            decoration: BoxDecoration(
-              color: theme.colorScheme.surface,
-              borderRadius: BorderRadius.circular(20),
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.black.withValues(alpha: 0.15),
-                  blurRadius: 30,
-                  offset: const Offset(0, 10),
-                ),
-              ],
-            ),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Container(
-                  margin: const EdgeInsets.only(top: 12),
-                  width: 40,
-                  height: 4,
-                  decoration: BoxDecoration(
-                    color: theme.colorScheme.onSurface.withValues(alpha: 0.15),
-                    borderRadius: BorderRadius.circular(2),
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(20, 16, 20, 0),
-                  child: Row(
-                    children: [
-                      Expanded(
-                        child: Text(
-                          widget.project.name,
-                          style: theme.textTheme.titleLarge?.copyWith(
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ),
-                      IconButton(
-                        icon: const Icon(Icons.close),
-                        onPressed: () => Navigator.of(ctx).pop(),
-                      ),
-                    ],
-                  ),
-                ),
-                const Divider(),
-                Flexible(
-                  child: SingleChildScrollView(
-                    padding: const EdgeInsets.fromLTRB(20, 8, 20, 20),
-                    child: Text(
-                      widget.project.description,
-                      style: theme.textTheme.bodyLarge?.copyWith(
-                        height: 1.7,
-                        color: theme.colorScheme.onSurface
-                            .withValues(alpha: 0.85),
-                      ),
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ),
-      ),
-      transitionBuilder: (ctx, anim1, anim2, child) => child,
-    );
   }
 
   void _showImageDialog(BuildContext ctx) {
@@ -1499,252 +1419,57 @@ class _ProjectCardState extends State<_ProjectCard> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Row(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          Expanded(
-                            child: Text(
-                              widget.project.name,
-                              style: theme.textTheme.titleLarge?.copyWith(
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                          ),
-                          if (widget.project.seniority != SeniorityLevel.all)
-                            Padding(
-                              padding: const EdgeInsets.only(left: 8),
-                              child: _SeniorityBadge(
-                                  level: widget.project.seniority),
-                            ),
-                        ],
-                      ),
-                      const SizedBox(height: 8),
                       Text(
-                        widget.project.description,
+                        widget.project.name,
+                        style: theme.textTheme.titleLarge?.copyWith(
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      const SizedBox(height: 6),
+                      Text(
+                        widget.project.shortDescription.isNotEmpty
+                            ? widget.project.shortDescription
+                            : widget.project.description,
                         maxLines: 2,
                         overflow: TextOverflow.ellipsis,
                         style: theme.textTheme.bodyMedium?.copyWith(
                           color: theme.colorScheme.onSurface
-                              .withValues(alpha: 0.8),
-                          height: 1.5,
+                              .withValues(alpha: 0.7),
+                          height: 1.4,
                         ),
                       ),
-                      if (widget.project.description.isNotEmpty)
-                        Padding(
-                          padding: const EdgeInsets.only(top: 4),
-                          child: GestureDetector(
-                            onTap: () => _showDescriptionDialog(context),
-                            child: Row(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                Text(
-                                  'Show more',
-                                  style: theme.textTheme.labelMedium?.copyWith(
-                                    color: theme.colorScheme.primary,
-                                    fontWeight: FontWeight.w600,
-                                  ),
-                                ),
-                                const SizedBox(width: 2),
-                                Icon(
-                                  Icons.expand_more,
-                                  size: 16,
-                                  color: theme.colorScheme.primary,
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                          if (widget.project.techStack.isNotEmpty) ...[
-                            const SizedBox(height: 12),
-                            Wrap(
-                              spacing: 6,
-                              runSpacing: 4,
-                              children: widget.project.techStack.map((tech) {
-                                final icon = _techIcon(tech);
-                                return Container(
-                                  padding: const EdgeInsets.symmetric(
-                                      horizontal: 8, vertical: 3),
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(10),
-                                    color: theme.colorScheme.primary
-                                        .withValues(alpha: 0.1),
-                                  ),
-                                  child: Row(
-                                    mainAxisSize: MainAxisSize.min,
-                                    children: [
-                                      if (icon != null) ...[
-                                        Icon(icon.icon,
-                                            size: 13, color: icon.color),
-                                        const SizedBox(width: 4),
-                                      ],
-                                      Text(
-                                        tech,
-                                        style: theme
-                                            .textTheme.labelSmall?.copyWith(
-                                          color: theme.colorScheme.primary,
-                                          fontWeight: FontWeight.w500,
-                                          fontSize: 11,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                );
-                              }).toList(),
-                            ),
-                          ],
-                      if (widget.project.liveDemoUrl != null) ...[
-                        const SizedBox(height: 14),
-                        SizedBox(
-                          width: double.infinity,
-                          child: _StoreBadge(
-                            label: t.tr('live_demo'),
-                            icon: Icons.phone_iphone,
-                            onTap: () => Navigator.of(context).push(
-                              MaterialPageRoute(
-                                builder: (_) => DemoScreen(
-                                  url: widget.project.liveDemoUrl!,
-                                  title: widget.project.name,
+                      const SizedBox(height: 14),
+                      SizedBox(
+                        width: double.infinity,
+                        child: _StoreBadge(
+                          label: t.tr('go_to_project'),
+                          icon: Icons.arrow_forward_ios,
+                          onTap: () => Navigator.of(context).push(
+                            MaterialPageRoute(
+                              builder: (_) => ProjectDetailScreen(
+                                project: ProjectData(
+                                  name: widget.project.name,
+                                  description: widget.project.description,
+                                  imagePath: widget.project.imagePath,
+                                  githubUrl: widget.project.githubUrl,
+                                  dashboardUrl: widget.project.dashboardUrl,
+                                  dashboardLabel: widget.project.dashboardLabel,
+                                  adminDashboardUrl: widget.project.adminDashboardUrl,
+                                  adminDashboardLabel: widget.project.adminDashboardLabel,
+                                  apkUrl: widget.project.apkUrl,
+                                  driverApkUrl: widget.project.driverApkUrl,
+                                  liveDemoUrl: widget.project.liveDemoUrl,
+                                  driverLiveDemoUrl: widget.project.driverLiveDemoUrl,
+                                  seniority: widget.project.seniority != SeniorityLevel.all
+                                      ? widget.project.seniority.name[0].toUpperCase() + widget.project.seniority.name.substring(1)
+                                      : '',
+                                  techStack: widget.project.techStack,
                                 ),
                               ),
                             ),
                           ),
                         ),
-                      ],
-                      if (widget.project.driverLiveDemoUrl != null) ...[
-                        const SizedBox(height: 8),
-                        SizedBox(
-                          width: double.infinity,
-                          child: _StoreBadge(
-                            label: t.tr('driver_demo'),
-                            icon: Icons.local_shipping_outlined,
-                            onTap: () => Navigator.of(context).push(
-                              MaterialPageRoute(
-                                builder: (_) => DemoScreen(
-                                  url: widget.project.driverLiveDemoUrl!,
-                                  title: '${widget.project.name} Driver',
-                                ),
-                              ),
-                            ),
-                          ),
-                        ),
-                      ],
-                      const SizedBox(height: 16),
-                      if (widget.project.playStoreUrl != null) ...[
-                        Row(
-                          children: [
-                            Icon(Icons.store,
-                                size: 16,
-                                color: theme.colorScheme.primary),
-                            const SizedBox(width: 6),
-                            Text(
-                              t.tr('lives_on'),
-                              style: theme.textTheme.labelMedium?.copyWith(
-                                color: theme.colorScheme.primary,
-                              ),
-                            ),
-                          ],
-                        ),
-                        const SizedBox(height: 8),
-                        Row(
-                          children: [
-                            Expanded(
-                              child: _StoreBadge(
-                                label: 'Google Play',
-                                icon: Icons.play_circle_outline,
-                                onTap: () => launchUrl(
-                                    Uri.parse(widget.project.playStoreUrl!)),
-                              ),
-                            ),
-                            if (widget.project.appStoreUrl != null)
-                              const SizedBox(width: 8),
-                            if (widget.project.appStoreUrl != null)
-                              Expanded(
-                                child: _StoreBadge(
-                                  label: 'App Store',
-                                  icon: Icons.apple,
-                                  onTap: () => launchUrl(
-                                      Uri.parse(widget.project.appStoreUrl!)),
-                                ),
-                              ),
-                          ],
-                        ),
-                        const SizedBox(height: 8),
-                      ],
-                      if (widget.project.dashboardUrl != null ||
-                          widget.project.adminDashboardUrl != null ||
-                          widget.project.apkUrl != null ||
-                          widget.project.driverApkUrl != null) ...[
-                        Row(
-                          children: [
-                            if (widget.project.dashboardUrl != null)
-                              Expanded(
-                                child: _StoreBadge(
-                                  label: widget.project.dashboardLabel ?? 'Web App',
-                                  icon: Icons.language,
-                                  onTap: () => launchUrl(
-                                      Uri.parse(widget.project.dashboardUrl!)),
-                                ),
-                              ),
-                            if (widget.project.dashboardUrl != null &&
-                                (widget.project.adminDashboardUrl != null ||
-                                    widget.project.apkUrl != null))
-                              const SizedBox(width: 8),
-                            if (widget.project.adminDashboardUrl != null)
-                              Expanded(
-                                child: _StoreBadge(
-                                  label: widget.project.adminDashboardLabel ?? 'Admin',
-                                  icon: Icons.admin_panel_settings,
-                                  onTap: () => launchUrl(
-                                      Uri.parse(widget.project.adminDashboardUrl!)),
-                                ),
-                              ),
-                            if (widget.project.adminDashboardUrl != null &&
-                                widget.project.apkUrl != null)
-                              const SizedBox(width: 8),
-                            if (widget.project.apkUrl != null)
-                              Expanded(
-                                child: _StoreBadge(
-                                  label: 'User APK',
-                                  icon: Icons.download,
-                                  onTap: () => launchUrl(
-                                      Uri.parse(widget.project.apkUrl!)),
-                                ),
-                              ),
-                          ],
-                        ),
-                        if (widget.project.driverApkUrl != null) ...[
-                          const SizedBox(height: 8),
-                          Row(
-                            children: [
-                              Expanded(
-                                child: _StoreBadge(
-                                  label: 'Driver APK',
-                                  icon: Icons.download,
-                                  onTap: () => launchUrl(
-                                      Uri.parse(widget.project.driverApkUrl!)),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ],
-                        const SizedBox(height: 8),
-                      ],
-                      if (widget.project.githubUrl != null)
-                        Row(
-                          children: [
-                            Icon(Icons.code,
-                                size: 16,
-                                color: theme.colorScheme.onSurface
-                                    .withValues(alpha: 0.5)),
-                            const SizedBox(width: 6),
-                            TextButton.icon(
-                              onPressed: () => launchUrl(
-                                  Uri.parse(widget.project.githubUrl!)),
-                              icon: const Icon(Icons.open_in_new, size: 16),
-                              label: Text(t.tr('view_on_github')),
-                            ),
-                          ],
-                        ),
+                      ),
                       ],
                     ),
                   ),
