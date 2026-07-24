@@ -3,7 +3,7 @@ import 'dart:math' show sin, pi;
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:http/http.dart' as http;
-import 'package:portfolio/widgets/phone_demo.dart';
+import 'package:portfolio/screens/demo_screen.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../cv_downloader.dart';
@@ -1480,10 +1480,13 @@ class _ProjectCardState extends State<_ProjectCard> {
                           child: _StoreBadge(
                             label: t.tr('live_demo'),
                             icon: Icons.phone_iphone,
-                            onTap: () => showPhoneDemo(
-                              context,
-                              widget.project.liveDemoUrl!,
-                              widget.project.name,
+                            onTap: () => Navigator.of(context).push(
+                              MaterialPageRoute(
+                                builder: (_) => DemoScreen(
+                                  url: widget.project.liveDemoUrl!,
+                                  title: widget.project.name,
+                                ),
+                              ),
                             ),
                           ),
                         ),
