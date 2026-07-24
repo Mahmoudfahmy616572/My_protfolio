@@ -240,7 +240,9 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen>
       buttons.add(SizedBox(
         width: double.infinity,
         child: _DetailButton(
-          label: t.tr('live_demo'),
+          label: widget.project.driverLiveDemoUrl != null
+              ? t.tr('user_demo')
+              : t.tr('live_demo'),
           icon: Icons.phone_iphone,
           onTap: () => Navigator.of(context).push(
             MaterialPageRoute(
