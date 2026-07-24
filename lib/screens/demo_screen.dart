@@ -43,11 +43,11 @@ class _DemoScreenState extends State<DemoScreen> {
     ui_web.platformViewRegistry.registerViewFactory(_viewType, (int id) {
       final iframe = html.IFrameElement()
         ..src = widget.url
-        ..style.border = 'none'
-        ..style.margin = '0'
-        ..style.padding = '0'
-        ..style.width = '${_viewportW.round()}px'
-        ..style.height = '${_viewportH.round()}px'
+        ..style.cssText =
+            'border:none;margin:0;padding:0;display:block;overflow:hidden;'
+            'width:${_viewportW.round()}px;height:${_viewportH.round()}px;'
+            'min-width:${_viewportW.round()}px;min-height:${_viewportH.round()}px;'
+            'max-width:${_viewportW.round()}px;max-height:${_viewportH.round()}px;'
         ..allow =
             'accelerometer; camera; geolocation; microphone; clipboard-write'
         ..setAttribute('loading', 'eager');
