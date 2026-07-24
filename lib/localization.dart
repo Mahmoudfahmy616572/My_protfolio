@@ -44,6 +44,7 @@ class AppLocalizations {
     'view_on_github': 'View on GitHub',
     'view_on_playstore': 'View on Google Play',
     'lives_on': 'Live on',
+    'live_demo': 'Live Demo',
     'download_cv': 'Download My CV',
     'cv_subtitle':
         'Always up-to-date. Click below to get the latest version of my CV.',
@@ -104,6 +105,7 @@ class AppLocalizations {
     'view_on_github': 'عرض على جيت هاب',
     'view_on_playstore': 'عرض على Google Play',
     'lives_on': 'منشور على',
+    'live_demo': 'تجربة مباشرة',
     'download_cv': 'تحميل السيرة الذاتية',
     'cv_subtitle': 'دائماً محدثة. اضغط للتحميل للحصول على أحدث نسخة من سيرتي الذاتية.',
     'download_cv_btn': 'تحميل السيرة الذاتية (PDF)',

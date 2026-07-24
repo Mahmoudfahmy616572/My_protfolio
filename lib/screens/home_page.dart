@@ -3,6 +3,7 @@ import 'dart:math' show sin, pi;
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:http/http.dart' as http;
+import 'package:portfolio/widgets/phone_demo.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../cv_downloader.dart';
@@ -923,6 +924,7 @@ class _ProjectsSection extends StatelessWidget {
             'https://github.com/Mahmoudfahmy616572/ship_link/releases/download/v1.0.0/app-arm64-v8a-driver-release.apk',
         seniority: SeniorityLevel.senior,
         techStack: const ['Flutter', 'Dart', 'Supabase', 'Firebase', 'Paymob'],
+        liveDemoUrl: 'https://mahmoudfahmy616572.github.io/ship_link/',
       ),
       _Project(
         name: t.tr('project_sneakers'),
@@ -1088,6 +1090,7 @@ class _Project {
   final String? adminDashboardLabel;
   final String? apkUrl;
   final String? driverApkUrl;
+  final String? liveDemoUrl;
   final SeniorityLevel seniority;
   final List<String> techStack;
 
@@ -1104,6 +1107,7 @@ class _Project {
     this.adminDashboardLabel,
     this.apkUrl,
     this.driverApkUrl,
+    this.liveDemoUrl,
     this.seniority = SeniorityLevel.all,
     this.techStack = const [],
   });
@@ -1469,6 +1473,21 @@ class _ProjectCardState extends State<_ProjectCard> {
                               }).toList(),
                             ),
                           ],
+                      if (widget.project.liveDemoUrl != null) ...[
+                        const SizedBox(height: 14),
+                        SizedBox(
+                          width: double.infinity,
+                          child: _StoreBadge(
+                            label: t.tr('live_demo'),
+                            icon: Icons.phone_iphone,
+                            onTap: () => showPhoneDemo(
+                              context,
+                              widget.project.liveDemoUrl!,
+                              widget.project.name,
+                            ),
+                          ),
+                        ),
+                      ],
                       const SizedBox(height: 16),
                       if (widget.project.playStoreUrl != null) ...[
                         Row(
