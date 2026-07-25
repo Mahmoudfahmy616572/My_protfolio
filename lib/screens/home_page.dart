@@ -1019,7 +1019,6 @@ class _ProjectsSection extends StatelessWidget {
         description: t.tr('project_unipath_desc'),
         shortDescription: t.tr('project_unipath_desc_short'),
         imagePath: 'assets/images/UniPath.webp',
-        githubUrl: 'https://github.com/Mahmoudfahmy616572/uni_path_germany',
         adminDashboardUrl: 'https://mahmoudfahmy616572.github.io/uni-path-germany-dashboard/',
         adminDashboardLabel: 'Admin Panel',
         apkUrl:
@@ -1033,7 +1032,6 @@ class _ProjectsSection extends StatelessWidget {
         description: t.tr('project_ship_link_desc'),
         shortDescription: t.tr('project_ship_link_desc_short'),
         imagePath: 'assets/images/ShipLink.webp',
-        githubUrl: 'https://github.com/Mahmoudfahmy616572/ship_link',
         dashboardUrl: 'https://mahmoudfahmy616572.github.io/ship_link/',
         adminDashboardUrl: 'https://mahmoudfahmy616572.github.io/ship_link/admin/',
         adminDashboardLabel: 'Admin Panel',
