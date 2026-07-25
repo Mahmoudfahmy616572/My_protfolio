@@ -54,7 +54,7 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen>
   @override
   void initState() {
     super.initState();
-    final itemCount = 3 + widget.project.techStack.length + _buttonCount();
+    final itemCount = 3 + (widget.project.techStack.isNotEmpty ? 1 + widget.project.techStack.length : 0) + _buttonCount();
     _stagger = AnimationController(
       vsync: this,
       duration: Duration(milliseconds: 400 + itemCount * 80),
