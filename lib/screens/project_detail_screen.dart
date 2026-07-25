@@ -37,10 +37,58 @@ class ProjectData {
   });
 }
 
-class ProjectDetailScreen extends StatelessWidget {
+class ProjectDetailScreen extends StatefulWidget {
   final ProjectData project;
 
   const ProjectDetailScreen({super.key, required this.project});
+
+  @override
+  State<ProjectDetailScreen> createState() => _ProjectDetailScreenState();
+}
+
+class _ProjectDetailScreenState extends State<ProjectDetailScreen>
+    with SingleTickerProviderStateMixin {
+  late final AnimationController _stagger;
+  late final List<Animation<double>> _itemAnimations;
+
+  @override
+  void initState() {
+    super.initState();
+    final itemCount = 3 + widget.project.techStack.length + _buttonCount();
+    _stagger = AnimationController(
+      vsync: this,
+      duration: Duration(milliseconds: 400 + itemCount * 80),
+    );
+
+    _itemAnimations = List.generate(itemCount, (i) {
+      final start = (i * 0.08).clamp(0.0, 0.8);
+      final end = (start + 0.3).clamp(0.0, 1.0);
+      return CurvedAnimation(
+        parent: _stagger,
+        curve: Interval(start, end, curve: Curves.easeOutCubic),
+      );
+    });
+
+    _stagger.forward();
+  }
+
+  int _buttonCount() {
+    int c = 0;
+    if (widget.project.liveDemoUrl != null) c++;
+    if (widget.project.driverLiveDemoUrl != null) c++;
+    if (widget.project.dashboardUrl != null ||
+        widget.project.adminDashboardUrl != null ||
+        widget.project.apkUrl != null) c++;
+    if (widget.project.driverApkUrl != null) c++;
+    if (widget.project.githubUrl != null) c++;
+    return c;
+  }
+
+  @override
+  void dispose() {
+    _stagger.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -49,6 +97,20 @@ class ProjectDetailScreen extends StatelessWidget {
     final screenW = MediaQuery.of(context).size.width;
     final isWide = screenW > 800;
     final padding = isWide ? 48.0 : 20.0;
+    final project = widget.project;
+    int idx = 0;
+
+    Widget slideIn(Widget child) {
+      final anim = _itemAnimations[idx];
+      idx++;
+      return AnimatedBuilder(
+        animation: anim,
+        builder: (context, _) => Transform.translate(
+          offset: Offset(0, 30 * (1 - anim.value)),
+          child: Opacity(opacity: anim.value, child: child),
+        ),
+      );
+    }
 
     return Scaffold(
       backgroundColor: theme.scaffoldBackgroundColor,
@@ -97,7 +159,7 @@ class ProjectDetailScreen extends StatelessWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      ClipRRect(
+                      slideIn(ClipRRect(
                         borderRadius: BorderRadius.circular(20),
                         child: Image.asset(
                           project.imagePath,
@@ -106,43 +168,45 @@ class ProjectDetailScreen extends StatelessWidget {
                           cacheWidth: 800,
                           errorBuilder: (_, __, ___) => Container(
                             height: 200,
-                            color:
-                                theme.colorScheme.surfaceContainerHighest,
-                            child:
-                                const Icon(Icons.broken_image, size: 48),
+                            color: theme
+                                .colorScheme.surfaceContainerHighest,
+                            child: const Icon(Icons.broken_image,
+                                size: 48),
                           ),
                         ),
-                      ),
+                      )),
                       const SizedBox(height: 28),
-                      Text(
+                      slideIn(Text(
                         project.name,
-                        style: theme.textTheme.headlineSmall?.copyWith(
+                        style:
+                            theme.textTheme.headlineSmall?.copyWith(
                           fontWeight: FontWeight.bold,
                         ),
-                      ),
+                      )),
                       const SizedBox(height: 20),
-                      Text(
+                      slideIn(Text(
                         project.description,
                         style: theme.textTheme.bodyLarge?.copyWith(
                           height: 1.7,
                           color: theme.colorScheme.onSurface
                               .withValues(alpha: 0.85),
                         ),
-                      ),
+                      )),
                       if (project.techStack.isNotEmpty) ...[
                         const SizedBox(height: 28),
-                        Text(
+                        slideIn(Text(
                           t.tr('skills'),
-                          style: theme.textTheme.titleSmall?.copyWith(
+                          style:
+                              theme.textTheme.titleSmall?.copyWith(
                             fontWeight: FontWeight.bold,
                           ),
-                        ),
+                        )),
                         const SizedBox(height: 12),
                         Wrap(
                           spacing: 8,
                           runSpacing: 8,
                           children: project.techStack.map((tech) {
-                            return Container(
+                            return slideIn(Container(
                               padding: const EdgeInsets.symmetric(
                                   horizontal: 14, vertical: 7),
                               decoration: BoxDecoration(
@@ -158,12 +222,12 @@ class ProjectDetailScreen extends StatelessWidget {
                                   fontWeight: FontWeight.w600,
                                 ),
                               ),
-                            );
+                            ));
                           }).toList(),
                         ),
                       ],
                       const SizedBox(height: 32),
-                      ..._buildButtons(context, t, theme),
+                      ..._buildButtons(context, t, theme, slideIn),
                     ],
                   ),
                 ),
@@ -175,12 +239,13 @@ class ProjectDetailScreen extends StatelessWidget {
     );
   }
 
-  List<Widget> _buildButtons(
-      BuildContext context, AppLocalizations t, ThemeData theme) {
+  List<Widget> _buildButtons(BuildContext context, AppLocalizations t,
+      ThemeData theme, Widget Function(Widget) slideIn) {
+    final project = widget.project;
     final buttons = <Widget>[];
 
     if (project.liveDemoUrl != null) {
-      buttons.add(SizedBox(
+      buttons.add(slideIn(SizedBox(
         width: double.infinity,
         child: _DetailButton(
           label: project.driverLiveDemoUrl != null
@@ -196,12 +261,12 @@ class ProjectDetailScreen extends StatelessWidget {
             ),
           ),
         ),
-      ));
+      )));
     }
 
     if (project.driverLiveDemoUrl != null) {
-      if (buttons.isNotEmpty) buttons.add(const SizedBox(height: 10));
-      buttons.add(SizedBox(
+      buttons.add(const SizedBox(height: 10));
+      buttons.add(slideIn(SizedBox(
         width: double.infinity,
         child: _DetailButton(
           label: t.tr('driver_demo'),
@@ -215,7 +280,7 @@ class ProjectDetailScreen extends StatelessWidget {
             ),
           ),
         ),
-      ));
+      )));
     }
 
     final hasLinks = project.dashboardUrl != null ||
@@ -224,8 +289,8 @@ class ProjectDetailScreen extends StatelessWidget {
         project.driverApkUrl != null;
 
     if (hasLinks) {
-      if (buttons.isNotEmpty) buttons.add(const SizedBox(height: 10));
-      buttons.add(Row(
+      buttons.add(const SizedBox(height: 10));
+      buttons.add(slideIn(Row(
         children: [
           if (project.dashboardUrl != null)
             Expanded(
@@ -262,12 +327,12 @@ class ProjectDetailScreen extends StatelessWidget {
               ),
             ),
         ],
-      ));
+      )));
     }
 
     if (project.driverApkUrl != null) {
-      if (buttons.isNotEmpty) buttons.add(const SizedBox(height: 10));
-      buttons.add(SizedBox(
+      buttons.add(const SizedBox(height: 10));
+      buttons.add(slideIn(SizedBox(
         width: double.infinity,
         child: _DetailButton(
           label: 'Driver APK',
@@ -275,20 +340,20 @@ class ProjectDetailScreen extends StatelessWidget {
           onTap: () =>
               launchUrl(Uri.parse(project.driverApkUrl!)),
         ),
-      ));
+      )));
     }
 
     if (project.githubUrl != null) {
-      if (buttons.isNotEmpty) buttons.add(const SizedBox(height: 10));
+      buttons.add(const SizedBox(height: 10));
       final readmeUrl = '${project.githubUrl}/blob/main/README.md';
-      buttons.add(SizedBox(
+      buttons.add(slideIn(SizedBox(
         width: double.infinity,
         child: _DetailButton(
           label: t.tr('view_on_github'),
           icon: Icons.open_in_new,
           onTap: () => launchUrl(Uri.parse(readmeUrl)),
         ),
-      ));
+      )));
     }
 
     return buttons;

@@ -2175,25 +2175,49 @@ class _ContactSectionState extends State<_ContactSection> {
     super.dispose();
   }
 
-  void _sendMessage() {
+  static const _formspreeEndpoint = 'https://formspree.io/f/YOUR_FORM_ID';
+
+  Future<void> _sendMessage() async {
     if (!_formKey.currentState!.validate()) return;
     setState(() => _sending = true);
-    final subject = Uri.encodeComponent(
-        'Portfolio Contact from ${_nameController.text}');
-    final body = Uri.encodeComponent(
-      'Name: ${_nameController.text}\n'
-      'Email: ${_emailController.text}\n\n'
-      '${_messageController.text}',
-    );
-    launchUrl(Uri.parse('mailto:mahmoudfahmeyy@gmail.com?subject=$subject&body=$body'));
-    Future.delayed(const Duration(milliseconds: 600), () {
+    try {
+      final response = await http.post(
+        Uri.parse(_formspreeEndpoint),
+        headers: {'Content-Type': 'application/json'},
+        body: jsonEncode({
+          'name': _nameController.text,
+          'email': _emailController.text,
+          'message': _messageController.text,
+        }),
+      );
       if (!mounted) return;
-      setState(() => _sending = false);
-      _formKey.currentState?.reset();
-      _nameController.clear();
-      _emailController.clear();
-      _messageController.clear();
-    });
+      if (response.statusCode == 200) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(AppLocalizations.of(context).tr('form_sent')),
+            backgroundColor: Colors.green,
+          ),
+        );
+      } else {
+        throw Exception('Failed');
+      }
+    } catch (_) {
+      final subject = Uri.encodeComponent(
+          'Portfolio Contact from ${_nameController.text}');
+      final body = Uri.encodeComponent(
+        'Name: ${_nameController.text}\n'
+        'Email: ${_emailController.text}\n\n'
+        '${_messageController.text}',
+      );
+      launchUrl(Uri.parse(
+          'mailto:mahmoudfahmeyy@gmail.com?subject=$subject&body=$body'));
+    }
+    if (!mounted) return;
+    setState(() => _sending = false);
+    _formKey.currentState?.reset();
+    _nameController.clear();
+    _emailController.clear();
+    _messageController.clear();
   }
 
   @override
