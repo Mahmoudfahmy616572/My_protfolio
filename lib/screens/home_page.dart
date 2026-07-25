@@ -1047,6 +1047,15 @@ class _ProjectsSection extends StatelessWidget {
         driverLiveDemoUrl: 'https://mahmoudfahmy616572.github.io/ship_link/driver/',
       ),
       _Project(
+        name: t.tr('project_soundora'),
+        description: t.tr('project_soundora_desc'),
+        shortDescription: t.tr('project_soundora_desc_short'),
+        imagePath: 'assets/images/SoundOra.webp',
+        githubUrl: 'https://github.com/Mahmoudfahmy616572/soundora',
+        seniority: SeniorityLevel.senior,
+        techStack: const ['Flutter', 'Dart', 'Firebase', 'Cloudinary'],
+      ),
+      _Project(
         name: t.tr('project_sneakers'),
         description: t.tr('project_sneakers_desc'),
         shortDescription: t.tr('project_sneakers_desc_short'),
@@ -1055,15 +1064,6 @@ class _ProjectsSection extends StatelessWidget {
             'https://github.com/Mahmoudfahmy616572/Sneakers_eCommerce',
         seniority: SeniorityLevel.intermediate,
         techStack: const ['Flutter', 'Dart', 'REST API'],
-      ),
-      _Project(
-        name: t.tr('project_soundora'),
-        description: t.tr('project_soundora_desc'),
-        shortDescription: t.tr('project_soundora_desc_short'),
-        imagePath: 'assets/images/SoundOra.webp',
-        githubUrl: 'https://github.com/Mahmoudfahmy616572/soundora',
-        seniority: SeniorityLevel.senior,
-        techStack: const ['Flutter', 'Dart', 'Firebase', 'Cloudinary'],
       ),
       _Project(
         name: t.tr('project_minishop'),
