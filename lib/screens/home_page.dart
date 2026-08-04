@@ -853,18 +853,18 @@ class _ExperienceSection extends StatelessWidget {
               child: Column(
                 children: [
                   _TimelineEntry(
+                    icon: Icons.military_tech,
+                    title: t.tr('exp_military'),
+                    period: t.tr('exp_military_period'),
+                    description: t.tr('exp_military_desc'),
+                    showLine: true,
+                  ),
+                  _TimelineEntry(
                     icon: Icons.work_outline,
                     title: t.tr('exp_zikola'),
                     subtitle: t.tr('exp_zikola_role'),
                     period: t.tr('exp_zikola_period'),
                     description: t.tr('exp_zikola_desc'),
-                    showLine: true,
-                  ),
-                  _TimelineEntry(
-                    icon: Icons.military_tech,
-                    title: t.tr('exp_military'),
-                    period: t.tr('exp_military_period'),
-                    description: t.tr('exp_military_desc'),
                     showLine: false,
                   ),
                 ],
