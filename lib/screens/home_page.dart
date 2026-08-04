@@ -26,7 +26,7 @@ class _HomePageState extends State<HomePage> {
   bool _showBackToTop = false;
   int _activeSection = 0;
 
-  static const _sectionKeys = ['about_me', 'skills', 'projects', 'download_cv', 'contact'];
+  static const _sectionKeys = ['about_me', 'experience', 'skills', 'projects', 'download_cv', 'contact'];
 
   @override
   void initState() {
@@ -107,6 +107,7 @@ class _HomePageState extends State<HomePage> {
                   _HeaderSection(),
                   const _StatsBar(),
                   const _AboutSection(),
+                  const _ExperienceSection(),
                   const _SkillsSection(),
                   const _ProjectsSection(),
                   const _CVSection(),
@@ -832,6 +833,109 @@ class _AboutSection extends StatelessWidget {
   }
 }
 
+class _ExperienceSection extends StatelessWidget {
+  const _ExperienceSection();
+
+  @override
+  Widget build(BuildContext context) {
+    final t = AppLocalizations.of(context);
+    final theme = Theme.of(context);
+    final isWide = MediaQuery.of(context).size.width > 800;
+
+    return AnimatedSection(
+      index: 3,
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 56),
+        child: Column(
+          children: [
+            _SectionHeader(title: t.tr('experience')),
+            const SizedBox(height: 28),
+            ConstrainedBox(
+              constraints: const BoxConstraints(maxWidth: 720),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Column(
+                    children: [
+                      Container(
+                        width: 20,
+                        height: 20,
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          color: theme.colorScheme.primary,
+                          boxShadow: [
+                            BoxShadow(
+                              color: theme.colorScheme.primary
+                                  .withValues(alpha: 0.4),
+                              blurRadius: 8,
+                            ),
+                          ],
+                        ),
+                        child: const Icon(Icons.military_tech,
+                            size: 12, color: Colors.white),
+                      ),
+                      Container(
+                        width: 2,
+                        height: isWide ? 120 : 160,
+                        color: theme.colorScheme.primary.withValues(alpha: 0.25),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(width: 18),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
+                          children: [
+                            Expanded(
+                              child: Text(
+                                t.tr('exp_military'),
+                                style: theme.textTheme.titleLarge?.copyWith(
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ),
+                            Container(
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 12, vertical: 5),
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(20),
+                                color: theme.colorScheme.primary
+                                    .withValues(alpha: 0.12),
+                              ),
+                              child: Text(
+                                t.tr('exp_military_period'),
+                                style: theme.textTheme.labelMedium?.copyWith(
+                                  color: theme.colorScheme.primary,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: 10),
+                        Text(
+                          t.tr('exp_military_desc'),
+                          style: theme.textTheme.bodyLarge?.copyWith(
+                            height: 1.6,
+                            color: theme.colorScheme.onSurface
+                                .withValues(alpha: 0.8),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
 class _SkillsSection extends StatelessWidget {
   const _SkillsSection();
 
@@ -909,7 +1013,7 @@ class _SkillsSection extends StatelessWidget {
     ];
 
     return AnimatedSection(
-      index: 3,
+      index: 4,
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 300),
         curve: Curves.easeOut,
@@ -1079,7 +1183,7 @@ class _ProjectsSection extends StatelessWidget {
         : allProjects.where((p) => p.seniority == filterLevel).toList();
 
     return AnimatedSection(
-      index: 4,
+      index: 5,
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 56),
         child: Column(
@@ -2099,7 +2203,7 @@ class _CVSection extends StatelessWidget {
     final t = AppLocalizations.of(context);
     final theme = Theme.of(context);
     return AnimatedSection(
-      index: 5,
+      index: 6,
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 300),
         curve: Curves.easeOut,
@@ -2223,7 +2327,7 @@ class _ContactSectionState extends State<_ContactSection> {
     final t = AppLocalizations.of(context);
     final theme = Theme.of(context);
     return AnimatedSection(
-      index: 6,
+      index: 7,
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 56),
         child: Column(

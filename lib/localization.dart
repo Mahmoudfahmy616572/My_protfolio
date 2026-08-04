@@ -14,6 +14,11 @@ class AppLocalizations {
     'about_text':
         'I am a passionate Flutter mobile developer with experience in building cross-platform applications. I specialize in creating clean, efficient, and user-friendly mobile apps using Flutter and Dart. I have worked on various projects including e-commerce apps, audio streaming apps, and logistics solutions.',
     'skills': 'Skills',
+    'experience': 'Experience',
+    'exp_military': 'Military Service',
+    'exp_military_desc':
+        'Completed one year of mandatory military service.',
+    'exp_military_period': 'Mar 2025 – Mar 2026',
     'skill_flutter': 'Flutter',
     'skill_dart': 'Dart',
     'skill_firebase': 'Firebase',
@@ -101,6 +106,10 @@ class AppLocalizations {
     'about_text':
         'أنا مطور تطبيقات فلاتر شغوف ببناء تطبيقات متعددة المنصات. أتخصص في إنشاء تطبيقات جوال نظيفة وفعالة وسهلة الاستخدام باستخدام Flutter و Dart. عملت على مشاريع متنوعة تشمل تطبيقات التجارة الإلكترونية وتطبيقات بث الموسيقى وحلول الشحن واللوجستيات.',
     'skills': 'المهارات',
+    'experience': 'الخبرة',
+    'exp_military': 'الخدمة العسكرية',
+    'exp_military_desc': 'أتممت سنة الخدمة العسكرية الإلزامية.',
+    'exp_military_period': 'مارس 2025 – مارس 2026',
     'skill_flutter': 'فلاتر',
     'skill_dart': 'دارت',
     'skill_firebase': 'فايربيز',
