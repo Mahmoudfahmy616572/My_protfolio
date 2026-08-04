@@ -15,6 +15,11 @@ class AppLocalizations {
         'I am a passionate Flutter mobile developer with experience in building cross-platform applications. I specialize in creating clean, efficient, and user-friendly mobile apps using Flutter and Dart. I have worked on various projects including e-commerce apps, audio streaming apps, and logistics solutions.',
     'skills': 'Skills',
     'experience': 'Experience',
+    'exp_zikola': 'Zikola',
+    'exp_zikola_role': 'Flutter Developer',
+    'exp_zikola_period': 'June 2026 – Dec 2025',
+    'exp_zikola_desc':
+        'Developed and maintained cross-platform mobile applications using Flutter and Dart, collaborated with the team on new features and UI/UX, and integrated RESTful APIs with state management.',
     'exp_military': 'Military Service',
     'exp_military_desc':
         'Completed one year of mandatory military service.',
@@ -107,6 +112,11 @@ class AppLocalizations {
         'أنا مطور تطبيقات فلاتر شغوف ببناء تطبيقات متعددة المنصات. أتخصص في إنشاء تطبيقات جوال نظيفة وفعالة وسهلة الاستخدام باستخدام Flutter و Dart. عملت على مشاريع متنوعة تشمل تطبيقات التجارة الإلكترونية وتطبيقات بث الموسيقى وحلول الشحن واللوجستيات.',
     'skills': 'المهارات',
     'experience': 'الخبرة',
+    'exp_zikola': 'زيكولا',
+    'exp_zikola_role': 'مطور فلاتر',
+    'exp_zikola_period': 'يونيو 2026 – ديسمبر 2025',
+    'exp_zikola_desc':
+        'طوّرت وحافظت على تطبيقات موبايل متعددة المنصات باستخدام Flutter و Dart، تعاونت مع الفريق في مزايا جديدة وتجربة مستخدم، ودمجت واجهات برمجية مع إدارة الحالة.',
     'exp_military': 'الخدمة العسكرية',
     'exp_military_desc': 'أتممت سنة الخدمة العسكرية الإلزامية.',
     'exp_military_period': 'مارس 2025 – مارس 2026',

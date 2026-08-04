@@ -839,8 +839,6 @@ class _ExperienceSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final t = AppLocalizations.of(context);
-    final theme = Theme.of(context);
-    final isWide = MediaQuery.of(context).size.width > 800;
 
     return AnimatedSection(
       index: 3,
@@ -852,85 +850,134 @@ class _ExperienceSection extends StatelessWidget {
             const SizedBox(height: 28),
             ConstrainedBox(
               constraints: const BoxConstraints(maxWidth: 720),
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
+              child: Column(
                 children: [
-                  Column(
-                    children: [
-                      Container(
-                        width: 20,
-                        height: 20,
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          color: theme.colorScheme.primary,
-                          boxShadow: [
-                            BoxShadow(
-                              color: theme.colorScheme.primary
-                                  .withValues(alpha: 0.4),
-                              blurRadius: 8,
-                            ),
-                          ],
-                        ),
-                        child: const Icon(Icons.military_tech,
-                            size: 12, color: Colors.white),
-                      ),
-                      Container(
-                        width: 2,
-                        height: isWide ? 120 : 160,
-                        color: theme.colorScheme.primary.withValues(alpha: 0.25),
-                      ),
-                    ],
+                  _TimelineEntry(
+                    icon: Icons.work_outline,
+                    title: t.tr('exp_zikola'),
+                    subtitle: t.tr('exp_zikola_role'),
+                    period: t.tr('exp_zikola_period'),
+                    description: t.tr('exp_zikola_desc'),
+                    showLine: true,
                   ),
-                  const SizedBox(width: 18),
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Row(
-                          children: [
-                            Expanded(
-                              child: Text(
-                                t.tr('exp_military'),
-                                style: theme.textTheme.titleLarge?.copyWith(
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                            ),
-                            Container(
-                              padding: const EdgeInsets.symmetric(
-                                  horizontal: 12, vertical: 5),
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(20),
-                                color: theme.colorScheme.primary
-                                    .withValues(alpha: 0.12),
-                              ),
-                              child: Text(
-                                t.tr('exp_military_period'),
-                                style: theme.textTheme.labelMedium?.copyWith(
-                                  color: theme.colorScheme.primary,
-                                  fontWeight: FontWeight.w600,
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                        const SizedBox(height: 10),
-                        Text(
-                          t.tr('exp_military_desc'),
-                          style: theme.textTheme.bodyLarge?.copyWith(
-                            height: 1.6,
-                            color: theme.colorScheme.onSurface
-                                .withValues(alpha: 0.8),
-                          ),
-                        ),
-                      ],
-                    ),
+                  _TimelineEntry(
+                    icon: Icons.military_tech,
+                    title: t.tr('exp_military'),
+                    period: t.tr('exp_military_period'),
+                    description: t.tr('exp_military_desc'),
+                    showLine: false,
                   ),
                 ],
               ),
             ),
           ],
         ),
+      ),
+    );
+  }
+}
+
+class _TimelineEntry extends StatelessWidget {
+  final IconData icon;
+  final String title;
+  final String? subtitle;
+  final String period;
+  final String description;
+  final bool showLine;
+
+  const _TimelineEntry({
+    required this.icon,
+    required this.title,
+    this.subtitle,
+    required this.period,
+    required this.description,
+    this.showLine = true,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    return IntrinsicHeight(
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Column(
+            children: [
+              Container(
+                width: 20,
+                height: 20,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: theme.colorScheme.primary,
+                  boxShadow: [
+                    BoxShadow(
+                      color: theme.colorScheme.primary.withValues(alpha: 0.4),
+                      blurRadius: 8,
+                    ),
+                  ],
+                ),
+                child: Icon(icon, size: 12, color: Colors.white),
+              ),
+              if (showLine)
+                Expanded(
+                  child: Container(
+                    width: 2,
+                    margin: const EdgeInsets.symmetric(vertical: 4),
+                    color: theme.colorScheme.primary.withValues(alpha: 0.25),
+                  ),
+                ),
+            ],
+          ),
+          const SizedBox(width: 18),
+          Expanded(
+            child: Padding(
+              padding: const EdgeInsets.only(bottom: 28),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    children: [
+                      Expanded(
+                        child: Text(
+                          subtitle != null
+                              ? '$title — $subtitle'
+                              : title,
+                          style: theme.textTheme.titleLarge?.copyWith(
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                      const SizedBox(width: 8),
+                      Container(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 12, vertical: 5),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(20),
+                          color: theme.colorScheme.primary.withValues(alpha: 0.12),
+                        ),
+                        child: Text(
+                          period,
+                          style: theme.textTheme.labelMedium?.copyWith(
+                            color: theme.colorScheme.primary,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 10),
+                  Text(
+                    description,
+                    style: theme.textTheme.bodyLarge?.copyWith(
+                      height: 1.6,
+                      color: theme.colorScheme.onSurface.withValues(alpha: 0.8),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }
