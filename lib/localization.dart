@@ -17,7 +17,7 @@ class AppLocalizations {
     'experience': 'Experience',
     'exp_zikola': 'Zikola',
     'exp_zikola_role': 'Flutter Developer',
-    'exp_zikola_period': 'June 2026 – Dec 2025',
+    'exp_zikola_period': 'Feb 2026 – Jul 2026',
     'exp_zikola_desc':
         'Developed and maintained cross-platform mobile applications using Flutter and Dart, collaborated with the team on new features and UI/UX, and integrated RESTful APIs with state management.',
     'exp_military': 'Military Service',
@@ -114,7 +114,7 @@ class AppLocalizations {
     'experience': 'الخبرة',
     'exp_zikola': 'زيكولا',
     'exp_zikola_role': 'مطور فلاتر',
-    'exp_zikola_period': 'يونيو 2026 – ديسمبر 2025',
+    'exp_zikola_period': 'فبراير 2026 – يوليو 2026',
     'exp_zikola_desc':
         'طوّرت وحافظت على تطبيقات موبايل متعددة المنصات باستخدام Flutter و Dart، تعاونت مع الفريق في مزايا جديدة وتجربة مستخدم، ودمجت واجهات برمجية مع إدارة الحالة.',
     'exp_military': 'الخدمة العسكرية',
