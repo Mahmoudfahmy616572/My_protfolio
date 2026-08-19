@@ -66,9 +66,9 @@ class AppLocalizations {
         'E-commerce app for sneakers with product browsing, cart management, and checkout flow.',
     'project_soundora': 'SoundOra',
     'project_soundora_desc_short':
-        'Audio streaming app with music playback and offline support.',
+        'Cross-platform Arabic music app with real-time maqam detection, synced lyrics, spatial audio, and smart playlists.',
     'project_soundora_desc':
-        'Audio streaming app with music playback, playlist management, and offline support.',
+        'Next-gen cross-platform Arabic music experience (Android, iOS, Web) with the first real-time maqam-aware playback engine.\n\n• Live Arabic maqam detection with confidence percentage (Rast, Nahawand, Hijaz, Bayati, Saba, Kurd, Sikah, Ajam)\n• Browse, play, and stream Maqam radio stations by scale\n• Smart lyrics sync with tap-to-seek, emotion coloring, and shareable lyric cards\n• Karaoke mode with synchronized real-time lyrics\n• SmartDJ AI playlist generator with 4 modes (Party, Chill, Workout, Sleep)\n• MoodMap discovery across 7 moods (happy, sad, energetic, calm, focus, party, sleep)\n• Personalized mood-based music for every moment\n• Spatial Audio with 3D immersive sound experience\n• Music Card: create and share beautiful cards from your favorite lyrics\n• Lyrics Memory: learn and remember your favorite lyrics\n• Quran: listen, recite, and explore\n• Listening parties with friends in real-time\n• Achievements & XP to track your music journey\n• Offline downloads for listening anywhere\n• TimeMachine: browse songs by decade or what dropped on this day\n\nTech Stack: Flutter, Dart, Supabase, PostgreSQL, Bloc/Cubit, Firebase',
     'project_minishop': 'miniShop',
     'project_minishop_desc_short':
         'Lightweight e-commerce app with product listing and search.',
@@ -162,9 +162,9 @@ class AppLocalizations {
         'تطبيق متجر إلكتروني للأحذية الرياضية مع تصفح المنتجات وإدارة السلة وعملية الدفع.',
     'project_soundora': 'ساوند أورا',
     'project_soundora_desc_short':
-        'تطبيق بث موسيقى مع تشغيل الأغاني ودعم التشغيل بدون إنترنت.',
+        'تطبيق موسيقى عربية متعدد المنصات مع كشف المقام لحظياً وكلمات متزامنة وصوت مكاني وقوائم ذكية.',
     'project_soundora_desc':
-        'تطبيق بث موسيقى مع تشغيل الأغاني وإدارة قوائم التشغيل ودعم التشغيل بدون إنترنت.',
+        'تجربة موسيقى عربية متعددة المنصات (Android، iOS، Web) بأول محرك تشغيل واعٍ بالمقام لحظياً.\n\n• كشف المقام العربي لحظياً مع نسبة ثقة (رست، نهاوند، حجاز، بياتي، صبا، كرد، سيكاه، عجم)\n• تصفح وتشغيل وبث محطات راديو المقام حسب السلم\n• كلمات متزامنة مع نقر للبحث وتلوين المشاعر وبطاقات قابلة للمشاركة\n• وضع الكاريوكي مع كلمات لحظية متزامنة\n• مولّد قوائم تشغيل ذكي SmartDJ بـ 4 أنماط (حفلة، هدوء، تمارين، نوم)\n• اكتشاف عبر MoodMap بـ 7 مزاجات (سعيد، حزين، نشيط، هادئ، تركيز، حفلة، نوم)\n• موسيقى مخصصة حسب المزاج لكل لحظة\n• صوت مكاني Spatial Audio بتجربة صوتية ثلاثية الأبعاد\n• بطاقة موسيقى Music Card: أنشئ وشارك بطاقات جميلة من كلماتك المفضلة\n• ذاكرة الكلمات Lyrics Memory: تعلم وتذكر كلماتك المفضلة\n• القرآن: استمع وتلاو واستكشف\n• جلسات استماع جماعية مع الأصدقاء في الوقت الفعلي\n• إنجازات وخبرة XP لتتبع رحلتك الموسيقية\n• تحميل للاستماع بدون إنترنت\n• TimeMachine: تصفح الأغاني حسب العقد أو ما صدر في هذا اليوم\n\nالتقنيات: Flutter، Dart، Supabase، PostgreSQL، Bloc/Cubit، Firebase',
     'project_minishop': 'ميني شوب',
     'project_minishop_desc_short':
         'تطبيق متجر إلكتروني خفيف مع عرض المنتجات والبحث.',

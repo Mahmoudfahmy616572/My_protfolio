@@ -1201,8 +1201,18 @@ class _ProjectsSection extends StatelessWidget {
         shortDescription: t.tr('project_soundora_desc_short'),
         imagePath: 'assets/images/SoundOra.webp',
         githubUrl: 'https://github.com/Mahmoudfahmy616572/soundora',
+        apkUrl:
+            'https://github.com/Mahmoudfahmy616572/soundora/releases/download/v1.0.0/app-arm64-v8a-release.apk',
+        liveDemoUrl: 'https://mahmoudfahmy616572.github.io/soundora-website/',
         seniority: SeniorityLevel.senior,
-        techStack: const ['Flutter', 'Dart', 'Firebase', 'Cloudinary'],
+        techStack: const [
+          'Flutter',
+          'Dart',
+          'Supabase',
+          'PostgreSQL',
+          'Bloc/Cubit',
+          'Firebase',
+        ],
       ),
       _Project(
         name: t.tr('project_sneakers'),
