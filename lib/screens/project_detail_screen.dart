@@ -16,6 +16,7 @@ class ProjectData {
   final String? driverApkUrl;
   final String? liveDemoUrl;
   final String? driverLiveDemoUrl;
+  final String? websiteUrl;
   final String seniority;
   final List<String> techStack;
 
@@ -32,6 +33,7 @@ class ProjectData {
     this.driverApkUrl,
     this.liveDemoUrl,
     this.driverLiveDemoUrl,
+    this.websiteUrl,
     this.seniority = '',
     this.techStack = const [],
   });
@@ -81,6 +83,7 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen>
         widget.project.apkUrl != null) c++;
     if (widget.project.driverApkUrl != null) c++;
     if (widget.project.githubUrl != null) c++;
+    if (widget.project.websiteUrl != null) c++;
     return c;
   }
 
@@ -352,6 +355,18 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen>
           label: t.tr('view_on_github'),
           icon: Icons.open_in_new,
           onTap: () => launchUrl(Uri.parse(readmeUrl)),
+        ),
+      )));
+    }
+
+    if (project.websiteUrl != null) {
+      buttons.add(const SizedBox(height: 10));
+      buttons.add(slideIn(SizedBox(
+        width: double.infinity,
+        child: _DetailButton(
+          label: t.tr('promo_website'),
+          icon: Icons.open_in_browser,
+          onTap: () => launchUrl(Uri.parse(project.websiteUrl!)),
         ),
       )));
     }

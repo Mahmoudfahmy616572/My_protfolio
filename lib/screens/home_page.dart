@@ -1203,7 +1203,7 @@ class _ProjectsSection extends StatelessWidget {
         githubUrl: 'https://github.com/Mahmoudfahmy616572/soundora',
         apkUrl:
             'https://github.com/Mahmoudfahmy616572/soundora/releases/download/v1.0.0/app-arm64-v8a-release.apk',
-        liveDemoUrl: 'https://mahmoudfahmy616572.github.io/soundora-website/',
+        websiteUrl: 'https://mahmoudfahmy616572.github.io/soundora-website/',
         seniority: SeniorityLevel.senior,
         techStack: const [
           'Flutter',
@@ -1375,6 +1375,7 @@ class _Project {
   final String? driverApkUrl;
   final String? liveDemoUrl;
   final String? driverLiveDemoUrl;
+  final String? websiteUrl;
   final SeniorityLevel seniority;
   final List<String> techStack;
 
@@ -1394,6 +1395,7 @@ class _Project {
     this.driverApkUrl,
     this.liveDemoUrl,
     this.driverLiveDemoUrl,
+    this.websiteUrl,
     this.seniority = SeniorityLevel.all,
     this.techStack = const [],
   });
@@ -1619,6 +1621,7 @@ class _ProjectCardState extends State<_ProjectCard> {
                                   driverApkUrl: widget.project.driverApkUrl,
                                   liveDemoUrl: widget.project.liveDemoUrl,
                                   driverLiveDemoUrl: widget.project.driverLiveDemoUrl,
+                                  websiteUrl: widget.project.websiteUrl,
                                   seniority: widget.project.seniority != SeniorityLevel.all
                                       ? widget.project.seniority.name[0].toUpperCase() + widget.project.seniority.name.substring(1)
                                       : '',
