@@ -1637,6 +1637,8 @@ class _SkillCircleState extends State<_SkillCircle>
     with SingleTickerProviderStateMixin {
   late final AnimationController _controller;
   late final Animation<double> _anim;
+  ScrollPosition? _scrollPosition;
+  bool _visible = false;
 
   @override
   void initState() {
@@ -1646,13 +1648,49 @@ class _SkillCircleState extends State<_SkillCircle>
       duration: const Duration(milliseconds: 1200),
     );
     _anim = CurvedAnimation(parent: _controller, curve: Curves.easeOutCubic);
-    Future.delayed(Duration(milliseconds: 200 * widget.index), () {
-      if (mounted) _controller.forward();
-    });
+    WidgetsBinding.instance.addPostFrameCallback((_) => _checkVisibility());
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    final scrollable = Scrollable.maybeOf(context);
+    final newPosition = scrollable?.position;
+    if (newPosition != _scrollPosition) {
+      _scrollPosition?.removeListener(_onScroll);
+      _scrollPosition = newPosition;
+      newPosition?.addListener(_onScroll);
+    }
+  }
+
+  void _onScroll() {
+    _checkVisibility();
+  }
+
+  void _checkVisibility() {
+    if (!mounted) return;
+    final renderBox = context.findRenderObject() as RenderBox?;
+    if (renderBox == null) return;
+    final pos = renderBox.localToGlobal(Offset.zero);
+    final size = renderBox.size;
+    final scrollable = Scrollable.maybeOf(context);
+    final viewportHeight = scrollable?.context.size?.height ?? 600;
+    final isVisible = pos.dy < viewportHeight && pos.dy + size.height > 0;
+
+    if (isVisible && !_visible) {
+      _visible = true;
+      Future.delayed(Duration(milliseconds: 200 * widget.index), () {
+        if (mounted && _visible) _controller.forward(from: 0);
+      });
+    } else if (!isVisible && _visible) {
+      _visible = false;
+      _controller.reset();
+    }
   }
 
   @override
   void dispose() {
+    _scrollPosition?.removeListener(_onScroll);
     _controller.dispose();
     super.dispose();
   }
