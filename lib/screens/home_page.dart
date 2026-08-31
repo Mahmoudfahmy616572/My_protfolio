@@ -304,8 +304,89 @@ class _FABState extends State<_FAB> {
   }
 }
 
-class _HeaderSection extends StatelessWidget {
+class _HeaderSection extends StatefulWidget {
   const _HeaderSection();
+
+  @override
+  State<_HeaderSection> createState() => _HeaderSectionState();
+}
+
+class _HeaderSectionState extends State<_HeaderSection>
+    with SingleTickerProviderStateMixin {
+  late final AnimationController _ctrl;
+
+  @override
+  void initState() {
+    super.initState();
+    _ctrl = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 2400),
+    );
+    Future.delayed(const Duration(milliseconds: 300), () {
+      if (mounted) _ctrl.forward();
+    });
+  }
+
+  @override
+  void dispose() {
+    _ctrl.dispose();
+    super.dispose();
+  }
+
+  Widget _buildProfileImage(
+      BuildContext context, double size, double borderRadius) {
+    final theme = Theme.of(context);
+    return ClipRRect(
+      borderRadius: BorderRadius.circular(borderRadius),
+      child: Image.asset(
+        'assets/images/profile.webp',
+        width: size,
+        height: size,
+        fit: BoxFit.cover,
+        errorBuilder: (_, __, ___) => Container(
+          width: size,
+          height: size,
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(borderRadius),
+            color: theme.colorScheme.primaryContainer,
+          ),
+          child: Icon(Icons.person,
+              size: size * 0.44, color: theme.colorScheme.primary),
+        ),
+      ),
+    );
+  }
+
+  Widget _socialButtonByIndex(int index, AppLocalizations t) {
+    switch (index) {
+      case 0:
+        return const _SocialButton(
+          icon: Icon(Icons.email_outlined),
+          label: 'Email',
+          url: 'mailto:mahmoudfahmeyy@gmail.com',
+        );
+      case 1:
+        return const _SocialButton(
+          icon: Icon(Icons.code),
+          label: 'GitHub',
+          url: 'https://github.com/Mahmoudfahmy616572',
+        );
+      case 2:
+        return const _SocialButton(
+          icon: Icon(Icons.link),
+          label: 'LinkedIn',
+          url: 'https://linkedin.com/in/mahmoud__fahmy',
+        );
+      case 3:
+        return _SocialButton(
+          icon: FaIcon(FontAwesomeIcons.whatsapp),
+          label: t.tr('whatsapp'),
+          url: 'https://wa.me/201013312546',
+        );
+      default:
+        return const SizedBox.shrink();
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -314,323 +395,223 @@ class _HeaderSection extends StatelessWidget {
 
     return AnimatedSection(
       index: 0,
-      child: Container(
-        width: double.infinity,
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-            colors: [
-              theme.colorScheme.primary.withValues(alpha: 0.15),
-              theme.colorScheme.surface,
-            ],
-          ),
-        ),
-        padding: const EdgeInsets.fromLTRB(24, 80, 24, 60),
-        child: LayoutBuilder(
-          builder: (context, constraints) {
-            final isWide = constraints.maxWidth > 800;
-            if (isWide) {
-              return Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  ClipRRect(
-                    borderRadius: BorderRadius.circular(24),
-                    child: Image.asset(
-                      'assets/images/profile.webp',
-                      width: 180,
-                      height: 180,
-                      fit: BoxFit.cover,
-                      errorBuilder: (_, __, ___) => Container(
-                        width: 180,
-                        height: 180,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(24),
-                          color: theme.colorScheme.primaryContainer,
-                        ),
-                        child: Icon(Icons.person,
-                            size: 80, color: theme.colorScheme.primary),
-                      ),
-                    ),
-                  ),
-                  const SizedBox(width: 48),
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        ShaderMask(
-                          shaderCallback: (bounds) => LinearGradient(
-                            colors: [
-                              theme.colorScheme.primary,
-                              theme.colorScheme.tertiary,
-                            ],
-                          ).createShader(bounds),
-                          child: Text(
-                            t.tr('name'),
-                            style:
-                                theme.textTheme.headlineLarge?.copyWith(
-                              fontWeight: FontWeight.bold,
-                              letterSpacing: -0.5,
-                              color: Colors.white,
-                            ),
-                          ),
-                        ),
-                        const SizedBox(height: 8),
-                        Container(
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 16, vertical: 6),
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(20),
-                            color: theme.colorScheme.primary
-                                .withValues(alpha: 0.15),
-                          ),
-                          child: Text(
-                            t.tr('title'),
-                            style: theme.textTheme.titleMedium?.copyWith(
-                              color: theme.colorScheme.primary,
-                              fontWeight: FontWeight.w600,
-                            ),
-                          ),
-                        ),
-                        const SizedBox(height: 12),
-                        Row(
-                          children: [
-                            Icon(Icons.location_on_outlined,
-                                size: 16,
-                                color: theme.colorScheme.onSurface
-                                    .withValues(alpha: 0.5)),
-                            const SizedBox(width: 4),
-                            Text(
-                              t.tr('location'),
-                              style:
-                                  theme.textTheme.bodyMedium?.copyWith(
-                                color: theme.colorScheme.onSurface
-                                    .withValues(alpha: 0.6),
-                              ),
-                            ),
-                          ],
-                        ),
-                        const SizedBox(height: 16),
-                        Container(
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 14, vertical: 7),
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(20),
-                            color:
-                                Colors.green.withValues(alpha: 0.12),
-                            border: Border.all(
-                              color:
-                                  Colors.green.withValues(alpha: 0.4),
-                              width: 1,
-                            ),
-                          ),
-                          child: Row(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              Container(
-                                width: 9,
-                                height: 9,
-                                decoration: const BoxDecoration(
-                                  color: Colors.green,
-                                  shape: BoxShape.circle,
-                                ),
-                              ),
-                              const SizedBox(width: 8),
-                              Text(
-                                t.tr('open_to_work'),
-                                style: theme
-                                    .textTheme.bodyMedium
-                                    ?.copyWith(
-                                  color: Colors.green.shade700,
-                                  fontWeight: FontWeight.w600,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                        const SizedBox(height: 24),
-                        Row(
-                          children: [
-                            _SocialButton(
-                              icon: const Icon(Icons.email_outlined),
-                              label: 'Email',
-                              url:
-                                  'mailto:mahmoudfahmeyy@gmail.com',
-                            ),
-                            const SizedBox(width: 12),
-                            _SocialButton(
-                              icon: const Icon(Icons.code),
-                              label: 'GitHub',
-                              url:
-                                  'https://github.com/Mahmoudfahmy616572',
-                            ),
-                            const SizedBox(width: 12),
-                            _SocialButton(
-                              icon: const Icon(Icons.link),
-                              label: 'LinkedIn',
-                              url:
-                                  'https://linkedin.com/in/mahmoud__fahmy',
-                            ),
-                            const SizedBox(width: 12),
-                            _SocialButton(
-                              icon:
-                                  FaIcon(FontAwesomeIcons.whatsapp),
-                              label: t.tr('whatsapp'),
-                              url: 'https://wa.me/201013312546',
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
-                  ),
+      child: AnimatedBuilder(
+        animation: _ctrl,
+        builder: (context, _) {
+          final v = _ctrl.value;
+
+          final imageTween = Tween<double>(begin: 1.0, end: 0.0).animate(
+            CurvedAnimation(
+              parent: _ctrl,
+              curve: const Interval(0.0, 0.4, curve: Curves.easeInOutCubic),
+            ),
+          );
+          final radiusTween =
+              Tween<double>(begin: 0.0, end: 24.0).animate(
+            CurvedAnimation(
+              parent: _ctrl,
+              curve: const Interval(0.1, 0.5, curve: Curves.easeInOutCubic),
+            ),
+          );
+
+          final contentOpacity =
+              v > 0.35 ? 1.0 : 0.0;
+
+          Widget _slideFrom(
+              Offset begin, Interval interval, Widget child) {
+            final anim = Tween<Offset>(begin: begin, end: Offset.zero)
+                .animate(CurvedAnimation(
+              parent: _ctrl,
+              curve: interval,
+            ));
+            return SlideTransition(position: anim, child: child);
+          }
+
+          final nameAnim = _slideFrom(
+            const Offset(0, -0.5),
+            const Interval(0.35, 0.55, curve: Curves.easeOutBack),
+            ShaderMask(
+              shaderCallback: (bounds) => LinearGradient(
+                colors: [
+                  theme.colorScheme.primary,
+                  theme.colorScheme.tertiary,
                 ],
-              );
-            }
-            return Column(
+              ).createShader(bounds),
+              child: Text(
+                t.tr('name'),
+                style: theme.textTheme.headlineLarge?.copyWith(
+                  fontWeight: FontWeight.bold,
+                  letterSpacing: -0.5,
+                  color: Colors.white,
+                ),
+              ),
+            ),
+          );
+
+          final titleAnim = _slideFrom(
+            const Offset(0.6, 0),
+            const Interval(0.42, 0.62, curve: Curves.easeOutBack),
+            Container(
+              padding:
+                  const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(20),
+                color: theme.colorScheme.primary.withValues(alpha: 0.15),
+              ),
+              child: Text(
+                t.tr('title'),
+                style: theme.textTheme.titleMedium?.copyWith(
+                  color: theme.colorScheme.primary,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+            ),
+          );
+
+          final locationAnim = _slideFrom(
+            const Offset(-0.6, 0),
+            const Interval(0.49, 0.69, curve: Curves.easeOutBack),
+            Row(
+              mainAxisSize: MainAxisSize.min,
               children: [
-                ClipRRect(
-                  borderRadius: BorderRadius.circular(24),
-                  child: Image.asset(
-                    'assets/images/profile.webp',
-                    width: 120,
-                    height: 120,
-                    fit: BoxFit.cover,
-                    errorBuilder: (_, __, ___) => Container(
-                      width: 120,
-                      height: 120,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(24),
-                        color: theme.colorScheme.primaryContainer,
-                      ),
-                      child: Icon(Icons.person,
-                          size: 60,
-                          color: theme.colorScheme.primary),
-                    ),
+                Icon(Icons.location_on_outlined,
+                    size: 16,
+                    color: theme.colorScheme.onSurface
+                        .withValues(alpha: 0.5)),
+                const SizedBox(width: 4),
+                Text(
+                  t.tr('location'),
+                  style: theme.textTheme.bodyMedium?.copyWith(
+                    color: theme.colorScheme.onSurface
+                        .withValues(alpha: 0.6),
                   ),
                 ),
-                const SizedBox(height: 28),
-                ShaderMask(
-                  shaderCallback: (bounds) => LinearGradient(
-                    colors: [
-                      theme.colorScheme.primary,
-                      theme.colorScheme.tertiary,
-                    ],
-                  ).createShader(bounds),
-                  child: Text(
-                    t.tr('name'),
-                    style: theme.textTheme.headlineLarge?.copyWith(
-                      fontWeight: FontWeight.bold,
-                      letterSpacing: -0.5,
-                      color: Colors.white,
+              ],
+            ),
+          );
+
+          final badgeAnim = _slideFrom(
+            const Offset(0, 0.5),
+            const Interval(0.56, 0.76, curve: Curves.easeOutBack),
+            Container(
+              padding:
+                  const EdgeInsets.symmetric(horizontal: 14, vertical: 7),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(20),
+                color: Colors.green.withValues(alpha: 0.12),
+                border: Border.all(
+                  color: Colors.green.withValues(alpha: 0.4),
+                  width: 1,
+                ),
+              ),
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Container(
+                    width: 9,
+                    height: 9,
+                    decoration: const BoxDecoration(
+                      color: Colors.green,
+                      shape: BoxShape.circle,
                     ),
                   ),
-                ),
-                const SizedBox(height: 8),
-                Container(
-                  padding: const EdgeInsets.symmetric(
-                      horizontal: 16, vertical: 6),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(20),
-                    color: theme.colorScheme.primary
-                        .withValues(alpha: 0.15),
-                  ),
-                  child: Text(
-                    t.tr('title'),
-                    style: theme.textTheme.titleMedium?.copyWith(
-                      color: theme.colorScheme.primary,
+                  const SizedBox(width: 8),
+                  Text(
+                    t.tr('open_to_work'),
+                    style: theme.textTheme.bodyMedium?.copyWith(
+                      color: Colors.green.shade700,
                       fontWeight: FontWeight.w600,
                     ),
                   ),
-                ),
+                ],
+              ),
+            ),
+          );
+
+          final socialAnims = List.generate(4, (i) {
+            final begin = 0.62 + i * 0.06;
+            return _slideFrom(
+              const Offset(1.2, 0),
+              Interval(begin, begin + 0.18, curve: Curves.easeOutBack),
+              _socialButtonByIndex(i, t),
+            );
+          });
+
+          final contentColumn = Opacity(
+            opacity: contentOpacity,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                nameAnim,
                 const SizedBox(height: 8),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Icon(Icons.location_on_outlined,
-                        size: 16,
-                        color: theme.colorScheme.onSurface
-                            .withValues(alpha: 0.5)),
-                    const SizedBox(width: 4),
-                    Text(
-                      t.tr('location'),
-                      style: theme.textTheme.bodyMedium?.copyWith(
-                        color: theme.colorScheme.onSurface
-                            .withValues(alpha: 0.6),
-                      ),
-                    ),
-                  ],
-                ),
+                titleAnim,
+                const SizedBox(height: 12),
+                locationAnim,
                 const SizedBox(height: 16),
-                Container(
-                  padding: const EdgeInsets.symmetric(
-                      horizontal: 14, vertical: 7),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(20),
-                    color: Colors.green.withValues(alpha: 0.12),
-                    border: Border.all(
-                      color: Colors.green.withValues(alpha: 0.4),
-                      width: 1,
-                    ),
-                  ),
-                  child: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Container(
-                        width: 9,
-                        height: 9,
-                        decoration: const BoxDecoration(
-                          color: Colors.green,
-                          shape: BoxShape.circle,
-                        ),
-                      ),
-                      const SizedBox(width: 8),
-                      Text(
-                        t.tr('open_to_work'),
-                        style:
-                            theme.textTheme.bodyMedium?.copyWith(
-                          color: Colors.green.shade700,
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
+                badgeAnim,
                 const SizedBox(height: 24),
                 Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    _SocialButton(
-                      icon: const Icon(Icons.email_outlined),
-                      label: 'Email',
-                      url: 'mailto:mahmoudfahmeyy@gmail.com',
-                    ),
+                    socialAnims[0],
                     const SizedBox(width: 12),
-                    _SocialButton(
-                      icon: const Icon(Icons.code),
-                      label: 'GitHub',
-                      url:
-                          'https://github.com/Mahmoudfahmy616572',
-                    ),
+                    socialAnims[1],
                     const SizedBox(width: 12),
-                    _SocialButton(
-                      icon: const Icon(Icons.link),
-                      label: 'LinkedIn',
-                      url:
-                          'https://linkedin.com/in/mahmoud__fahmy',
-                    ),
+                    socialAnims[2],
                     const SizedBox(width: 12),
-                    _SocialButton(
-                      icon: FaIcon(FontAwesomeIcons.whatsapp),
-                      label: t.tr('whatsapp'),
-                      url: 'https://wa.me/201013312546',
-                    ),
+                    socialAnims[3],
                   ],
                 ),
               ],
-            );
-          },
-        ),
+            ),
+          );
+
+          return Container(
+            width: double.infinity,
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+                colors: [
+                  theme.colorScheme.primary.withValues(alpha: 0.15),
+                  theme.colorScheme.surface,
+                ],
+              ),
+            ),
+            padding: const EdgeInsets.fromLTRB(24, 80, 24, 60),
+            child: LayoutBuilder(
+              builder: (context, constraints) {
+                final isWide = constraints.maxWidth > 800;
+                final maxSize = isWide ? 180.0 : 120.0;
+                final fullHeight = isWide ? 320.0 : 320.0;
+                final currentSize =
+                    maxSize + (fullHeight - maxSize) * imageTween.value;
+                final currentRadius = radiusTween.value;
+
+                final profileImage =
+                    _buildProfileImage(context, currentSize, currentRadius);
+
+                if (isWide) {
+                  return Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      profileImage,
+                      const SizedBox(width: 48),
+                      Expanded(child: contentColumn),
+                    ],
+                  );
+                }
+                return Column(
+                  children: [
+                    profileImage,
+                    const SizedBox(height: 28),
+                    contentColumn,
+                  ],
+                );
+              },
+            ),
+          );
+        },
       ),
     );
   }
