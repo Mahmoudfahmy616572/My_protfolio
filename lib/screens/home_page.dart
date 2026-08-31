@@ -320,9 +320,9 @@ class _HeaderSectionState extends State<_HeaderSection>
     super.initState();
     _ctrl = AnimationController(
       vsync: this,
-      duration: const Duration(milliseconds: 2400),
+      duration: const Duration(milliseconds: 3200),
     );
-    Future.delayed(const Duration(milliseconds: 300), () {
+    Future.delayed(const Duration(milliseconds: 800), () {
       if (mounted) _ctrl.forward();
     });
   }
@@ -403,19 +403,19 @@ class _HeaderSectionState extends State<_HeaderSection>
           final imageTween = Tween<double>(begin: 1.0, end: 0.0).animate(
             CurvedAnimation(
               parent: _ctrl,
-              curve: const Interval(0.0, 0.4, curve: Curves.easeInOutCubic),
+              curve: const Interval(0.0, 0.35, curve: Curves.easeInOutCubic),
             ),
           );
           final radiusTween =
               Tween<double>(begin: 0.0, end: 24.0).animate(
             CurvedAnimation(
               parent: _ctrl,
-              curve: const Interval(0.1, 0.5, curve: Curves.easeInOutCubic),
+              curve: const Interval(0.05, 0.4, curve: Curves.easeInOutCubic),
             ),
           );
 
           final contentOpacity =
-              v > 0.35 ? 1.0 : 0.0;
+              v > 0.4 ? 1.0 : 0.0;
 
           Widget _slideFrom(
               Offset begin, Interval interval, Widget child) {
@@ -428,8 +428,8 @@ class _HeaderSectionState extends State<_HeaderSection>
           }
 
           final nameAnim = _slideFrom(
-            const Offset(0, -0.5),
-            const Interval(0.35, 0.55, curve: Curves.easeOutBack),
+            const Offset(0, -3.0),
+            const Interval(0.38, 0.60, curve: Curves.easeOutBack),
             ShaderMask(
               shaderCallback: (bounds) => LinearGradient(
                 colors: [
@@ -449,8 +449,8 @@ class _HeaderSectionState extends State<_HeaderSection>
           );
 
           final titleAnim = _slideFrom(
-            const Offset(0.6, 0),
-            const Interval(0.42, 0.62, curve: Curves.easeOutBack),
+            const Offset(3.0, 0),
+            const Interval(0.44, 0.66, curve: Curves.easeOutBack),
             Container(
               padding:
                   const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
@@ -469,8 +469,8 @@ class _HeaderSectionState extends State<_HeaderSection>
           );
 
           final locationAnim = _slideFrom(
-            const Offset(-0.6, 0),
-            const Interval(0.49, 0.69, curve: Curves.easeOutBack),
+            const Offset(-3.0, 0),
+            const Interval(0.50, 0.72, curve: Curves.easeOutBack),
             Row(
               mainAxisSize: MainAxisSize.min,
               children: [
@@ -491,8 +491,8 @@ class _HeaderSectionState extends State<_HeaderSection>
           );
 
           final badgeAnim = _slideFrom(
-            const Offset(0, 0.5),
-            const Interval(0.56, 0.76, curve: Curves.easeOutBack),
+            const Offset(0, 3.0),
+            const Interval(0.56, 0.78, curve: Curves.easeOutBack),
             Container(
               padding:
                   const EdgeInsets.symmetric(horizontal: 14, vertical: 7),
@@ -529,10 +529,10 @@ class _HeaderSectionState extends State<_HeaderSection>
           );
 
           final socialAnims = List.generate(4, (i) {
-            final begin = 0.62 + i * 0.06;
+            final begin = 0.60 + i * 0.06;
             return _slideFrom(
-              const Offset(1.2, 0),
-              Interval(begin, begin + 0.18, curve: Curves.easeOutBack),
+              const Offset(3.0, 0),
+              Interval(begin, begin + 0.20, curve: Curves.easeOutBack),
               _socialButtonByIndex(i, t),
             );
           });
