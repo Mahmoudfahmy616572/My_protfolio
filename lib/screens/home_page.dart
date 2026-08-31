@@ -160,7 +160,7 @@ class _HomePageState extends State<HomePage> {
           ),
           if (isWide)
             Positioned(
-              left: 8,
+              right: 8,
               top: 0,
               bottom: 0,
               child: IgnorePointer(
@@ -734,7 +734,7 @@ class _DesktopSidebar extends StatelessWidget {
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(8),
                 border: Border(
-                  left: BorderSide(
+                  right: BorderSide(
                     color: isActive
                         ? theme.colorScheme.primary
                         : Colors.transparent,
