@@ -472,22 +472,24 @@ class _HeaderSectionState extends State<_HeaderSection>
           final locationAnim = _slideFrom(
             const Offset(-3.0, 0),
             const Interval(0.50, 0.72, curve: Curves.easeOutBack),
-            Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Icon(Icons.location_on_outlined,
-                    size: 16,
-                    color: theme.colorScheme.onSurface
-                        .withValues(alpha: 0.5)),
-                const SizedBox(width: 4),
-                Text(
-                  t.tr('location'),
-                  style: theme.textTheme.bodyMedium?.copyWith(
-                    color: theme.colorScheme.onSurface
-                        .withValues(alpha: 0.6),
+            Center(
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Icon(Icons.location_on_outlined,
+                      size: 16,
+                      color: theme.colorScheme.onSurface
+                          .withValues(alpha: 0.5)),
+                  const SizedBox(width: 4),
+                  Text(
+                    t.tr('location'),
+                    style: theme.textTheme.bodyMedium?.copyWith(
+                      color: theme.colorScheme.onSurface
+                          .withValues(alpha: 0.6),
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           );
 
@@ -541,7 +543,7 @@ class _HeaderSectionState extends State<_HeaderSection>
           final contentColumn = Opacity(
             opacity: contentOpacity,
             child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
               children: [
                 nameAnim,
                 const SizedBox(height: 8),
@@ -551,16 +553,19 @@ class _HeaderSectionState extends State<_HeaderSection>
                 const SizedBox(height: 16),
                 badgeAnim,
                 const SizedBox(height: 24),
-                Row(
-                  children: [
-                    socialAnims[0],
-                    const SizedBox(width: 12),
-                    socialAnims[1],
-                    const SizedBox(width: 12),
-                    socialAnims[2],
-                    const SizedBox(width: 12),
-                    socialAnims[3],
-                  ],
+                Center(
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      socialAnims[0],
+                      const SizedBox(width: 12),
+                      socialAnims[1],
+                      const SizedBox(width: 12),
+                      socialAnims[2],
+                      const SizedBox(width: 12),
+                      socialAnims[3],
+                    ],
+                  ),
                 ),
               ],
             ),
@@ -582,7 +587,7 @@ class _HeaderSectionState extends State<_HeaderSection>
             child: LayoutBuilder(
               builder: (context, constraints) {
                 final isWide = constraints.maxWidth > 800;
-                final maxSize = isWide ? 180.0 : 120.0;
+                final maxSize = isWide ? 200.0 : 140.0;
                 final fullHeight = isWide ? 320.0 : 320.0;
                 final currentSize =
                     maxSize + (fullHeight - maxSize) * imageTween.value;
@@ -591,18 +596,8 @@ class _HeaderSectionState extends State<_HeaderSection>
                 final profileImage =
                     _buildProfileImage(context, currentSize, currentRadius);
 
-                if (isWide) {
-                  return Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      profileImage,
-                      const SizedBox(width: 48),
-                      Expanded(child: contentColumn),
-                    ],
-                  );
-                }
                 return Column(
+                  mainAxisSize: MainAxisSize.min,
                   children: [
                     profileImage,
                     const SizedBox(height: 28),
