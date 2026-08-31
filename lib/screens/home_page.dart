@@ -25,6 +25,7 @@ class _HomePageState extends State<HomePage> {
   double _scrollProgress = 0;
   bool _showBackToTop = false;
   int _activeSection = 0;
+  double _sidebarTop = 200;
 
   static const _sectionKeys = [
     'about_me',
@@ -162,16 +163,24 @@ class _HomePageState extends State<HomePage> {
           if (isWide)
             Positioned(
               right: 8,
-              top: 0,
-              bottom: 0,
+              top: _sidebarTop,
               child: IgnorePointer(
                 ignoring: !_showBackToTop,
                 child: AnimatedOpacity(
                   opacity: _showBackToTop ? 1.0 : 0.0,
                   duration: const Duration(milliseconds: 300),
-                  child: _DesktopSidebar(
-                    activeSection: _activeSection,
-                    onTap: _scrollToSection,
+                  child: GestureDetector(
+                    onVerticalDragUpdate: (details) {
+                      setState(() {
+                        _sidebarTop = (_sidebarTop + details.delta.dy)
+                            .clamp(80.0,
+                                MediaQuery.of(context).size.height - 200);
+                      });
+                    },
+                    child: _DesktopSidebar(
+                      activeSection: _activeSection,
+                      onTap: _scrollToSection,
+                    ),
                   ),
                 ),
               ),
