@@ -861,13 +861,7 @@ class _StatsBar extends StatelessWidget {
               index: 1,
               proportion: 0.5,
             ),
-            _StatItem(
-              icon: Icons.code,
-              value: '14',
-              label: 'GitHub Repos',
-              index: 2,
-              proportion: 0.7,
-            ),
+            _GitHubLiveStat(index: 2),
             _StatItem(
               icon: Icons.work_outline,
               value: '2+',
@@ -875,7 +869,6 @@ class _StatsBar extends StatelessWidget {
               index: 3,
               proportion: 0.4,
             ),
-            _GitHubLiveStat(index: 4),
           ],
         ),
       ),
@@ -1526,7 +1519,16 @@ class _SkillsSection extends StatelessWidget {
         duration: const Duration(milliseconds: 300),
         curve: Curves.easeOut,
         width: double.infinity,
-        color: theme.colorScheme.surfaceContainerHighest,
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            colors: [
+              theme.colorScheme.primary.withValues(alpha: 0.06),
+              theme.colorScheme.surface,
+            ],
+          ),
+        ),
         padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 56),
         child: Column(
           children: [
