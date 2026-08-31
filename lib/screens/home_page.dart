@@ -719,14 +719,19 @@ class _DesktopSidebar extends StatelessWidget {
       (7, t.tr('contact')),
     ];
 
+    final isDark = theme.brightness == Brightness.dark;
     return Center(
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 6),
         decoration: BoxDecoration(
-          color: theme.colorScheme.surface.withValues(alpha: 0.8),
+          color: isDark
+              ? Colors.white.withValues(alpha: 0.1)
+              : Colors.black.withValues(alpha: 0.06),
           borderRadius: BorderRadius.circular(12),
           border: Border.all(
-            color: theme.colorScheme.outlineVariant.withValues(alpha: 0.3),
+            color: isDark
+                ? Colors.white.withValues(alpha: 0.15)
+                : Colors.black.withValues(alpha: 0.1),
             width: 1,
           ),
         ),
