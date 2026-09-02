@@ -79,6 +79,11 @@ class AppLocalizations {
         'Lightweight e-commerce app with product listing and search.',
     'project_minishop_desc':
         'Lightweight e-commerce app with product listing, search, and order management.',
+    'project_nexora': 'Nexora',
+    'project_nexora_desc_short':
+        'AI-powered career copilot for profile building, CV creation, and interview prep.',
+    'project_nexora_desc':
+        'AI-powered career intelligence platform. Build your profile, find the right opportunities, create standout CVs, practice interviews, and land your dream role. Features include AI Opportunity Analysis, Career DNA profiling, mock interviews, and application tracking.',
     'go_to_project': 'Go to Project',
     'view_on_github': 'View on GitHub',
     'promo_website': 'Promo Website',
@@ -181,6 +186,11 @@ class AppLocalizations {
         'تطبيق متجر إلكتروني خفيف مع عرض المنتجات والبحث.',
     'project_minishop_desc':
         'تطبيق متجر إلكتروني خفيف مع عرض المنتجات والبحث وإدارة الطلبات.',
+    'project_nexora': 'نكسورا',
+    'project_nexora_desc_short':
+        'منصة ذكاء مهني مدعومة بالذكاء الاصطناعي لبناء الملف الشخصي وإعداد السيرة الذاتية والمقابلات.',
+    'project_nexora_desc':
+        'منصة ذكاء مهني مدعومة بالذكاء الاصطناعي. ابنِ ملفك الشخصي، ابحث عن الفرص المناسبة، أنشئ سير ذاتية مميزة، تدرب على المقابلات، واحصل على وظيفة أحلامك. تشمل ميزات تحليل الفرص بالذكاء الاصطناعي، ملف التعريف المهني، المقابلات التدريبية، وتتبع طلبات العمل.',
     'go_to_project': 'عرض المشروع',
     'view_on_github': 'عرض على جيت هاب',
     'promo_website': 'الموقع الإعلاني',

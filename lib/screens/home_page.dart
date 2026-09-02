@@ -890,7 +890,7 @@ class _StatsBar extends StatelessWidget {
             _GitHubLiveStat(index: 2),
             _StatItem(
               icon: Icons.work_outline,
-              value: '2+',
+              value: '3+',
               label: 'Years Experience',
               index: 3,
               proportion: 0.4,
@@ -1932,6 +1932,21 @@ class _ProjectsSection extends StatelessWidget {
         githubUrl: 'https://github.com/Mahmoudfahmy616572/e_commerce',
         seniority: SeniorityLevel.intermediate,
         techStack: const ['Flutter', 'Dart', 'REST API'],
+      ),
+      _Project(
+        name: t.tr('project_nexora'),
+        description: t.tr('project_nexora_desc'),
+        shortDescription: t.tr('project_nexora_desc_short'),
+        imagePath: 'assets/images/nexora.png',
+        seniority: SeniorityLevel.senior,
+        techStack: const [
+          'Flutter',
+          'Dart',
+          'Firebase',
+          'AI',
+          'Python',
+          'FastAPI',
+        ],
       ),
     ];
 
