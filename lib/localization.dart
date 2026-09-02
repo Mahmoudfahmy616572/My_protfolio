@@ -20,6 +20,11 @@ class AppLocalizations {
     'exp_zikola_period': 'Feb 2026 – Jul 2026',
     'exp_zikola_desc':
         'Developed and maintained cross-platform mobile applications using Flutter and Dart, collaborated with the team on new features and UI/UX, and integrated RESTful APIs with state management.',
+    'exp_freelance': 'Freelance Flutter Developer',
+    'exp_freelance_role': 'Self-Employed',
+    'exp_freelance_period': '2024 – 2026',
+    'exp_freelance_desc':
+        'Built 15+ personal and freelance projects ranging from eCommerce apps (ShipLink, Sneakers) to a smart Arabic music app (SoundOra), handling the full lifecycle from UI/UX to backend, APIs, and Play Store deployment.',
     'exp_military': 'Military Service',
     'exp_military_desc':
         'Completed one year of mandatory military service.',
@@ -118,6 +123,11 @@ class AppLocalizations {
     'exp_zikola_period': 'فبراير 2026 – يوليو 2026',
     'exp_zikola_desc':
         'طوّرت وحافظت على تطبيقات موبايل متعددة المنصات باستخدام Flutter و Dart، تعاونت مع الفريق في مزايا جديدة وتجربة مستخدم، ودمجت واجهات برمجية مع إدارة الحالة.',
+    'exp_freelance': 'مطور فلاتر حر',
+    'exp_freelance_role': 'عمل حر',
+    'exp_freelance_period': '2024 – 2026',
+    'exp_freelance_desc':
+        'بنيت أكثر من 15 مشروعاً شخصياً وحراً تتراوح بين تطبيقات التجارة الإلكترونية (ShipLink، Sneakers) وتطبيق الموسيقى العربية الذكية (SoundOra)، متكلفاً بمسار التطوير الكامل من الواجهات إلى الباك إند وواجهات البرمجة ونشر التطبيقات على متجر Play.',
     'exp_military': 'الخدمة العسكرية',
     'exp_military_desc': 'أتممت سنة الخدمة العسكرية الإلزامية.',
     'exp_military_period': 'مارس 2025 – مارس 2026',

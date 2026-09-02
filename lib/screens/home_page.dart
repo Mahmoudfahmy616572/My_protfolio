@@ -1331,6 +1331,14 @@ class _ExperienceSection extends StatelessWidget {
               child: Column(
                 children: [
                   _TimelineEntry(
+                    icon: Icons.work_outline,
+                    title: t.tr('exp_freelance'),
+                    subtitle: t.tr('exp_freelance_role'),
+                    period: t.tr('exp_freelance_period'),
+                    description: t.tr('exp_freelance_desc'),
+                    showLine: true,
+                  ),
+                  _TimelineEntry(
                     icon: Icons.military_tech,
                     title: t.tr('exp_military'),
                     period: t.tr('exp_military_period'),
