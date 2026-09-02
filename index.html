@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <base href="/My_protfolio/">
+
+  <meta charset="UTF-8">
+  <meta content="IE=Edge" http-equiv="X-UA-Compatible">
+  <meta name="description" content="Mahmoud Fahmy - Flutter Mobile Developer Portfolio. Cross-platform mobile apps built with Flutter and Dart.">
+  <meta name="keywords" content="Mahmoud Fahmy, Flutter, Mobile Developer, Dart, Portfolio, App Developer">
+  <meta name="author" content="Mahmoud Fahmy">
+
+  <!-- Open Graph -->
+  <meta property="og:title" content="Mahmoud Fahmy - Flutter Developer">
+  <meta property="og:description" content="Flutter Mobile Developer Portfolio">
+  <meta property="og:image" content="https://mahmoudfahmy616572.github.io/My_protfolio/assets/assets/images/profile.webp">
+  <meta property="og:url" content="https://mahmoudfahmy616572.github.io/My_protfolio/">
+  <meta property="og:type" content="website">
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Mahmoud Fahmy - Flutter Developer">
+  <meta name="twitter:description" content="Flutter Mobile Developer Portfolio">
+  <meta name="twitter:image" content="https://mahmoudfahmy616572.github.io/My_protfolio/assets/assets/images/profile.webp">
+
+  <!-- iOS meta tags & icons -->
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <meta name="apple-mobile-web-app-title" content="Mahmoud Fahmy">
+  <link rel="apple-touch-icon" href="icons/Icon-192.png">
+
+  <!-- Favicon -->
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='20' fill='%231565C0'/%3E%3Ctext x='50' y='67' text-anchor='middle' font-size='42' font-family='cursive,segoe script,brush script mt,sans-serif' font-weight='bold' fill='white'%3EMF%3C/text%3E%3C/svg%3E">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <title>Mahmoud Fahmy - Flutter Developer</title>
+  <link rel="manifest" href="manifest.json">
+
+  <style>
+    html, body { margin: 0; padding: 0; height: 100%; background: #0D0D1A; }
+    #splash {
+      display: flex; align-items: center; justify-content: center;
+      position: fixed; top: 0; left: 0; right: 0; bottom: 0; z-index: 100;
+      background: #0D0D1A; flex-direction: column;
+      font-family: 'Space Grotesk', sans-serif;
+      transition: opacity 0.5s ease-out;
+    }
+    #splash h1 { color: #A78BFA; font-size: 28px; font-weight: 600; margin: 0; }
+    #splash p { color: #666; margin-top: 8px; font-size: 14px; }
+    .loader {
+      width: 40px; height: 40px; border: 3px solid #1E1E2E;
+      border-top-color: #A78BFA; border-radius: 50%;
+      animation: spin 0.8s linear infinite; margin-bottom: 20px;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    flutter-view { display: block; width: 100%; height: 100%; }
+  </style>
+</head>
+<body>
+  <div id="splash">
+    <div class="loader"></div>
+    <h1>Mahmoud Fahmy</h1>
+    <p>Loading...</p>
+  </div>
+  <script>
+    var splash = document.getElementById('splash');
+    function hideSplash() {
+      splash.style.opacity = '0';
+      splash.style.pointerEvents = 'none';
+      setTimeout(function() { splash.style.display = 'none'; }, 500);
+    }
+    window.addEventListener('flutter-first-frame', hideSplash);
+    setTimeout(hideSplash, 6000);
+  </script>
+  <script src="flutter_bootstrap.js" async></script>
+</body>
+</html>
