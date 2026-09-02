@@ -1915,6 +1915,24 @@ class _ProjectsSection extends StatelessWidget {
         ],
       ),
       _Project(
+        name: t.tr('project_nexora'),
+        description: t.tr('project_nexora_desc'),
+        shortDescription: t.tr('project_nexora_desc_short'),
+        imagePath: 'assets/images/nexora.png',
+        githubUrl: 'https://github.com/Mahmoudfahmy616572/nexora/',
+        apkUrl:
+            'https://github.com/Mahmoudfahmy616572/nexora/releases/download/v1.0.0/app-arm64-v8a-release.apk',
+        seniority: SeniorityLevel.senior,
+        techStack: const [
+          'Flutter',
+          'Dart',
+          'Firebase',
+          'AI',
+          'Python',
+          'FastAPI',
+        ],
+      ),
+      _Project(
         name: t.tr('project_sneakers'),
         description: t.tr('project_sneakers_desc'),
         shortDescription: t.tr('project_sneakers_desc_short'),
@@ -1932,21 +1950,6 @@ class _ProjectsSection extends StatelessWidget {
         githubUrl: 'https://github.com/Mahmoudfahmy616572/e_commerce',
         seniority: SeniorityLevel.intermediate,
         techStack: const ['Flutter', 'Dart', 'REST API'],
-      ),
-      _Project(
-        name: t.tr('project_nexora'),
-        description: t.tr('project_nexora_desc'),
-        shortDescription: t.tr('project_nexora_desc_short'),
-        imagePath: 'assets/images/nexora.png',
-        seniority: SeniorityLevel.senior,
-        techStack: const [
-          'Flutter',
-          'Dart',
-          'Firebase',
-          'AI',
-          'Python',
-          'FastAPI',
-        ],
       ),
     ];
 
