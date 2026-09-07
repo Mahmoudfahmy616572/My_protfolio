@@ -1922,6 +1922,7 @@ class _ProjectsSection extends StatelessWidget {
         githubUrl: 'https://github.com/Mahmoudfahmy616572/nexora/',
         apkUrl:
             'https://github.com/Mahmoudfahmy616572/nexora/releases/download/v1.0.0/app-arm64-v8a-release.apk',
+        websiteUrl: 'https://mahmoudfahmy616572.github.io/nexora/',
         seniority: SeniorityLevel.senior,
         techStack: const [
           'Flutter',
