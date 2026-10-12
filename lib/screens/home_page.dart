@@ -1879,9 +1879,9 @@ class _ProjectsSection extends StatelessWidget {
             'https://mahmoudfahmy616572.github.io/ship_link/admin/',
         adminDashboardLabel: 'Admin Panel',
         apkUrl:
-            'https://github.com/Mahmoudfahmy616572/ship_link/releases/download/v1.0.0/app-arm64-v8a-user-release.apk',
+            'https://github.com/Mahmoudfahmy616572/ship_link/releases/download/v1.1.0/app-arm64-v8a-user-release.apk',
         driverApkUrl:
-            'https://github.com/Mahmoudfahmy616572/ship_link/releases/download/v1.0.0/app-arm64-v8a-driver-release.apk',
+            'https://github.com/Mahmoudfahmy616572/ship_link/releases/download/v1.1.0/app-arm64-v8a-driver-release.apk',
         seniority: SeniorityLevel.senior,
         techStack: const [
           'Flutter',
@@ -1889,6 +1889,7 @@ class _ProjectsSection extends StatelessWidget {
           'Supabase',
           'Firebase',
           'Paymob',
+          'MapTiler',
         ],
         liveDemoUrl: 'https://mahmoudfahmy616572.github.io/ship_link/',
         driverLiveDemoUrl:
