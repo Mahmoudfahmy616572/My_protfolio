@@ -1862,9 +1862,10 @@ class _ProjectsSection extends StatelessWidget {
         techStack: const [
           'Flutter',
           'Dart',
-          'Firebase',
           'Supabase',
-          'REST API',
+          'Gemini AI',
+          'Paymob',
+          'BLoC',
         ],
         liveDemoUrl:
             'https://mahmoudfahmy616572.github.io/uni-path-germany-web/',
@@ -1923,15 +1924,15 @@ class _ProjectsSection extends StatelessWidget {
         githubUrl: 'https://github.com/Mahmoudfahmy616572/nexora/',
         apkUrl:
             'https://github.com/Mahmoudfahmy616572/nexora/releases/download/v1.0.0/app-arm64-v8a-release.apk',
-        websiteUrl: 'https://mahmoudfahmy616572.github.io/nexora/',
+        liveDemoUrl: 'https://mahmoudfahmy616572.github.io/nexora/',
         seniority: SeniorityLevel.senior,
         techStack: const [
           'Flutter',
           'Dart',
-          'Firebase',
-          'AI',
-          'Python',
-          'FastAPI',
+          'Supabase',
+          'Groq AI',
+          'Edge Functions',
+          'BLoC',
         ],
       ),
       _Project(

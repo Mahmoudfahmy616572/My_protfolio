@@ -58,7 +58,7 @@ class AppLocalizations {
     'project_unipath_desc_short':
         'AI-powered platform helping students navigate German university admissions.',
     'project_unipath_desc':
-        'AI-powered platform helping students navigate German university admissions.\n\n• 13,700+ programs indexed across 588 German universities\n• Smart matching algorithm to find the best-fit programs\n• Advanced search with filters by field, city, degree type, and language\n• Complete application tracking and deadline management\n• Student dashboard for managing applications\n• Personalized recommendations based on student profile\n• Push notifications via Firebase Cloud Messaging (FCM)\n• Backend API powered by Supabase\n\nTech Stack: Flutter, Firebase, Supabase, AI/ML, REST APIs',
+        'AI-powered platform helping students navigate German university admissions.\n\n• 13,600+ programs indexed across 360+ German universities\n• Smart matching algorithm to find the best-fit programs\n• Advanced search with filters by field, city, degree type, and language\n• Complete application tracking and deadline management\n• Student dashboard for managing applications\n• Personalized recommendations based on student profile\n• Push notifications via Firebase Cloud Messaging (FCM)\n• Backend API powered by Supabase\n\nTech Stack: Flutter, Firebase, Supabase, AI/ML, REST APIs',
     'project_ship_link': 'ShipLink',
     'project_ship_link_desc_short':
         'E-commerce & delivery platform with real-time order tracking.',
@@ -165,7 +165,7 @@ class AppLocalizations {
     'project_unipath_desc_short':
         'منصة مدعومة بالذكاء الاصطناعي لمساعدة الطلاب في التقديم للجامعات الألمانية.',
     'project_unipath_desc':
-        'منصة مدعومة بالذكاء الاصطناعي لمساعدة الطلاب في التقديم للجامعات الألمانية.\n\n• أكتر من 13,700 برنامج عبر 588 جامعة ألمانية\n• خوارزمية مطابقة ذكية لاكتشاف أفضل البرامج\n• بحث متقدم بفلتر حسب التخصص والمدينة ونوع الدرجة واللغة\n• تتبع كامل للطلبات وإدارة المواعيد النهائية\n• لوحة تحكم للطالب لإدارة الطلبات\n• توصيات مخصصة حسب ملف الطالب\n• إشعارات فورية عبر Firebase Cloud Messaging (FCM)\n• باك إند API مدعوم بـ Supabase\n\nالتقنيات: Flutter، Firebase، Supabase، AI/ML، REST APIs',
+        'منصة مدعومة بالذكاء الاصطناعي لمساعدة الطلاب في التقديم للجامعات الألمانية.\n\n• أكتر من 13,600 برنامج عبر 360+ جامعة ألمانية\n• خوارزمية مطابقة ذكية لاكتشاف أفضل البرامج\n• بحث متقدم بفلتر حسب التخصص والمدينة ونوع الدرجة واللغة\n• تتبع كامل للطلبات وإدارة المواعيد النهائية\n• لوحة تحكم للطالب لإدارة الطلبات\n• توصيات مخصصة حسب ملف الطالب\n• إشعارات فورية عبر Firebase Cloud Messaging (FCM)\n• باك إند API مدعوم بـ Supabase\n\nالتقنيات: Flutter، Firebase، Supabase، AI/ML، REST APIs',
     'project_ship_link': 'ShipLink',
     'project_ship_link_desc_short':
         'منصة تجارة إلكترونية وتوصيل مع تتبع فوري للطلبات.',
