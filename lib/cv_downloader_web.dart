@@ -2,7 +2,7 @@ import 'dart:html' show Blob, Url, AnchorElement;
 import 'package:flutter/services.dart' show rootBundle;
 
 Future<void> downloadCv() async {
-  final data = await rootBundle.load('assets/pdfs/Mahmoud Fahmy.pdf');
+  final data = await rootBundle.load('assets/pdfs/Mahmoud_Fahmy.pdf');
   final blob = Blob([data.buffer.asUint8List()]);
   final url = Url.createObjectUrlFromBlob(blob);
   AnchorElement(href: url)
