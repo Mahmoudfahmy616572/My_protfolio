@@ -1,4 +1,4 @@
-﻿import 'dart:convert';
+import 'dart:convert';
 import 'dart:math';
 import 'dart:ui' as ui;
 import 'package:flutter/material.dart';
@@ -385,7 +385,7 @@ class _HeaderSectionState extends State<_HeaderSection>
         return const _SocialButton(
           icon: Icon(Icons.link),
           label: 'LinkedIn',
-          url: 'https://linkedin.com/in/mahmoud__fahmy',
+          url: 'https://linkedin.com/in/mahmoud-fahmy-129946322',
         );
       case 3:
         return _SocialButton(
@@ -3298,7 +3298,7 @@ class _ContactSectionState extends State<_ContactSection> {
                       label: 'LinkedIn',
                       value: 'Mahmoud Fahmy',
                       url:
-                          'https://linkedin.com/in/mahmoud__fahmy',
+                          'https://linkedin.com/in/mahmoud-fahmy-129946322',
                     ),
                   ),
                   AnimatedStaggeredCard(
@@ -3408,7 +3408,7 @@ class _Footer extends StatelessWidget {
                     IconButton(
                       icon: const Icon(Icons.link),
                       onPressed: () => launchUrl(Uri.parse(
-                          'https://linkedin.com/in/mahmoud__fahmy')),
+                          'https://linkedin.com/in/mahmoud-fahmy-129946322')),
                       tooltip: 'LinkedIn',
                     ),
                     IconButton(
@@ -3500,7 +3500,7 @@ class _Footer extends StatelessWidget {
                     IconButton(
                       icon: const Icon(Icons.link),
                       onPressed: () => launchUrl(Uri.parse(
-                          'https://linkedin.com/in/mahmoud__fahmy')),
+                          'https://linkedin.com/in/mahmoud-fahmy-129946322')),
                       tooltip: 'LinkedIn',
                     ),
                     IconButton(
