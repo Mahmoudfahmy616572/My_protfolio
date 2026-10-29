@@ -1,3 +1,5 @@
+import 'dart:html' as html;
+import 'dart:ui_web' as ui_web;
 import 'package:flutter/material.dart';
 import 'package:portfolio/localization.dart';
 import 'package:portfolio/screens/demo_screen.dart';
@@ -19,6 +21,8 @@ class ProjectData {
   final String? websiteUrl;
   final String seniority;
   final List<String> techStack;
+  final List<String> screenshots;
+  final List<({String label, String assetPath})> promoVideos;
 
   const ProjectData({
     required this.name,
@@ -36,6 +40,8 @@ class ProjectData {
     this.websiteUrl,
     this.seniority = '',
     this.techStack = const [],
+    this.screenshots = const [],
+    this.promoVideos = const [],
   });
 }
 
@@ -52,19 +58,20 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen>
     with SingleTickerProviderStateMixin {
   late final AnimationController _stagger;
   late final List<Animation<double>> _itemAnimations;
+  int _selectedVideoIdx = 0;
 
   @override
   void initState() {
     super.initState();
-    final itemCount = 3 + (widget.project.techStack.isNotEmpty ? 1 + widget.project.techStack.length : 0) + _buttonCount();
+    const itemCount = 24;
     _stagger = AnimationController(
       vsync: this,
-      duration: Duration(milliseconds: 400 + itemCount * 80),
+      duration: const Duration(milliseconds: 900),
     );
 
     _itemAnimations = List.generate(itemCount, (i) {
-      final start = (i * 0.08).clamp(0.0, 0.8);
-      final end = (start + 0.3).clamp(0.0, 1.0);
+      final start = (i * 0.05).clamp(0.0, 0.75);
+      final end = (start + 0.25).clamp(0.0, 1.0);
       return CurvedAnimation(
         parent: _stagger,
         curve: Interval(start, end, curve: Curves.easeOutCubic),
@@ -74,23 +81,102 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen>
     _stagger.forward();
   }
 
-  int _buttonCount() {
-    int c = 0;
-    if (widget.project.liveDemoUrl != null) c++;
-    if (widget.project.driverLiveDemoUrl != null) c++;
-    if (widget.project.dashboardUrl != null ||
-        widget.project.adminDashboardUrl != null ||
-        widget.project.apkUrl != null) c++;
-    if (widget.project.driverApkUrl != null) c++;
-    if (widget.project.githubUrl != null) c++;
-    if (widget.project.websiteUrl != null) c++;
-    return c;
-  }
-
   @override
   void dispose() {
     _stagger.dispose();
     super.dispose();
+  }
+
+  void _openScreenshotCarousel(BuildContext context, int initialIndex) {
+    final shots = widget.project.screenshots;
+    if (shots.isEmpty) return;
+    final pageCtrl = PageController(initialPage: initialIndex);
+    int current = initialIndex;
+
+    showGeneralDialog(
+      context: context,
+      barrierDismissible: true,
+      barrierLabel: '',
+      barrierColor: Colors.black.withValues(alpha: 0.92),
+      transitionDuration: const Duration(milliseconds: 250),
+      pageBuilder: (ctx, anim1, anim2) {
+        return StatefulBuilder(
+          builder: (ctx, setModalState) {
+            return Scaffold(
+              backgroundColor: Colors.transparent,
+              appBar: AppBar(
+                backgroundColor: Colors.black87,
+                elevation: 0,
+                leading: IconButton(
+                  icon: const Icon(Icons.close, color: Colors.white),
+                  onPressed: () => Navigator.of(ctx).pop(),
+                ),
+                title: Text(
+                  '${widget.project.name}  (${current + 1} / ${shots.length})',
+                  style: const TextStyle(color: Colors.white, fontSize: 16),
+                ),
+              ),
+              body: Stack(
+                children: [
+                  PageView.builder(
+                    controller: pageCtrl,
+                    itemCount: shots.length,
+                    onPageChanged: (idx) => setModalState(() => current = idx),
+                    itemBuilder: (_, idx) => InteractiveViewer(
+                      child: Center(
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 48, vertical: 16),
+                          child: Image.asset(
+                            shots[idx],
+                            fit: BoxFit.contain,
+                            errorBuilder: (_, __, ___) => const Icon(
+                              Icons.broken_image,
+                              color: Colors.white,
+                              size: 64,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                  if (current > 0)
+                    Positioned(
+                      left: 12,
+                      top: 0,
+                      bottom: 0,
+                      child: Center(
+                        child: IconButton.filled(
+                          onPressed: () => pageCtrl.previousPage(
+                            duration: const Duration(milliseconds: 220),
+                            curve: Curves.easeOut,
+                          ),
+                          icon: const Icon(Icons.chevron_left, size: 30),
+                        ),
+                      ),
+                    ),
+                  if (current < shots.length - 1)
+                    Positioned(
+                      right: 12,
+                      top: 0,
+                      bottom: 0,
+                      child: Center(
+                        child: IconButton.filled(
+                          onPressed: () => pageCtrl.nextPage(
+                            duration: const Duration(milliseconds: 220),
+                            curve: Curves.easeOut,
+                          ),
+                          icon: const Icon(Icons.chevron_right, size: 30),
+                        ),
+                      ),
+                    ),
+                ],
+              ),
+            );
+          },
+        );
+      },
+    );
   }
 
   @override
@@ -104,7 +190,7 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen>
     int idx = 0;
 
     Widget slideIn(Widget child) {
-      final anim = _itemAnimations[idx];
+      final anim = _itemAnimations[idx.clamp(0, _itemAnimations.length - 1)];
       idx++;
       return AnimatedBuilder(
         animation: anim,
@@ -158,35 +244,81 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen>
               padding: EdgeInsets.all(padding),
               child: Center(
                 child: ConstrainedBox(
-                  constraints: const BoxConstraints(maxWidth: 720),
+                  constraints: const BoxConstraints(maxWidth: 880),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      slideIn(ClipRRect(
-                        borderRadius: BorderRadius.circular(20),
-                        child: Image.asset(
-                          project.imagePath,
-                          width: double.infinity,
-                          fit: BoxFit.fitWidth,
-                          cacheWidth: 800,
-                          errorBuilder: (_, __, ___) => Container(
-                            height: 200,
-                            color: theme
-                                .colorScheme.surfaceContainerHighest,
-                            child: const Icon(Icons.broken_image,
-                                size: 48),
+                      if (project.promoVideos.isNotEmpty) ...[
+                        slideIn(Row(
+                          children: [
+                            Icon(Icons.play_circle_fill_rounded,
+                                color: theme.colorScheme.primary, size: 22),
+                            const SizedBox(width: 8),
+                            Text(
+                              t.tr('promo_video'),
+                              style: theme.textTheme.titleMedium?.copyWith(
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ],
+                        )),
+                        if (project.promoVideos.length > 1) ...[
+                          const SizedBox(height: 12),
+                          slideIn(Wrap(
+                            spacing: 10,
+                            runSpacing: 8,
+                            children: List.generate(
+                                project.promoVideos.length, (vIdx) {
+                              final selected = _selectedVideoIdx == vIdx;
+                              return ChoiceChip(
+                                label: Text(project.promoVideos[vIdx].label),
+                                selected: selected,
+                                onSelected: (_) =>
+                                    setState(() => _selectedVideoIdx = vIdx),
+                              );
+                            }),
+                          )),
+                        ],
+                        const SizedBox(height: 12),
+                        slideIn(ClipRRect(
+                          borderRadius: BorderRadius.circular(18),
+                          child: AspectRatio(
+                            aspectRatio: 16 / 9,
+                            child: _InlinePromoVideoPlayer(
+                              key: ValueKey(project
+                                  .promoVideos[_selectedVideoIdx].assetPath),
+                              assetPath: project
+                                  .promoVideos[_selectedVideoIdx].assetPath,
+                            ),
                           ),
-                        ),
-                      )),
-                      const SizedBox(height: 28),
+                        )),
+                        const SizedBox(height: 28),
+                      ] else ...[
+                        slideIn(ClipRRect(
+                          borderRadius: BorderRadius.circular(20),
+                          child: Image.asset(
+                            project.imagePath,
+                            width: double.infinity,
+                            fit: BoxFit.fitWidth,
+                            cacheWidth: 800,
+                            errorBuilder: (_, __, ___) => Container(
+                              height: 200,
+                              color:
+                                  theme.colorScheme.surfaceContainerHighest,
+                              child:
+                                  const Icon(Icons.broken_image, size: 48),
+                            ),
+                          ),
+                        )),
+                        const SizedBox(height: 28),
+                      ],
                       slideIn(Text(
                         project.name,
-                        style:
-                            theme.textTheme.headlineSmall?.copyWith(
+                        style: theme.textTheme.headlineSmall?.copyWith(
                           fontWeight: FontWeight.bold,
                         ),
                       )),
-                      const SizedBox(height: 20),
+                      const SizedBox(height: 18),
                       slideIn(Text(
                         project.description,
                         style: theme.textTheme.bodyLarge?.copyWith(
@@ -195,12 +327,62 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen>
                               .withValues(alpha: 0.85),
                         ),
                       )),
+                      if (project.screenshots.isNotEmpty) ...[
+                        const SizedBox(height: 30),
+                        slideIn(Row(
+                          children: [
+                            Icon(Icons.photo_library_outlined,
+                                color: theme.colorScheme.primary, size: 20),
+                            const SizedBox(width: 8),
+                            Text(
+                              '${t.tr('screenshots_gallery')} (${project.screenshots.length})',
+                              style: theme.textTheme.titleMedium?.copyWith(
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ],
+                        )),
+                        const SizedBox(height: 14),
+                        slideIn(SizedBox(
+                          height: 290,
+                          child: ListView.separated(
+                            scrollDirection: Axis.horizontal,
+                            itemCount: project.screenshots.length,
+                            separatorBuilder: (_, __) =>
+                                const SizedBox(width: 14),
+                            itemBuilder: (ctx, sIdx) {
+                              return GestureDetector(
+                                onTap: () =>
+                                    _openScreenshotCarousel(context, sIdx),
+                                child: ClipRRect(
+                                  borderRadius: BorderRadius.circular(14),
+                                  child: Container(
+                                    decoration: BoxDecoration(
+                                      border: Border.all(
+                                        color:
+                                            theme.colorScheme.outlineVariant,
+                                      ),
+                                      borderRadius:
+                                          BorderRadius.circular(14),
+                                    ),
+                                    child: Image.asset(
+                                      project.screenshots[sIdx],
+                                      height: 290,
+                                      fit: BoxFit.contain,
+                                      cacheHeight: 580,
+                                    ),
+                                  ),
+                                ),
+                              );
+                            },
+                          ),
+                        )),
+                      ],
                       if (project.techStack.isNotEmpty) ...[
                         const SizedBox(height: 28),
                         slideIn(Text(
                           t.tr('skills'),
-                          style:
-                              theme.textTheme.titleSmall?.copyWith(
+                          style: theme.textTheme.titleSmall?.copyWith(
                             fontWeight: FontWeight.bold,
                           ),
                         )),
@@ -219,8 +401,7 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen>
                               ),
                               child: Text(
                                 tech,
-                                style: theme.textTheme.labelMedium
-                                    ?.copyWith(
+                                style: theme.textTheme.labelMedium?.copyWith(
                                   color: theme.colorScheme.primary,
                                   fontWeight: FontWeight.w600,
                                 ),
@@ -300,33 +481,29 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen>
               child: _DetailButton(
                 label: project.dashboardLabel ?? 'Web App',
                 icon: Icons.language,
-                onTap: () =>
-                    launchUrl(Uri.parse(project.dashboardUrl!)),
+                onTap: () => launchUrl(Uri.parse(project.dashboardUrl!)),
               ),
             ),
           if (project.dashboardUrl != null &&
-              (project.adminDashboardUrl != null ||
-                  project.apkUrl != null))
+              (project.adminDashboardUrl != null || project.apkUrl != null))
             const SizedBox(width: 10),
           if (project.adminDashboardUrl != null)
             Expanded(
               child: _DetailButton(
                 label: project.adminDashboardLabel ?? 'Admin',
                 icon: Icons.admin_panel_settings,
-                onTap: () => launchUrl(
-                    Uri.parse(project.adminDashboardUrl!)),
+                onTap: () =>
+                    launchUrl(Uri.parse(project.adminDashboardUrl!)),
               ),
             ),
-          if (project.adminDashboardUrl != null &&
-              project.apkUrl != null)
+          if (project.adminDashboardUrl != null && project.apkUrl != null)
             const SizedBox(width: 10),
           if (project.apkUrl != null)
             Expanded(
               child: _DetailButton(
                 label: 'User APK',
                 icon: Icons.download,
-                onTap: () =>
-                    launchUrl(Uri.parse(project.apkUrl!)),
+                onTap: () => launchUrl(Uri.parse(project.apkUrl!)),
               ),
             ),
         ],
@@ -340,8 +517,7 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen>
         child: _DetailButton(
           label: 'Driver APK',
           icon: Icons.download,
-          onTap: () =>
-              launchUrl(Uri.parse(project.driverApkUrl!)),
+          onTap: () => launchUrl(Uri.parse(project.driverApkUrl!)),
         ),
       )));
     }
@@ -375,6 +551,42 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen>
   }
 }
 
+class _InlinePromoVideoPlayer extends StatefulWidget {
+  final String assetPath;
+
+  const _InlinePromoVideoPlayer({super.key, required this.assetPath});
+
+  @override
+  State<_InlinePromoVideoPlayer> createState() =>
+      _InlinePromoVideoPlayerState();
+}
+
+class _InlinePromoVideoPlayerState extends State<_InlinePromoVideoPlayer> {
+  late final String _viewType;
+
+  @override
+  void initState() {
+    super.initState();
+    _viewType =
+        'promo-video-${widget.assetPath.hashCode}-${DateTime.now().microsecondsSinceEpoch}';
+    ui_web.platformViewRegistry.registerViewFactory(_viewType, (int id) {
+      final video = html.VideoElement()
+        ..src = 'assets/${widget.assetPath}'
+        ..controls = true
+        ..preload = 'metadata'
+        ..style.cssText =
+            'width:100%;height:100%;background:#090D16;object-fit:contain;border:none;display:block;'
+        ..setAttribute('playsinline', 'true');
+      return video;
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return HtmlElementView(viewType: _viewType);
+  }
+}
+
 class _DetailButton extends StatelessWidget {
   final String label;
   final IconData icon;
@@ -393,8 +605,7 @@ class _DetailButton extends StatelessWidget {
       onTap: onTap,
       borderRadius: BorderRadius.circular(12),
       child: Container(
-        padding:
-            const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
+        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(12),
           border: Border.all(color: theme.colorScheme.outlineVariant),

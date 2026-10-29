@@ -1869,6 +1869,20 @@ class _ProjectsSection extends StatelessWidget {
         ],
         liveDemoUrl:
             'https://mahmoudfahmy616572.github.io/uni-path-germany-web/',
+        promoVideos: [
+          (label: t.tr('promo_video'), assetPath: 'assets/videos/unipath_promo.mp4'),
+        ],
+        screenshots: const [
+          'assets/screenshots/unipath/unipath_01.webp',
+          'assets/screenshots/unipath/unipath_02.webp',
+          'assets/screenshots/unipath/unipath_03.webp',
+          'assets/screenshots/unipath/unipath_04.webp',
+          'assets/screenshots/unipath/unipath_05.webp',
+          'assets/screenshots/unipath/unipath_06.webp',
+          'assets/screenshots/unipath/unipath_07.webp',
+          'assets/screenshots/unipath/unipath_08.webp',
+          'assets/screenshots/unipath/unipath_09.webp',
+        ],
       ),
       _Project(
         name: t.tr('project_ship_link'),
@@ -1895,6 +1909,59 @@ class _ProjectsSection extends StatelessWidget {
         liveDemoUrl: 'https://mahmoudfahmy616572.github.io/ship_link/',
         driverLiveDemoUrl:
             'https://mahmoudfahmy616572.github.io/ship_link/driver/',
+        promoVideos: [
+          (
+            label: t.tr('user_promo_video'),
+            assetPath: 'assets/videos/shiplink_user_promo.mp4'
+          ),
+          (
+            label: t.tr('driver_promo_video'),
+            assetPath: 'assets/videos/shiplink_driver_promo.mp4'
+          ),
+        ],
+        screenshots: const [
+          'assets/screenshots/shiplink/shiplink_01.webp',
+          'assets/screenshots/shiplink/shiplink_02.webp',
+          'assets/screenshots/shiplink/shiplink_03.webp',
+          'assets/screenshots/shiplink/shiplink_04.webp',
+          'assets/screenshots/shiplink/shiplink_05.webp',
+          'assets/screenshots/shiplink/shiplink_06.webp',
+          'assets/screenshots/shiplink/shiplink_07.webp',
+          'assets/screenshots/shiplink/shiplink_08.webp',
+          'assets/screenshots/shiplink/shiplink_09.webp',
+          'assets/screenshots/shiplink/shiplink_10.webp',
+          'assets/screenshots/shiplink/shiplink_11.webp',
+          'assets/screenshots/shiplink/shiplink_12.webp',
+        ],
+      ),
+      _Project(
+        name: t.tr('project_kalimny'),
+        description: t.tr('project_kalimny_desc'),
+        shortDescription: t.tr('project_kalimny_desc_short'),
+        imagePath: 'assets/images/Kalimny.webp',
+        githubUrl: 'https://github.com/Mahmoudfahmy616572/kalimny',
+        dashboardUrl: 'https://kalimny.vercel.app',
+        dashboardLabel: 'Live Web App',
+        seniority: SeniorityLevel.senior,
+        techStack: const [
+          'Next.js',
+          'TypeScript',
+          'Supabase',
+          'Gemini Live',
+          'Three.js',
+        ],
+        promoVideos: [
+          (label: t.tr('promo_video'), assetPath: 'assets/videos/kalimny_promo.mp4'),
+        ],
+        screenshots: const [
+          'assets/screenshots/kalimny/kalimny_01.webp',
+          'assets/screenshots/kalimny/kalimny_02.webp',
+          'assets/screenshots/kalimny/kalimny_03.webp',
+          'assets/screenshots/kalimny/kalimny_04.webp',
+          'assets/screenshots/kalimny/kalimny_05.webp',
+          'assets/screenshots/kalimny/kalimny_06.webp',
+          'assets/screenshots/kalimny/kalimny_07.webp',
+        ],
       ),
       _Project(
         name: t.tr('project_soundora'),
@@ -1914,6 +1981,21 @@ class _ProjectsSection extends StatelessWidget {
           'PostgreSQL',
           'Bloc/Cubit',
           'Firebase',
+        ],
+        promoVideos: [
+          (label: t.tr('promo_video'), assetPath: 'assets/videos/soundora_promo.mp4'),
+        ],
+        screenshots: const [
+          'assets/screenshots/soundora/soundora_01.webp',
+          'assets/screenshots/soundora/soundora_02.webp',
+          'assets/screenshots/soundora/soundora_03.webp',
+          'assets/screenshots/soundora/soundora_04.webp',
+          'assets/screenshots/soundora/soundora_05.webp',
+          'assets/screenshots/soundora/soundora_06.webp',
+          'assets/screenshots/soundora/soundora_07.webp',
+          'assets/screenshots/soundora/soundora_08.webp',
+          'assets/screenshots/soundora/soundora_09.webp',
+          'assets/screenshots/soundora/soundora_10.webp',
         ],
       ),
       _Project(
@@ -2312,6 +2394,8 @@ class _FeaturedProjectCardState extends State<_FeaturedProjectCard> {
                                       .substring(1)
                               : '',
                           techStack: widget.project.techStack,
+                          screenshots: widget.project.screenshots,
+                          promoVideos: widget.project.promoVideos,
                         ),
                       ),
                     ),
@@ -2427,6 +2511,8 @@ class _Project {
   final String? websiteUrl;
   final SeniorityLevel seniority;
   final List<String> techStack;
+  final List<String> screenshots;
+  final List<({String label, String assetPath})> promoVideos;
 
   const _Project({
     required this.name,
@@ -2447,6 +2533,8 @@ class _Project {
     this.websiteUrl,
     this.seniority = SeniorityLevel.all,
     this.techStack = const [],
+    this.screenshots = const [],
+    this.promoVideos = const [],
   });
 }
 
@@ -2728,6 +2816,10 @@ class _ProjectCardState extends State<_ProjectCard> {
                                         : '',
                                     techStack:
                                         widget.project.techStack,
+                                    screenshots:
+                                        widget.project.screenshots,
+                                    promoVideos:
+                                        widget.project.promoVideos,
                                   ),
                                 ),
                               ),

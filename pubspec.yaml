@@ -28,3 +28,8 @@ flutter:
   assets:
     - assets/images/
     - assets/pdfs/
+    - assets/videos/
+    - assets/screenshots/unipath/
+    - assets/screenshots/shiplink/
+    - assets/screenshots/soundora/
+    - assets/screenshots/kalimny/

@@ -84,6 +84,15 @@ class AppLocalizations {
         'AI-powered career copilot for profile building, CV creation, and interview prep.',
     'project_nexora_desc':
         'The hard question is not "how do I write a CV" — it is "which jobs actually fit me, and can I prove it". Nexora answers with a deterministic match score, a CV tailored to that exact job, and a scored mock interview.\n\n• Career intake from CV upload, GitHub import or guided AI questions → versioned Career DNA\n• Match engine written in pure Dart (skills, seniority, domain, gaps) — the LLM never owns a number\n• CV Studio: job-tailored generation, factual fallback, validation pass, 3 PDF templates, version history, ATS evaluation\n• Voice mock interviews with TTS + speech-to-text and scored feedback\n• Application pipeline tracker, English / Arabic with RTL, 57 test files\n• 8 Supabase Edge Functions proxy the LLM (Groq) with JWT checks, JSON repair and deterministic fallbacks\n\nTech Stack: Flutter, BLoC, Supabase (Postgres/RLS/Edge Functions), Groq LLMs',
+    'project_kalimny': 'Kalimny',
+    'project_kalimny_desc_short':
+        'Real-time AI voice language tutor with a 3D avatar, 4 languages, CEFR units, auto-summaries, and unit exams.',
+    'project_kalimny_desc':
+        'Language learners freeze in real conversations because textbook drills do not feel like talking to a person. Kalimny pairs you with a friendly 3D AI voice tutor (Jonas & Lina) that jokes, laughs, and corrects you gently in real time.\n\n• Full-duplex speech-to-speech voice sessions over WebSocket (Gemini Live API) with live transcript and 3D procedural avatar\n• 4 languages (German, English, French, Spanish) × 6 real-world scenarios (Airport, Restaurant, Job Interview, Shopping, Taxi, 5-min Challenge)\n• Structured CEFR curriculum (A1–B2): completing ≥70% of a session automatically generates the lesson summary and unlocks the mandatory unit exam required to unlock the next unit\n• Automatic Mistakes & Vocabulary Bank + Smart Flashcards generated from your actual conversation errors\n• Daily streak & XP score system to keep learners practicing every day\n\nTech Stack: Next.js, TypeScript, Supabase (Postgres/RLS), Gemini Live Audio, Three.js / WebGL',
+    'screenshots_gallery': 'Screenshots Gallery',
+    'promo_video': 'Explained Walkthrough Video',
+    'user_promo_video': 'Customer App Walkthrough',
+    'driver_promo_video': 'Driver App Walkthrough',
     'go_to_project': 'Go to Project',
     'view_on_github': 'View on GitHub',
     'promo_website': 'Promo Website',
@@ -191,6 +200,15 @@ class AppLocalizations {
         'منصة ذكاء مهني مدعومة بالذكاء الاصطناعي لبناء الملف الشخصي وإعداد السيرة الذاتية والمقابلات.',
     'project_nexora_desc':
         'السؤال الصعب مش "أكتب السيرة الذاتية إزاي"، السؤال "أنهي وظائف بتناسبني فعلاً وإزاي أثبتها". نكسورا بترد بدرجة مطابقة محسوبة، سيرة مكتوبة للوظيفة دي بالذات، ومقابلة تدريبية متقيَّمة.\n\n• بناء الملف من رفع CV أو استيراد GitHub أو أسئلة موجهة → Career DNA بإصدارات\n• محرك مطابقة بـ Dart خالص (مهارات، خبرة، مجال، فجوات) — الـ AI مش بيملك أي رقم\n• استوديو السيرة: توليد مخصص للوظيفة، fallback واقعي، فحص قبل الحفظ، 3 قوالب PDF، سجل إصدارات، وتقييم ATS\n• مقابلات صوتية تدريبية بـ TTS + تحويل الكلام لنص وتقييم بالدرجات\n• تتبع طلبات العمل، عربي/إنجليزي بدعم RTL، و57 ملف اختبار\n• 8 Edge Functions على Supabase تحمي مفاتيح الـ AI (Groq) مع فحص JWT وإصلاح JSON وfallback\n\nالتقنيات: Flutter، BLoC، Supabase (Postgres/RLS/Edge Functions)، Groq LLMs',
+    'project_kalimny': 'كلمني (Kalimny)',
+    'project_kalimny_desc_short':
+        'مدرّس ذكاء اصطناعي صوتي لحظي بشخصية 3D و4 لغات ومنهج وحدات وامتحانات وملخصات تلقائية.',
+    'project_kalimny_desc':
+        'أغلب متعلمي اللغات بيتوتروا وقت الكلام الحقيقي لأن التمارين النصية مش شبه المحادثة. «كلمني» بيخليك تتكلم صوتياً في الوقت الفعلي مع مدرّس AI ثلاثي الأبعاد (يوناس ولينا) ودود بيهزر ويضحك ويصحح أخطاءك بلطف.\n\n• محادثات صوتية حية (Speech-to-Speech) عبر Gemini Live WebSocket مع أفاتار 3D تفاعلي وكتابة مباشرة للمحادثة\n• 4 لغات كاملة (الألمانية · الإنجليزية · الفرنسية · الإسبانية) × 6 سيناريوهات واقعية (المطار، المطعم، مقابلة عمل، التسوق، تاكسي، تحدي 5 دقائق)\n• منهج CEFR متدرج: إتمام 70% من وقت الجلسة بيولّد ملخص الدرس تلقائياً ويفتح امتحان الوحدة كشرط أساسي لفتح الوحدة التالية\n• بنك «أخطائي» تلقائي + فلاش كاردز ذكية من الكلمات والغلطات اللي ظهرت في كلامك\n• نظام ستريك وسكور يومي يشجع المتعلم يواظب كل يوم من غير انقطاع\n\nالتقنيات: Next.js، TypeScript، Supabase (Postgres/RLS)، Gemini Live Audio، Three.js',
+    'screenshots_gallery': 'معرض شاشات التطبيق',
+    'promo_video': 'فيديو شرح التطبيق بالتفصيل',
+    'user_promo_video': 'فيديو شرح تطبيق العميل',
+    'driver_promo_video': 'فيديو شرح تطبيق السائق',
     'go_to_project': 'عرض المشروع',
     'view_on_github': 'عرض على جيت هاب',
     'promo_website': 'الموقع الإعلاني',
