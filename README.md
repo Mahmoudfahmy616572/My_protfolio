@@ -36,5 +36,5 @@ Project copy lives in `lib/localization.dart` (EN/AR) and is rendered by
 
 - Email: mahmoudfahmeyy@gmail.com
 - GitHub: https://github.com/Mahmoudfahmy616572
-- LinkedIn: https://linkedin.com/in/mahmoud__fahmy
+- LinkedIn: https://linkedin.com/in/mahmoud-fahmy-129946322
 - WhatsApp: https://wa.me/201013312546
