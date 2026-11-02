@@ -1844,6 +1844,7 @@ class _ProjectsSection extends StatelessWidget {
     final screenWidth = MediaQuery.of(context).size.width;
     final isWide = screenWidth > 800;
     final filterLevel = context.watch<FilterProvider>().level;
+    final isAr = t.locale.languageCode == 'ar';
 
     final allProjects = [
       _Project(
@@ -1870,7 +1871,12 @@ class _ProjectsSection extends StatelessWidget {
         liveDemoUrl:
             'https://mahmoudfahmy616572.github.io/uni-path-germany-web/',
         promoVideos: [
-          (label: t.tr('promo_video'), assetPath: 'assets/videos/unipath_promo.mp4'),
+          (
+            label: t.tr('promo_video'),
+            assetPath: isAr
+                ? 'assets/videos/unipath_promo.mp4'
+                : 'assets/videos/unipath_promo_en.mp4'
+          ),
         ],
         screenshots: const [
           'assets/screenshots/unipath/unipath_01.webp',
@@ -1912,11 +1918,15 @@ class _ProjectsSection extends StatelessWidget {
         promoVideos: [
           (
             label: t.tr('user_promo_video'),
-            assetPath: 'assets/videos/shiplink_user_promo.mp4'
+            assetPath: isAr
+                ? 'assets/videos/shiplink_user_promo.mp4'
+                : 'assets/videos/shiplink_user_promo_en.mp4'
           ),
           (
             label: t.tr('driver_promo_video'),
-            assetPath: 'assets/videos/shiplink_driver_promo.mp4'
+            assetPath: isAr
+                ? 'assets/videos/shiplink_driver_promo.mp4'
+                : 'assets/videos/shiplink_driver_promo_en.mp4'
           ),
         ],
         screenshots: const [
@@ -1951,7 +1961,12 @@ class _ProjectsSection extends StatelessWidget {
           'Three.js',
         ],
         promoVideos: [
-          (label: t.tr('promo_video'), assetPath: 'assets/videos/kalimny_promo.mp4'),
+          (
+            label: t.tr('promo_video'),
+            assetPath: isAr
+                ? 'assets/videos/kalimny_promo.mp4'
+                : 'assets/videos/kalimny_promo_en.mp4'
+          ),
         ],
         screenshots: const [
           'assets/screenshots/kalimny/kalimny_01.webp',
@@ -1983,7 +1998,12 @@ class _ProjectsSection extends StatelessWidget {
           'Firebase',
         ],
         promoVideos: [
-          (label: t.tr('promo_video'), assetPath: 'assets/videos/soundora_promo.mp4'),
+          (
+            label: t.tr('promo_video'),
+            assetPath: isAr
+                ? 'assets/videos/soundora_promo.mp4'
+                : 'assets/videos/soundora_promo_en.mp4'
+          ),
         ],
         screenshots: const [
           'assets/screenshots/soundora/soundora_01.webp',
